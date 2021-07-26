@@ -774,7 +774,7 @@
      font-size: 17px;
 }
  .copyright a:hover {
-    color: #d8b00f;
+    color: #1c0fd8;
 }
  .owl-dot {
      background: #15cfe5 !important;
@@ -858,11 +858,11 @@
 }
  #sidebar ul li a:hover {
      color: #fff;
-     background: #d8b00f;
+     background: #2d0fd8;
 }
  #sidebar ul li.active > a, a[aria-expanded="true"] {
      color: #fff;
-     background: #d8b00f;
+     background: #3a0fd8;
 }
  a[data-toggle="collapse"] {
      position: relative;
@@ -907,7 +907,7 @@
      font-weight: 500;
 }
  .yellow_bg {
-     background-color: #e3d105;
+     background-color: #0905e3;
      padding: 40px 0px;
      margin-top: 90px;
 }
