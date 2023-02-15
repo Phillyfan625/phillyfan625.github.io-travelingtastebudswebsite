@@ -13,10 +13,6 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-
     <!-- bootstrap css -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- owl css -->
@@ -33,7 +29,7 @@
 </head>
 <!-- body -->
 
-<body class="main-layout">
+<body class="main-layout about_page">
    
 
     <div class="wrapper">
@@ -49,13 +45,13 @@
 
                 <ul class="list-unstyled components">
 
-                    <li class="active">
+                    <li >
                         <a href="index.html">Home</a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a href="about.html">About</a>
                     </li>
-                    <li>
+                    <li >
                         <a href="blog.html">Blog</a>
                     </li>
                     
@@ -64,130 +60,125 @@
             </nav>
         </div>
 
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-        * {
-          box-sizing: border-box;
-        }
-        
-        /* Add a gray background color with some padding */
-        body {
-          font-family: Arial;
-          padding: 20px;
-          background: #f1f1f1;
-        }
-        
-        /* Header/Blog Title */
-        .header {
-          padding: 30px;
-          font-size: 40px;
-          text-align: center;
-          background: white;
-        }
-        
-        /* Create two unequal columns that floats next to each other */
-        /* Left column */
-        .leftcolumn {   
-          float: left;
-          width: 75%;
-        }
-        
-        /* Right column */
-        .rightcolumn {
-          float: left;
-          width: 25%;
-          padding-left: 20px;
-        }
-        
-        /* Fake image */
-        .fakeimg {
-          background-color: #aaa;
-          width: 100%;
-          padding: 20px;
-        }
-        
-        /* Add a card effect for articles */
-        .card {
-           background-color: white;
-           padding: 20px;
-           margin-top: 20px;
-        }
-        
-        /* Clear floats after the columns */
-        .row:after {
-          content: "";
-          display: table;
-          clear: both;
-        }
-        
-        /* Footer */
-        .footer {
-          padding: 20px;
-          text-align: center;
-          background: #ddd;
-          margin-top: 20px;
-        }
-        
-        /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
-        @media screen and (max-width: 800px) {
-          .leftcolumn, .rightcolumn {   
-            width: 100%;
-            padding: 0;
-          }
-        }
-        </style>
-        </head>
-        <body>
-        
-        <div class="header">
-          <h2>Blog Name</h2>
-        </div>
-        
-        <div class="row">
-          <div class="leftcolumn">
-            <div class="card">
-              <h2>TITLE HEADING</h2>
-              <h5>Title description, Dec 7, 2017</h5>
-              <div class="fakeimg" style="height:200px;">Image</div>
-              <p>Some text..</p>
-              <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+    <div id="content">
+    <!-- header -->
+    <header>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="full">
+                        <a class="logo" href="index.html"><img src="images/ttb1.png" alt="#" width="150px" height="40px"/></a>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="full">
+                        <div class="right_header_info">
+                            <ul>
+                                <li class="dinone"><img style="margin-right: 15px;" src="images/mail_icon.png" alt="#"><a href="#">business@travelingtastebuds.org</a></li>                                <li>
+                                    <button type="button" id="sidebarCollapse">
+                                        <img src="images/menu_icon.png" alt="#">
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card">
-              <h2>TITLE HEADING</h2>
-              <h5>Title description, Sep 2, 2017</h5>
-              <div class="fakeimg" style="height:200px;">Image</div>
-              <p>Some text..</p>
-              <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+        </div>
+    </header>
+    <!-- end header -->
+    
+    <div class="blue_bg">
+   <div class="container">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="title">
+                     <h2>About</h2>
+                    
+                  </div>
+               </div>
             </div>
           </div>
-          <div class="rightcolumn">
-            <div class="card">
-              <h2>About Me</h2>
-              <div class="fakeimg" style="height:100px;">Image</div>
-              <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-            </div>
-            <div class="card">
-              <h3>Popular Post</h3>
-              <div class="fakeimg">Image</div><br>
-              <div class="fakeimg">Image</div><br>
-              <div class="fakeimg">Image</div>
-            </div>
-            <div class="card">
-              <h3>Follow Me</h3>
-              <p>Some text..</p>
-            </div>
+</div>
+<!-- about -->
+<div class="about">
+    <div class="container">
+      <div class="row">
+         <div class="col-md-12">
+             <div class="title">
+                <img src="images/seaisle.JPG" alt="#" width="150px" height="40px"/>                
+                <h2>We work with Sea Isle</h2>
+             </div>
           </div>
-        </div>
-        
+       </div>
+       <div class="row">
+         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+             <div class="about_box">
+                <h3>More About Us</h3>
+                <p>During the summer of 2020 everyone was inside and I wanted to create a platform that highlighted the small businesses in need. </p>
+            </div>
+         </div>
+          
+               
+       </div> 
+    </div>
+</div>
+<!-- end about -->
+
+
+    <!-- footer -->
+    <footer>
         <div class="footer">
-          <h2>Footer</h2>
+            <div class="container-fluid">
+                <div class="row">
+                  <div class=" col-md-12">
+                    <h2><strong class="white">Let's Work Together!</strong></h2>
+                </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                      
+                        <form class="main_form" action="https://formspree.io/f/meqvrjrg"
+                        method="POST">
+                            <div class="row">
+                             
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <input class="form-control" placeholder="Name" type="text" name="Name">
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <input class="form-control" placeholder="Email" type="email" name="Email Name:">>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <input class="form-control" placeholder="Phone" type="text" name="Phone">
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <textarea class="textarea" placeholder="Message" type="text" name="Message"></textarea>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <button class="send">Send</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="footer_logo">
+                          <a href="index.html"><img src="images/ttb1.png" alt="logo" width="150" height="40" /></a>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <ul class="lik">
+                            <li > <a href="index.html">Home</a></li>
+                            <li class="active"> <a href="about.html">About</a></li>
+                           
+                        </ul>
+                    </div>
+                   
+                </div>
+            </div>
+            
         </div>
-        
-        
-</footer>
+    </footer>
     <!-- end footer -->
 
     </div>
@@ -221,40 +212,6 @@
             });
         });
     </script>
-
-    <style>
-    #owl-demo .item{
-        margin: 3px;
-    }
-    #owl-demo .item img{
-        display: block;
-        width: 100%;
-        height: auto;
-    }
-    </style>
-
-     
-      <script>
-         $(document).ready(function() {
-           var owl = $('.owl-carousel');
-           owl.owlCarousel({
-             margin: 10,
-             nav: true,
-             loop: true,
-             responsive: {
-               0: {
-                 items: 1
-               },
-               600: {
-                 items: 2
-               },
-               1000: {
-                 items: 5
-               }
-             }
-           })
-         })
-      </script>
 
 </body>
 
