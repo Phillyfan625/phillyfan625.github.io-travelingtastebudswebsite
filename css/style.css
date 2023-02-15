@@ -90,6 +90,9 @@
  img {
      max-width: 100%;
      height: auto;
+     max-height: 750px;
+     display: flex;
+     margin: auto;
 }
  :focus {
      outline: 0;
@@ -326,7 +329,6 @@
 }
  .slider_section {
      background: #212020;
-     min-height: 100vh;
      padding-top: 93px;
 }
 /** slider section **/
