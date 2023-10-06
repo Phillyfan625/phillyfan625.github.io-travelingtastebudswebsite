@@ -55,7 +55,6 @@ body {
     background-color: #313c59;
     color: white;
     font-size: 28px;
-    z-index: 99999999;
     transition: transform 0.3s ease;
 }
 
