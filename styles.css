@@ -1,10 +1,10 @@
 body {
-    background-color: #313c59 !important;
+    background-color: var(--background-color) !important;
     font-family: 'Kanit', sans-serif !important;
 }
 
 .nav-link {
-    color: #313c59;
+    color: var(--background-color);
 }
 
 .nav-link:hover {
@@ -41,7 +41,7 @@ body {
 
 .ttbBtn:hover {
     transform: scale(1.1);
-    background-color: #94b4f7;
+    background-color: var(--header-color);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     color: #fff !important;
     text-decoration: none !important;
@@ -52,16 +52,16 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #313c59;
-    color: white;
-    font-size: 28px;
-    transition: transform 0.3s ease;
+    background-color: var(--background-color) !important;
+    color: white !important;
+    font-size: 28px !important;
+    transition: transform 0.3s ease !important;
 }
 
 .carouselBtn:hover {
-    background-color: #94b4f7 !important;
+    background-color: var(--header-color) !important;
     transform: translate(-50%, -50%) scale(1.05) !important;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
 }
 
 
@@ -119,7 +119,7 @@ body {
     min-width: 600px;
     margin-top: 20px;
     margin-bottom: 20px;
-    border: 3px solid #94b4f7;
+    border: 3px solid var(--header-color);
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
     display: none;
 }
@@ -137,12 +137,12 @@ body {
 
 .question-of-the-day input[type="ttbText"] {
     padding: 10px;
-    border: 1px solid #94b4f7;
-    color: #94b4f7 !important;
+    border: 1px solid var(--header-color);
+    color: var(--header-color) !important;
     border-radius: 5px;
     margin-right: 10px;
     width: 60%;
-    outline: #94b4f7;
+    outline: var(--header-color);
 }
 
 .question-of-the-day .submit-button {
@@ -179,7 +179,7 @@ body {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 13px;
-    background-color: #94b4f7;
+    background-color: var(--header-color);
     color: black;
     border-radius: 10px;
     padding: 5px;
@@ -218,13 +218,21 @@ body {
     z-index: 9;
     cursor: pointer;
     transition: all 1s ease-in-out;
-    background-color: #94b4f7;
+    background-color: var(--header-color);
     padding: 3px 6px;
     border: 1px #333 solid;
 }
 
 #mobileCarousel {
     display: none;
+}
+
+.pricing-card {
+    transition: transform 0.3s ease-in-out;
+}
+
+.pricing-card:hover {
+    transform: scale(1.05);
 }
 
 @media (max-width: 992px) {
@@ -263,4 +271,78 @@ body {
     #mobileCarousel {
         display: block;
     }
+}
+
+.card-header {
+    background-color: var(--header-color);
+    color: #fff;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-unstyled {
+    flex: 1;
+}
+
+.card-price {
+    font-size: 2rem;
+    color: black;
+    margin-bottom: 1rem;
+}
+
+.package-badge {
+    background-color: white;
+    font-size: 1.2rem;
+    color: var(--background-color);
+    padding: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.3s ease-in-out;
+}
+
+.package-badge:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+}
+
+
+/* For list items in the card */
+
+.pricing-card ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.pricing-card li {
+    margin-bottom: 0.5rem;
+    font-size: large;
+}
+
+
+/* Specific styles for each card */
+
+.appetizer .card-header {
+    color: #fff;
+}
+
+.main-course .card-header {
+    color: #fff;
+}
+
+.all-fixins .card-header {
+    color: #fff;
+}
+
+:root {
+    --header-color: #94b4f7;
+    --background-color: #313c59;
 }
