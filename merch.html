@@ -16,7 +16,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light px-3 mb-4" style="background-color: var(--header-color); min-height: 100px;">
-        <a class="navbar-brand d-lg-none" href="/"><img src="/Images/ttbLogo.png" style="height: 50px;"></a>
+        <a class="navbar-brand d-lg-none" href="/"><img src="/Images/ttbLogoGreen.png" style="height: 50px;"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myNavbarToggler7" aria-controls="myNavbarToggler7" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -31,7 +31,7 @@
                 <li class="nav-item mx-3" style="align-self: center;">
                     <a class="nav-link" href="/merch">Merch</a>
                 </li>
-                <a class="d-none d-lg-block" href="/"><img class="mx-3" src="/Images/ttbLogo.png" style="height: 50px;"></a>
+                <a class="d-none d-lg-block" href="/"><img class="mx-3" src="/Images/ttbLogoGreen.png" style="height: 50px;"></a>
                 <li class="nav-item mx-3" style="align-self: center;">
                     <a class="nav-link" href="/food-reviews">Food Reviews</a>
                 </li>
@@ -44,6 +44,414 @@
             </ul>
         </div>
     </nav>
+    <div class="mb-5" id='product-component-1709399675184'></div>
+    <script type="text/javascript">
+        /*<![CDATA[*/
+        (function() {
+            var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+            if (window.ShopifyBuy) {
+                if (window.ShopifyBuy.UI) {
+                    ShopifyBuyInit();
+                } else {
+                    loadScript();
+                }
+            } else {
+                loadScript();
+            }
+
+            function loadScript() {
+                var script = document.createElement('script');
+                script.async = true;
+                script.src = scriptURL;
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+                script.onload = ShopifyBuyInit;
+            }
+
+            function ShopifyBuyInit() {
+                var client = ShopifyBuy.buildClient({
+                    domain: 'd72391-2.myshopify.com',
+                    storefrontAccessToken: '96a7a22662a9d162407dd309fb0091aa',
+                });
+                ShopifyBuy.UI.onReady(client).then(function(ui) {
+                    ui.createComponent('product', {
+                        id: '9046558769438',
+                        node: document.getElementById('product-component-1709399675184'),
+                        moneyFormat: '%24%7B%7Bamount%7D%7D',
+                        options: {
+                            "product": {
+                                "styles": {
+                                    "product": {
+                                        "@media (min-width: 601px)": {
+                                            "max-width": "100%",
+                                            "margin-left": "0",
+                                            "margin-bottom": "50px"
+                                        },
+                                        "text-align": "left"
+                                    },
+                                    "title": {
+                                        "font-size": "26px",
+                                        "color": "#ffffff"
+                                    },
+                                    "button": {
+                                        ":hover": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "background-color": "#98bf64",
+                                        ":focus": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "padding-left": "100px",
+                                        "padding-right": "100px"
+                                    },
+                                    "price": {
+                                        "font-weight": "bold",
+                                        "font-size": "18px",
+                                        "color": "#ffffff"
+                                    },
+                                    "compareAt": {
+                                        "font-weight": "bold",
+                                        "font-size": "15.299999999999999px",
+                                        "color": "#ffffff"
+                                    },
+                                    "unitPrice": {
+                                        "font-weight": "bold",
+                                        "font-size": "15.299999999999999px",
+                                        "color": "#ffffff"
+                                    },
+                                    "description": {
+                                        "color": "#ffffff"
+                                    }
+                                },
+                                "layout": "horizontal",
+                                "contents": {
+                                    "img": false,
+                                    "imgWithCarousel": true,
+                                    "description": true
+                                },
+                                "width": "100%",
+                                "text": {
+                                    "button": "Add to cart"
+                                }
+                            },
+                            "productSet": {
+                                "styles": {
+                                    "products": {
+                                        "@media (min-width: 601px)": {
+                                            "margin-left": "-20px"
+                                        }
+                                    }
+                                }
+                            },
+                            "modalProduct": {
+                                "contents": {
+                                    "img": false,
+                                    "imgWithCarousel": true,
+                                    "button": false,
+                                    "buttonWithQuantity": true
+                                },
+                                "styles": {
+                                    "product": {
+                                        "@media (min-width: 601px)": {
+                                            "max-width": "100%",
+                                            "margin-left": "0px",
+                                            "margin-bottom": "0px"
+                                        }
+                                    },
+                                    "button": {
+                                        ":hover": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "background-color": "#98bf64",
+                                        ":focus": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "padding-left": "100px",
+                                        "padding-right": "100px"
+                                    },
+                                    "title": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "bold",
+                                        "font-size": "26px",
+                                        "color": "#4c4c4c"
+                                    },
+                                    "price": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "normal",
+                                        "font-size": "18px",
+                                        "color": "#4c4c4c"
+                                    },
+                                    "compareAt": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "normal",
+                                        "font-size": "15.299999999999999px",
+                                        "color": "#4c4c4c"
+                                    },
+                                    "unitPrice": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "normal",
+                                        "font-size": "15.299999999999999px",
+                                        "color": "#4c4c4c"
+                                    },
+                                    "description": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "normal",
+                                        "font-size": "14px",
+                                        "color": "#4c4c4c"
+                                    }
+                                },
+                                "text": {
+                                    "button": "Add to cart"
+                                }
+                            },
+                            "option": {
+                                "styles": {
+                                    "label": {
+                                        "color": "#ffffff"
+                                    }
+                                }
+                            },
+                            "cart": {
+                                "styles": {
+                                    "button": {
+                                        ":hover": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "background-color": "#98bf64",
+                                        ":focus": {
+                                            "background-color": "#89ac5a"
+                                        }
+                                    }
+                                },
+                                "text": {
+                                    "total": "Subtotal",
+                                    "button": "Checkout"
+                                }
+                            },
+                            "toggle": {
+                                "styles": {
+                                    "toggle": {
+                                        "background-color": "#98bf64",
+                                        ":hover": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        ":focus": {
+                                            "background-color": "#89ac5a"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    });
+                });
+            }
+        })();
+        /*]]>*/
+    </script>
+
+    <div class="mb-5" id='product-component-1709399847566'></div>
+    <script type="text/javascript">
+        /*<![CDATA[*/
+        (function() {
+            var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+            if (window.ShopifyBuy) {
+                if (window.ShopifyBuy.UI) {
+                    ShopifyBuyInit();
+                } else {
+                    loadScript();
+                }
+            } else {
+                loadScript();
+            }
+
+            function loadScript() {
+                var script = document.createElement('script');
+                script.async = true;
+                script.src = scriptURL;
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+                script.onload = ShopifyBuyInit;
+            }
+
+            function ShopifyBuyInit() {
+                var client = ShopifyBuy.buildClient({
+                    domain: 'd72391-2.myshopify.com',
+                    storefrontAccessToken: '96a7a22662a9d162407dd309fb0091aa',
+                });
+                ShopifyBuy.UI.onReady(client).then(function(ui) {
+                    ui.createComponent('product', {
+                        id: '9046572564766',
+                        node: document.getElementById('product-component-1709399847566'),
+                        moneyFormat: '%24%7B%7Bamount%7D%7D',
+                        options: {
+                            "product": {
+                                "styles": {
+                                    "product": {
+                                        "@media (min-width: 601px)": {
+                                            "max-width": "100%",
+                                            "margin-left": "0",
+                                            "margin-bottom": "50px"
+                                        },
+                                        "text-align": "left"
+                                    },
+                                    "title": {
+                                        "font-size": "26px",
+                                        "color": "#ffffff"
+                                    },
+                                    "button": {
+                                        ":hover": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "background-color": "#98bf64",
+                                        ":focus": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "padding-left": "100px",
+                                        "padding-right": "100px"
+                                    },
+                                    "price": {
+                                        "font-weight": "bold",
+                                        "font-size": "18px",
+                                        "color": "#ffffff"
+                                    },
+                                    "compareAt": {
+                                        "font-weight": "bold",
+                                        "font-size": "15.299999999999999px",
+                                        "color": "#ffffff"
+                                    },
+                                    "unitPrice": {
+                                        "font-weight": "bold",
+                                        "font-size": "15.299999999999999px",
+                                        "color": "#ffffff"
+                                    },
+                                    "description": {
+                                        "color": "#ffffff"
+                                    }
+                                },
+                                "layout": "horizontal",
+                                "contents": {
+                                    "img": false,
+                                    "imgWithCarousel": true,
+                                    "description": true
+                                },
+                                "width": "100%",
+                                "text": {
+                                    "button": "Add to cart"
+                                }
+                            },
+                            "productSet": {
+                                "styles": {
+                                    "products": {
+                                        "@media (min-width: 601px)": {
+                                            "margin-left": "-20px"
+                                        }
+                                    }
+                                }
+                            },
+                            "modalProduct": {
+                                "contents": {
+                                    "img": false,
+                                    "imgWithCarousel": true,
+                                    "button": false,
+                                    "buttonWithQuantity": true
+                                },
+                                "styles": {
+                                    "product": {
+                                        "@media (min-width: 601px)": {
+                                            "max-width": "100%",
+                                            "margin-left": "0px",
+                                            "margin-bottom": "0px"
+                                        }
+                                    },
+                                    "button": {
+                                        ":hover": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "background-color": "#98bf64",
+                                        ":focus": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "padding-left": "100px",
+                                        "padding-right": "100px"
+                                    },
+                                    "title": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "bold",
+                                        "font-size": "26px",
+                                        "color": "#4c4c4c"
+                                    },
+                                    "price": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "normal",
+                                        "font-size": "18px",
+                                        "color": "#4c4c4c"
+                                    },
+                                    "compareAt": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "normal",
+                                        "font-size": "15.299999999999999px",
+                                        "color": "#4c4c4c"
+                                    },
+                                    "unitPrice": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "normal",
+                                        "font-size": "15.299999999999999px",
+                                        "color": "#4c4c4c"
+                                    },
+                                    "description": {
+                                        "font-family": "Helvetica Neue, sans-serif",
+                                        "font-weight": "normal",
+                                        "font-size": "14px",
+                                        "color": "#4c4c4c"
+                                    }
+                                },
+                                "text": {
+                                    "button": "Add to cart"
+                                }
+                            },
+                            "option": {
+                                "styles": {
+                                    "label": {
+                                        "color": "#ffffff"
+                                    }
+                                }
+                            },
+                            "cart": {
+                                "styles": {
+                                    "button": {
+                                        ":hover": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        "background-color": "#98bf64",
+                                        ":focus": {
+                                            "background-color": "#89ac5a"
+                                        }
+                                    }
+                                },
+                                "text": {
+                                    "total": "Subtotal",
+                                    "button": "Checkout"
+                                }
+                            },
+                            "toggle": {
+                                "styles": {
+                                    "toggle": {
+                                        "background-color": "#98bf64",
+                                        ":hover": {
+                                            "background-color": "#89ac5a"
+                                        },
+                                        ":focus": {
+                                            "background-color": "#89ac5a"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    });
+                });
+            }
+        })();
+        /*]]>*/
+    </script>
+
     <div id='product-component-1696565796386'></div>
     <script type="text/javascript">
         /*<![CDATA[*/
@@ -94,11 +502,11 @@
                                     },
                                     "button": {
                                         ":hover": {
-                                            "background-color": "#85a2de"
+                                            "background-color": "#03c04a"
                                         },
-                                        "background-color": "var(--header-color)",
+                                        "background-color": "#98bf64",
                                         ":focus": {
-                                            "background-color": "#85a2de"
+                                            "background-color": "#03c04a"
                                         },
                                         "padding-left": "138px",
                                         "padding-right": "138px"
@@ -159,11 +567,11 @@
                                     },
                                     "button": {
                                         ":hover": {
-                                            "background-color": "#85a2de"
+                                            "background-color": "#03c04a"
                                         },
-                                        "background-color": "var(--header-color)",
+                                        "background-color": "#98bf64",
                                         ":focus": {
-                                            "background-color": "#85a2de"
+                                            "background-color": "#03c04a"
                                         },
                                         "padding-left": "138px",
                                         "padding-right": "138px"
@@ -214,11 +622,11 @@
                                 "styles": {
                                     "button": {
                                         ":hover": {
-                                            "background-color": "#85a2de"
+                                            "background-color": "#03c04a"
                                         },
-                                        "background-color": "var(--header-color)",
+                                        "background-color": "#98bf64",
                                         ":focus": {
-                                            "background-color": "#85a2de"
+                                            "background-color": "#03c04a"
                                         }
                                     }
                                 },
@@ -230,12 +638,12 @@
                             "toggle": {
                                 "styles": {
                                     "toggle": {
-                                        "background-color": "var(--header-color)",
+                                        "background-color": "#98bf64",
                                         ":hover": {
-                                            "background-color": "#85a2de"
+                                            "background-color": "#03c04a"
                                         },
                                         ":focus": {
-                                            "background-color": "#85a2de"
+                                            "background-color": "#03c04a"
                                         }
                                     }
                                 }
@@ -252,7 +660,7 @@
     <div class="container mt-5">
         <div class="row">
             <!-- Restaurant Cards -->
-            <div class="col-sm-4 col-6 mb-4">
+            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
                 <div class="card restaurant-card" data-tiktok-id="7272142385285565742">
                     <img src="/Images/peterAndSonsLogo.jpg" class="card-img-top" alt="Peter and Sons">
                     <div class="card-body">
@@ -260,7 +668,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4 col-6 mb-4">
+            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
                 <div class="card restaurant-card" data-tiktok-id="7262868213384400171">
                     <img src="/Images/picLogo.png" class="card-img-top" alt="Pic-a-Lilli">
                     <div class="card-body">
@@ -268,15 +676,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
-                    <img src="/Images/pizzaVillaLogo.png" class="card-img-top" style="object-fit: contain;" alt="Pizza Villa">
-                    <div class="card-body">
-                        <h5 class="card-title">Pizza Villa<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
+            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
                 <div class="card restaurant-card" data-tiktok-id="7231695429392682286">
                     <img src="/Images/lillosLogo.png" class="card-img-top" style="object-fit: contain;" alt="Lillos Tomato Pies">
                     <div class="card-body">
@@ -284,11 +684,67 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
+            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
+                <div class="card restaurant-card" data-tiktok-id="7203508461517425963">
                     <img src="/Images/foodMartLogo.png" class="card-img-top" alt="Friendly Food Mart">
                     <div class="card-body">
                         <h5 class="card-title">Friendly Food Mart<br>20% Off (with food item)</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
+                <div class="card restaurant-card" data-tiktok-id="6974164228458548485">
+                    <img src="/Images/pizzaVillaLogo.png" class="card-img-top" style="object-fit: contain;" alt="Pizza Villa">
+                    <div class="card-body">
+                        <h5 class="card-title">Pizza Villa<br>10% Off</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-6 mb-4">
+                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
+                    <img src="/Images/bankBarLogo.png" class="card-img-top" style="object-fit: contain; background-color: black;" alt="Bank Bar">
+                    <div class="card-body">
+                        <h5 class="card-title">Bank Bar<br>10% Off</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-6 mb-4">
+                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
+                    <img src="/Images/holyCityLogo.png" class="card-img-top" style="object-fit: contain;" alt="Holy City">
+                    <div class="card-body">
+                        <h5 class="card-title">Holy City<br>10% Off</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-6 mb-4">
+                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
+                    <img src="/Images/kegAndKitchenLogo.png" class="card-img-top" style="background-color: black; object-fit: contain;" alt="Keg and Kitchen">
+                    <div class="card-body">
+                        <h5 class="card-title">Keg and Kitchen<br>15% Off</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-6 mb-4">
+                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
+                    <img src="/Images/kidRipsLogo.png" style="object-fit: contain;" class="card-img-top p-3" alt="Kid Rips">
+                    <div class="card-body">
+                        <h5 class="card-title">Kid Rips<br>10% Off</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-6 mb-4">
+                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
+                    <img src="/Images/mriLogo.png" class="card-img-top" alt="Mount Royal Inn">
+                    <div class="card-body">
+                        <h5 class="card-title">Mount Royal Inn<br>10% Off</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-6 mb-4">
+                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
+                    <img src="/Images/wilsonsLogo.png" class="card-img-top" style="object-fit: contain;" alt="Wilson's Pub">
+                    <div class="card-body">
+                        <h5 class="card-title">Wilson's Pub<br>10% Off</h5>
                     </div>
                 </div>
             </div>
