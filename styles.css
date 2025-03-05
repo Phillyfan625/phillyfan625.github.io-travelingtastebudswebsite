@@ -1,348 +1,344 @@
 body {
-    background-color: var(--background-color) !important;
-    font-family: 'Kanit', sans-serif !important;
+	background-color: var(--background-color) !important;
+	font-family: 'Kanit', sans-serif !important;
 }
 
 .nav-link {
-    color: var(--background-color);
+	color: var(--background-color);
 }
 
 .nav-link:hover {
-    color: white !important;
+	color: white !important;
 }
 
 .navbar .navbar-nav .nav-link {
-    color: #000000;
-    font-size: 1.1em;
+	color: #000000;
+	font-size: 1.1em;
 }
 
 .navbar .navbar-nav .nav-link:hover {
-    color: #808080;
+	color: #808080;
 }
 
 .navbar-logo-centered .navbar-nav .nav-link {
-    padding: .5em 1em;
+	padding: 0.5em 1em;
 }
 
 .ttbBtn {
-    text-align: center;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    display: table;
-    background-color: var(--background-color);
-    color: #fff;
-    font-size: 16px;
-    padding: 15px 15px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    font-weight: bold;
-    z-index: 9;
+	text-align: center;
+	margin: 0 auto;
+	margin-bottom: 20px;
+	display: table;
+	background-color: var(--background-color);
+	color: #fff;
+	font-size: 16px;
+	padding: 15px 15px;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	font-weight: bold;
+	z-index: 9;
 }
 
 .ttbBtn:hover {
-    transform: scale(1.1);
-    background-color: var(--header-color);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    color: #fff !important;
-    text-decoration: none !important;
+	transform: scale(1.1);
+	background-color: var(--header-color);
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	color: #fff !important;
+	text-decoration: none !important;
 }
 
 .carouselBtn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--background-color) !important;
-    color: white !important;
-    font-size: 28px !important;
-    transition: transform 0.3s ease !important;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--background-color) !important;
+	color: white !important;
+	font-size: 28px !important;
+	transition: transform 0.3s ease !important;
 }
 
 .carouselBtn:hover {
-    background-color: var(--header-color) !important;
-    transform: translate(-50%, -50%) scale(1.05) !important;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+	background-color: var(--header-color) !important;
+	transform: translate(-50%, -50%) scale(1.05) !important;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
 }
-
 
 /* Restaurant Cards */
 
 .restaurant-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-align: center;
+	transition: transform 0.2s, box-shadow 0.2s;
+	text-align: center;
 }
 
 .restaurant-card .card-img-top {
-    height: auto;
+	height: auto;
 }
 
 .restaurant-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
+	transform: scale(1.05);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
 }
 
 .card-title {
-    text-align: center;
+	text-align: center;
 }
 
 .modal-content {
-    position: relative;
+	position: relative;
 }
 
 .modal-body {
-    padding: 0;
-    /* Remove padding to make the iframe fit perfectly */
+	padding: 0;
+	/* Remove padding to make the iframe fit perfectly */
 }
 
 #tiktokIframe {
-    width: 100%;
-    height: 85vh;
-    border: none;
+	width: 100%;
+	height: 85vh;
+	border: none;
 }
-
 
 /* Question of the Day Section */
 
 .question-of-the-day {
-    z-index: 9999;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0 auto;
-    text-align: center;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    max-width: 1000px;
-    min-width: 600px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 3px solid var(--header-color);
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
-    display: none;
+	z-index: 9999;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin: 0 auto;
+	text-align: center;
+	padding: 20px;
+	border-radius: 10px;
+	background-color: #f9f9f9;
+	max-width: 1000px;
+	min-width: 600px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	border: 3px solid var(--header-color);
+	box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+	display: none;
 }
 
 .question-of-the-day h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
+	font-size: 24px;
+	margin-bottom: 10px;
 }
 
 .question-of-the-day .question-text {
-    font-size: 18px;
-    margin-bottom: 20px;
-    padding: 10px;
+	font-size: 18px;
+	margin-bottom: 20px;
+	padding: 10px;
 }
 
-.question-of-the-day input[type="ttbText"] {
-    padding: 10px;
-    border: 1px solid var(--header-color);
-    color: var(--header-color) !important;
-    border-radius: 5px;
-    margin-right: 10px;
-    width: 60%;
-    outline: var(--header-color);
+.question-of-the-day input[type='ttbText'] {
+	padding: 10px;
+	border: 1px solid var(--header-color);
+	color: var(--header-color) !important;
+	border-radius: 5px;
+	margin-right: 10px;
+	width: 60%;
+	outline: var(--header-color);
 }
 
 .question-of-the-day .submit-button {
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    cursor: pointer;
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin-bottom: 20px;
+	border-radius: 5px;
+	cursor: pointer;
 }
 
 .question-of-the-day .feedback {
-    font-size: 18px;
-    margin-top: 20px;
-    margin: 10px;
+	font-size: 18px;
+	margin-top: 20px;
+	margin: 10px;
 }
 
 .question-of-the-day-widget {
-    display: block;
-    border-radius: 10px;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+	display: block;
+	border-radius: 10px;
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 9;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
 }
 
 .widgetText {
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 13px;
-    background-color: var(--header-color);
-    color: black;
-    border-radius: 10px;
-    padding: 5px;
-    border: #0a51af 2px solid;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 13px;
+	background-color: var(--header-color);
+	color: black;
+	border-radius: 10px;
+	padding: 5px;
+	border: #0a51af 2px solid;
 }
 
 .widgetHover:hover {
-    transform: scale(1.05);
-    transition: all 0.3s ease-in-out;
+	transform: scale(1.05);
+	transition: all 0.3s ease-in-out;
 }
 
 .backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: none;
 }
 
 .questionExitBtn {
-    position: fixed;
-    cursor: pointer;
-    font-weight: bold;
-    top: 20px;
-    left: 20px;
+	position: fixed;
+	cursor: pointer;
+	font-weight: bold;
+	top: 20px;
+	left: 20px;
 }
 
 .widget-chevron-left {
-    position: fixed;
-    bottom: 20px;
-    right: 0;
-    font-size: 28px;
-    z-index: 9;
-    cursor: pointer;
-    transition: all 1s ease-in-out;
-    background-color: var(--header-color);
-    padding: 3px 6px;
-    border: 1px #333 solid;
+	position: fixed;
+	bottom: 20px;
+	right: 0;
+	font-size: 28px;
+	z-index: 9;
+	cursor: pointer;
+	transition: all 1s ease-in-out;
+	background-color: var(--header-color);
+	padding: 3px 6px;
+	border: 1px #333 solid;
 }
 
 #mobileCarousel {
-    display: none;
+	display: none;
 }
 
 .pricing-card {
-    transition: transform 0.3s ease-in-out;
+	transition: transform 0.3s ease-in-out;
 }
 
 .pricing-card:hover {
-    transform: scale(1.05);
+	transform: scale(1.05);
 }
 
 @media (max-width: 992px) {
-    .widgetText {
-        font-size: 12px !important;
-    }
-    .widgetLogo {
-        width: 60px !important;
-    }
-    .question-of-the-day {
-        min-width: 85%;
-        padding: 10px;
-        max-height: 600px;
-        overflow: auto;
-    }
-    .question-of-the-day h3 {
-        margin-top: 10px;
-    }
-    .question-of-the-day input[type="ttbText"] {
-        margin-bottom: 15px;
-        font-size: 16px !important;
-    }
-    .logo-img {
-        width: 100px;
-        height: 100px;
-    }
-    .ttbBtn {
-        font-size: 20px;
-    }
+	.widgetText {
+		font-size: 12px !important;
+	}
+	.widgetLogo {
+		width: 60px !important;
+	}
+	.question-of-the-day {
+		min-width: 85%;
+		padding: 10px;
+		max-height: 600px;
+		overflow: auto;
+	}
+	.question-of-the-day h3 {
+		margin-top: 10px;
+	}
+	.question-of-the-day input[type='ttbText'] {
+		margin-bottom: 15px;
+		font-size: 16px !important;
+	}
+	.logo-img {
+		width: 100px;
+		height: 100px;
+	}
+	.ttbBtn {
+		font-size: 20px;
+	}
 }
 
 @media (max-width: 767px) {
-    #desktopCarousel {
-        display: none;
-    }
-    #mobileCarousel {
-        display: block;
-    }
+	#desktopCarousel {
+		display: none;
+	}
+	#mobileCarousel {
+		display: block;
+	}
 }
 
 .card-header {
-    background-color: var(--header-color);
-    color: #fff;
-    padding: 1rem;
-    font-size: 1.5rem;
-    font-weight: bold;
+	background-color: var(--header-color);
+	color: #fff;
+	padding: 1rem;
+	font-size: 1.5rem;
+	font-weight: bold;
 }
 
 .card-body {
-    padding: 1rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+	padding: 1rem;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 .list-unstyled {
-    flex: 1;
+	flex: 1;
 }
 
 .card-price {
-    font-size: 2rem;
-    color: black;
-    margin-bottom: 1rem;
+	font-size: 2rem;
+	color: black;
+	margin-bottom: 1rem;
 }
 
 .package-badge {
-    background-color: white;
-    font-size: 1.2rem;
-    color: var(--background-color);
-    padding: 7px;
-    font-weight: bold;
-    cursor: pointer;
-    user-select: none;
-    transition: transform 0.3s ease-in-out;
+	background-color: white;
+	font-size: 1.2rem;
+	color: var(--background-color);
+	padding: 7px;
+	font-weight: bold;
+	cursor: pointer;
+	user-select: none;
+	transition: transform 0.3s ease-in-out;
 }
 
 .package-badge:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s ease-in-out;
+	transform: scale(1.05);
+	transition: transform 0.3s ease-in-out;
 }
-
 
 /* For list items in the card */
 
 .pricing-card ul {
-    padding: 0;
-    list-style-type: none;
+	padding: 0;
+	list-style-type: none;
 }
 
 .pricing-card li {
-    margin-bottom: 0.5rem;
-    font-size: large;
+	margin-bottom: 0.5rem;
+	font-size: large;
 }
-
 
 /* Specific styles for each card */
 
 .appetizer .card-header {
-    color: #fff;
+	color: #fff;
 }
 
 .main-course .card-header {
-    color: #fff;
+	color: #fff;
 }
 
 .all-fixins .card-header {
-    color: #fff;
+	color: #fff;
 }
 
 :root {
-    --header-color: #94b4f7;
-    --background-color: #313c59;
+	--header-color: #98bf64;
+	--background-color: #234f13;
 }
