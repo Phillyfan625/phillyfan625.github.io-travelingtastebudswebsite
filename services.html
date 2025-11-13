@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
@@ -18,38 +19,8 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light px-3"
-        style="background-color: var(--header-color); min-height: 100px;">
-        <a class="navbar-brand d-lg-none" href="/"><img src="/Images/ttbLogo.png" style="height: 50px;"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myNavbarToggler7"
-            aria-controls="myNavbarToggler7" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="myNavbarToggler7">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item mx-3" style="align-self: center;">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item mx-3" style="align-self: center;">
-                    <a class="nav-link" href="/about">About</a>
-                </li>
-                <li class="nav-item mx-3" style="align-self: center;">
-                    <a class="nav-link" href="/merch">Merch</a>
-                </li>
-                <a class="d-none d-lg-block" href="/"><img class="mx-3" src="/Images/ttbLogo.png"
-                        style="height: 50px;"></a>
-                <li class="nav-item mx-3" style="align-self: center;">
-                    <a class="nav-link" href="/food-reviews">Food Reviews</a>
-                </li>
-                <li class="nav-item mx-3" style="align-self: center;">
-                    <a class="nav-link" href="/services">Services</a>
-                </li>
-                <li class="nav-item mx-3" style="align-self: center;">
-                    <a class="nav-link" href="/contact">Contact</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <!-- Navbar will be loaded here by navbar-loader.js -->
+    <script src="/navbar-loader.js"></script>
     <div class="container my-5">
         <h1 class="mb-4" style="color: white;">Our Tailored Service Packages</h1>
         <p style="color: white;">At Traveling Tastebuds, we understand that every great story deserves an audience, and
@@ -90,10 +61,10 @@
                     style="border-radius: 3rem;">
                     <div class="card-header user-select-noner"
                         style="border-radius: 3rem; top: -10px; position: relative;">
-                        Main Course 🍔
+                        🍔 Main Course
                     </div>
                     <div class="card-body user-select-none">
-                        <h5 class="card-price">$500</h5>
+                        <h5 class="card-price">$500*</h5>
                         <ul class="list-unstyled flex-fill d-flex flex-column py-2"
                             style="justify-content: space-evenly;">
                             <li><svg style="bottom: 5px; position: relative;" xmlns="http://www.w3.org/2000/svg" x="0px"
@@ -119,9 +90,8 @@
                                     <path fill="#2100c4"
                                         d="M30,30c0-0.006-0.001-0.012-0.001-0.018L30.013,30l-0.002-13.248 c2.551,1.823,5.677,2.894,9.052,2.894v-4.733c-0.987-0.223-1.939-0.59-2.806-1.131c-0.994-0.62-1.851-1.432-2.538-2.376 c-1.75-1.275-3.019-3.155-3.51-5.337H25V30v1v1c0,2.761-2.239,5-5,5c-1.897,0-3.527-1.069-4.375-2.625 C14.069,33.527,13,31.897,13,30c0-2.761,2.239-5,5-5c0.343,0,0.677,0.035,1,0.101v-5.05C12.842,20.56,8,25.71,8,32 c0,2.804,0.969,5.377,2.581,7.419C12.623,41.031,15.196,42,18,42C24.627,42,30,36.627,30,30z">
                                     </path>
-                                </svg> 1 TikTok Videos - Full-Length Review</li>
-                            <li><svg style="bottom: 2px; position: relative;" xmlns="http://www.w3.org/2000/svg" x="0px"
-                                    y="0px" width="30" height="30" viewBox="0 0 48 48">
+                                </svg>/<svg style="bottom: 2px; position: relative;" xmlns="http://www.w3.org/2000/svg"
+                                    x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
                                     <path fill="#7238ce"
                                         d="M41.28,12.28c-0.4-0.43-4.476-0.606-5.28-1.28c-1.14-0.955-0.622-3.939-1.83-4.76	C37.42,6.96,40.07,9.25,41.28,12.28z">
                                     </path>
@@ -170,34 +140,13 @@
                                     <path fill="#fff"
                                         d="M18,33.114v-9.228c0-1.539,1.666-2.502,2.999-1.732l7.998,4.614c1.334,0.77,1.334,2.695,0,3.465	l-7.998,4.614C19.666,35.616,18,34.653,18,33.114z">
                                     </path>
-                                </svg> 1 IG Reels - Same as TikToks</li>
-                            <li>📸 Instagram Story - 2-3 Pictures</li>
-                            <li><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
-                                    viewBox="0 0 48 48">
-                                    <path fill="#ff3d00"
-                                        d="M29.103,2.631c4.217-2.198,9.438-0.597,11.658,3.577c2.22,4.173,0.6,9.337-3.617,11.534l-3.468,1.823	c2.987,0.109,5.836,1.75,7.328,4.555c2.22,4.173,0.604,9.337-3.617,11.534L18.897,45.37c-4.217,2.198-9.438,0.597-11.658-3.577	s-0.6-9.337,3.617-11.534l3.468-1.823c-2.987-0.109-5.836-1.75-7.328-4.555c-2.22-4.173-0.6-9.337,3.617-11.534	C10.612,12.346,29.103,2.631,29.103,2.631z M19.122,17.12l11.192,6.91l-11.192,6.877C19.122,30.907,19.122,17.12,19.122,17.12z">
-                                    </path>
-                                    <path fill="#fff" d="M19.122,17.12v13.787l11.192-6.877L19.122,17.12z"></path>
-                                </svg> 1 Youtube Short</li>
-                            <li><svg style="position: relative; bottom: 2px; margin-right: 2px;"
-                                    xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25"
-                                    viewBox="0 0 48 48">
-                                    <path fill="#FFC107"
-                                        d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z">
-                                    </path>
-                                    <path fill="#FF3D00"
-                                        d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z">
-                                    </path>
-                                    <path fill="#4CAF50"
-                                        d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z">
-                                    </path>
-                                    <path fill="#1976D2"
-                                        d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z">
-                                    </path>
-                                </svg> SEO - Will show up on Google Search</li>
+                                </svg> 1 Instagram Reel Syndicated for Tik Tok</li>
+                            <li>📸 10 High Resolution Photos for business use</li>
                         </ul>
                         <a href="/contact?package=MainCourse" class="btn ttbBtn mb-0 mt-auto">Contact Me!</a>
                     </div>
+                    <p class="text-center" style="font-size: 0.8rem; color: #666;">*Food to be provided at no cost</p>
+
                 </div>
             </div>
             <!-- All The Fixins Card -->
@@ -209,7 +158,7 @@
                         🌮🍖 All The Fixins 🍕🌭
                     </div>
                     <div class="card-body user-select-none">
-                        <h5 class="card-price">$1000</h5>
+                        <h5 class="card-price">$1,000+*</h5>
                         <ul class="list-unstyled flex-fill d-flex flex-column py-2"
                             style="justify-content: space-evenly;">
                             <li><svg style="bottom: 5px; position: relative;" xmlns="http://www.w3.org/2000/svg" x="0px"
@@ -235,9 +184,8 @@
                                     <path fill="#2100c4"
                                         d="M30,30c0-0.006-0.001-0.012-0.001-0.018L30.013,30l-0.002-13.248 c2.551,1.823,5.677,2.894,9.052,2.894v-4.733c-0.987-0.223-1.939-0.59-2.806-1.131c-0.994-0.62-1.851-1.432-2.538-2.376 c-1.75-1.275-3.019-3.155-3.51-5.337H25V30v1v1c0,2.761-2.239,5-5,5c-1.897,0-3.527-1.069-4.375-2.625 C14.069,33.527,13,31.897,13,30c0-2.761,2.239-5,5-5c0.343,0,0.677,0.035,1,0.101v-5.05C12.842,20.56,8,25.71,8,32 c0,2.804,0.969,5.377,2.581,7.419C12.623,41.031,15.196,42,18,42C24.627,42,30,36.627,30,30z">
                                     </path>
-                                </svg> Multiple TikTok Videos</li>
-                            <li><svg style="bottom: 2px; position: relative;" xmlns="http://www.w3.org/2000/svg" x="0px"
-                                    y="0px" width="30" height="30" viewBox="0 0 48 48">
+                                </svg>/<svg style="bottom: 2px; position: relative;" xmlns="http://www.w3.org/2000/svg"
+                                    x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
                                     <path fill="#7238ce"
                                         d="M41.28,12.28c-0.4-0.43-4.476-0.606-5.28-1.28c-1.14-0.955-0.622-3.939-1.83-4.76	C37.42,6.96,40.07,9.25,41.28,12.28z">
                                     </path>
@@ -286,35 +234,27 @@
                                     <path fill="#fff"
                                         d="M18,33.114v-9.228c0-1.539,1.666-2.502,2.999-1.732l7.998,4.614c1.334,0.77,1.334,2.695,0,3.465	l-7.998,4.614C19.666,35.616,18,34.653,18,33.114z">
                                     </path>
-                                </svg> Multiple IG Reels</li>
-                            <li><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
+                                </svg>/<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
                                     viewBox="0 0 48 48">
                                     <path fill="#ff3d00"
                                         d="M29.103,2.631c4.217-2.198,9.438-0.597,11.658,3.577c2.22,4.173,0.6,9.337-3.617,11.534l-3.468,1.823	c2.987,0.109,5.836,1.75,7.328,4.555c2.22,4.173,0.604,9.337-3.617,11.534L18.897,45.37c-4.217,2.198-9.438,0.597-11.658-3.577	s-0.6-9.337,3.617-11.534l3.468-1.823c-2.987-0.109-5.836-1.75-7.328-4.555c-2.22-4.173-0.6-9.337,3.617-11.534	C10.612,12.346,29.103,2.631,29.103,2.631z M19.122,17.12l11.192,6.91l-11.192,6.877C19.122,30.907,19.122,17.12,19.122,17.12z">
                                     </path>
                                     <path fill="#fff" d="M19.122,17.12v13.787l11.192-6.877L19.122,17.12z"></path>
-                                </svg> Multiple Youtube Shorts</li>
-                            <li><svg style="position: relative; bottom: 2px;" xmlns="http://www.w3.org/2000/svg" x="0px"
-                                    y="0px" width="30" height="30" viewBox="0 0 48 48">
-                                    <path fill="#FF3D00"
-                                        d="M43.2,33.9c-0.4,2.1-2.1,3.7-4.2,4c-3.3,0.5-8.8,1.1-15,1.1c-6.1,0-11.6-0.6-15-1.1c-2.1-0.3-3.8-1.9-4.2-4C4.4,31.6,4,28.2,4,24c0-4.2,0.4-7.6,0.8-9.9c0.4-2.1,2.1-3.7,4.2-4C12.3,9.6,17.8,9,24,9c6.2,0,11.6,0.6,15,1.1c2.1,0.3,3.8,1.9,4.2,4c0.4,2.3,0.9,5.7,0.9,9.9C44,28.2,43.6,31.6,43.2,33.9z">
-                                    </path>
-                                    <path fill="#FFF" d="M20 31L20 17 32 24z"></path>
-                                </svg> YouTube Review</li>
-                            <li><svg style="position: relative; bottom: 2px;" xmlns="http://www.w3.org/2000/svg" x="0px"
-                                    y="0px" width="30" height="30" viewBox="0 0 48 48">
+                                </svg>/<svg style="position: relative; bottom: 2px;" xmlns="http://www.w3.org/2000/svg"
+                                    x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
                                     <path fill="#3F51B5"
                                         d="M42,37c0,2.762-2.238,5-5,5H11c-2.761,0-5-2.238-5-5V11c0-2.762,2.239-5,5-5h26c2.762,0,5,2.238,5,5V37z">
                                     </path>
                                     <path fill="#FFF"
                                         d="M34.368,25H31v13h-5V25h-3v-4h3v-2.41c0.002-3.508,1.459-5.59,5.592-5.59H35v4h-2.287C31.104,17,31,17.6,31,18.723V21h4L34.368,25z">
                                     </path>
-                                </svg> Facebook Post</li>
-                            <li>📸 Professional Pictures to Use for your social media</li>
-                            <li>💡 Help with your social media account</li>
+                                </svg> 2 Videos syndicated across all platforms (including YouTube and Facebook)</li>
+                            <li><i class="fab fa-instagram me-1"></i> 2 Instagram Stories</li>
+                            <li>📸 10 High Resolution Photos for business use</li>
                         </ul>
                         <a href="/contact?package=AllTheFixins" class="btn ttbBtn mb-0 mt-auto">Contact Me!</a>
                     </div>
+                    <p class="text-center" style="font-size: 0.8rem; color: #666;">*Food to be provided at no cost</p>
                 </div>
             </div>
         </div>
