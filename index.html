@@ -1,410 +1,518 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
-    <link rel="stylesheet" href="/styles.css">
-    <script async src="https://www.tiktok.com/embed.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Traveling Tastebuds - Best Food in Jersey</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Chewy&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-</head>
 
-<body>
-    <!-- Navbar will be loaded here by navbar-loader.js -->
-    <script src="/navbar-loader.js"></script>
-    <div id="desktopCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <a href="/merch"><img src="/Images/ttbStPattysDesktop.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbStPattysDesktop1.png"
-                        style="max-height: 450px; object-fit: cover;" class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDrop.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDrop1.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDrop2.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-                <a href="/merch" style="text-decoration: none;"><button class="carouselBtn btn">Buy
-                        Now!</button></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDrop3.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#desktopCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#desktopCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-    <div id="mobileCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <a href="/merch"><img src="/Images/ttbStPattysMobile.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbStPattysMobile1.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDropMobile.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDropMobile1.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDropMobile2.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDropMobile3.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#mobileCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#mobileCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-    <h3 class="text-center mx-3 mb-3 mt-4" style="color: white;">Welcome Tastebuddies! Is this the best website in New
-        Jersey?
-    </h3>
-    <h5 class="text-center m-3" style="color: white;">Check out these awesome discounts you'll receive from local
-        restaurants when you wear this shirt!</h5>
-    <div class="container mt-5">
-        <div class="row">
-            <!-- Restaurant Cards -->
-            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
-                <div class="card restaurant-card" data-tiktok-id="7262868213384400171">
-                    <img src="/Images/picLogo.png" class="card-img-top" style="object-fit: contain;" alt="Pic-a-Lilli">
-                    <div class="card-body">
-                        <h5 class="card-title">Pic-a-Lilli<br>15% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
-                <div class="card restaurant-card" data-tiktok-id="7231695429392682286">
-                    <img src="/Images/lillosLogo.png" class="card-img-top" style="object-fit: contain;"
-                        alt="Lillos Tomato Pies">
-                    <div class="card-body">
-                        <h5 class="card-title">Lillos Tomato Pies<br>20% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
-                <div class="card restaurant-card" data-tiktok-id="7203508461517425963">
-                    <img src="/Images/foodMartLogo.png" class="card-img-top" alt="Friendly Food Mart">
-                    <div class="card-body">
-                        <h5 class="card-title">Friendly Food Mart<br>20% Off (with food item)</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
-                <div class="card restaurant-card" data-tiktok-id="6974164228458548485">
-                    <img src="/Images/pizzaVillaLogo.png" class="card-img-top p-4" style="object-fit: contain;"
-                        alt="Pizza Villa">
-                    <div class="card-body">
-                        <h5 class="card-title">Pizza Villa<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7322637556959431978">
-                    <img src="/Images/bankBarLogo.png" class="card-img-top"
-                        style="object-fit: contain; background-color: black;" alt="Bank Bar">
-                    <div class="card-body">
-                        <h5 class="card-title">Bank Bar<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7330419649441516843">
-                    <img src="/Images/holyCityLogo.png" class="card-img-top" style="object-fit: contain;"
-                        alt="Holy City">
-                    <div class="card-body">
-                        <h5 class="card-title">Holy City<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
-                    <img src="/Images/kegAndKitchenLogo.png" class="card-img-top"
-                        style="background-color: black; object-fit: contain;" alt="Keg and Kitchen">
-                    <div class="card-body">
-                        <h5 class="card-title">Keg and Kitchen<br>15% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7302216662042955050">
-                    <img src="/Images/kidRipsLogo.png" style="object-fit: contain;" class="card-img-top p-3"
-                        alt="Kid Rips">
-                    <div class="card-body">
-                        <h5 class="card-title">Kid Rips<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7120744992095685931">
-                    <img src="/Images/mriLogo.png" class="card-img-top p-4" style="object-fit: contain;"
-                        alt="Mount Royal Inn">
-                    <div class="card-body">
-                        <h5 class="card-title">Mount Royal Inn<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7055090515661983023">
-                    <img src="/Images/wilsonsLogo.png" class="card-img-top" style="object-fit: contain;"
-                        alt="Wilson's Pub">
-                    <div class="card-body">
-                        <h5 class="card-title">Wilson's Pub<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFFFF;
+            color: #1e3a8a;
+        }
+        .brand-font {
+            font-family: 'Chewy', cursive;
+        }
 
+        /* Hide Scrollbar but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
-    <!-- Modal -->
-    <div class="modal fade" id="restaurantModal" tabindex="-1" aria-labelledby="restaurantModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="restaurantModalLabel">TikTok Video</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="tiktokEmbedContainer">
-                    <iframe id="tiktokIframe" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
+        .card-highlight {
+            animation: pulse-border 2s infinite;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.3);
+        }
 
-    <!-- Question of the Day -->
-    <div class="backdrop"></div>
-    <div class="question-of-the-day-widget d-none">
-        <div class="widgetHover">
-            <div class="exitBtn"
-                style="background-color: var(--header-color); color: black; width: fit-content; border-radius: 50%; padding: 0px 5px;">
-                X</div>
-            <div style="margin: 0 auto">
-                <img style="max-width: 100px; display: block; display: block; margin: 0 auto;" src="/Images/ttbLogo.png"
-                    alt="Traveling Tastebuds Logo" />
-            </div>
-            <div class="widgetText text-center">
-                Foodie <br /> Question of the Day
-            </div>
-        </div>
-    </div>
-    <div class="question-of-the-day">
-        <div class="questionExitBtn">X</div>
-        <h3 class="qotdTitle">Question of the Day:</h3>
-        <img id="question-image" src="" style="max-width: 200px;" alt="Question Image">
-        <p class="question-text"></p>
-        <div class="answer">
-            <input type="ttbText" placeholder="Enter your answer here..." />
-            <button class="ttbBtn submit-button">Submit</button>
-        </div>
-        <div class="qotdContainer">
-            <p class="feedback"></p>
-            <p class="leaderboard" style="margin-bottom: 0px; padding: 8px"></p>
-        </div>
-    </div>
-    <div class="widget-chevron-left" style="opacity: 0">&#x2190;</div>
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(96, 165, 250, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); }
+        }
+
+        /* Smooth Scroll Behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+
     <script>
-        const questionWidget = document.querySelector(".question-of-the-day-widget");
-        const questionWidgetExitBtn = document.querySelector(".exitBtn");
-        const questionPopUp = document.querySelector(".question-of-the-day");
-        const questionBackDrop = document.querySelector(".backdrop");
-        const widgetChevron = document.querySelector(".widget-chevron-left");
-
-        questionWidgetExitBtn.addEventListener("click", (event) => {
-            questionWidget.style.transform = "translateX(130%)";
-            widgetChevron.style.opacity = "1";
-            event.stopPropagation();
-        });
-
-        widgetChevron.addEventListener("click", () => {
-            questionWidget.style.transform = "translateX(0)";
-            widgetChevron.style.opacity = "0";
-        });
-
-        questionWidget.addEventListener("click", () => {
-            document.querySelector(".question-of-the-day").style.display = "block";
-            document.querySelector(".backdrop").style.display = "block";
-        });
-
-        const questionExitBtn = document.querySelector(".questionExitBtn");
-
-        questionExitBtn.addEventListener("click", () => {
-            document.querySelector(".question-of-the-day").style.display = "none";
-            document.querySelector(".backdrop").style.display = "none";
-        });
-
-        // Create an array of question objects for the entire month
-        const questions = [{
-            question: "Where is this food from 👀? (Hint: It's in Glassboro, New Jersey)",
-            imageUrl: "/Images/qotdImages/peterAndSons.jpeg",
-            acceptedAnswers: [`peter and sons`, `peter & sons`, `peter &amp; sons`, `peter and son`],
-            correctFeedback: "Correct! Way to go, you know your New Jersey food spots! Come back tomorrow for another question of the day!",
-            incorrectFeedback: "That's not quite it - the correct answer was Peter and Sons - Stay tuned for tomorrow's Question of the Day!",
-        },];
-
-        // Use the current date to select the question of the day
-        const today = new Date();
-        const questionIndex = (today.getDate() - 1) % questions.length;
-        const currentQuestion = `${questions[questionIndex].question}`;
-        const currentImage = `${questions[questionIndex].imageUrl}`;
-
-        questionToday = document.querySelector(".question-text");
-        questionToday.innerText = currentQuestion;
-
-
-        const questionImage = document.getElementById("question-image"); // Get the image element
-        questionImage.src = currentImage;
-
-        // Get the user's score from local storage
-        let score = parseInt(localStorage.getItem("score")) || 0;
-
-        // Check if the user has already answered the question correctly
-        let answeredCorrectly = localStorage.getItem("answeredCorrectly");
-
-        let previousQuestion = localStorage.getItem("question");
-        if (previousQuestion !== currentQuestion) {
-            // Reset the "answeredCorrectly" value
-            answeredCorrectly = false;
-            localStorage.setItem("answeredCorrectly", false);
-        }
-
-        const qotdContainer = document.querySelector(".qotdContainer");
-        const submitButton = document.querySelector(".submit-button");
-        const feedback = document.querySelector(".feedback");
-        const leaderboard = document.querySelector(".leaderboard");
-
-        submitButton.addEventListener("click", () => {
-            const answer = document.querySelector('input[type="ttbText"]').value.trim().toLowerCase();
-
-            // Access the accepted answers based on the current day
-            const acceptedAnswers = questions[questionIndex].acceptedAnswers;
-
-            // Check if the user has already answered correctly today
-            if (answeredCorrectly) {
-                qotdContainer.style.display = "block";
-                feedback.innerText = "You already got it right! Tune in tomorrow for another foodie question of the day!";
-                leaderboard.innerHTML = "You are on a " + score + " day streak 🔥!<br> Way to go, come back tomorrow to keep the streak alive!";
-            } else if (acceptedAnswers.includes(answer)) {
-                qotdContainer.style.display = "block";
-                feedback.innerText = questions[questionIndex].correctFeedback; // Update the feedback based on the correct answer
-                score++;
-                answeredCorrectly = true;
-                leaderboard.innerHTML = "You are on a " + score + " day streak 🔥!<br> Way to go, come back tomorrow to keep the streak alive!";
-            } else {
-                qotdContainer.style.display = "block";
-                feedback.innerText = questions[questionIndex].incorrectFeedback; // Update the feedback based on the incorrect answer
-            }
-            // Store the updated values in localStorage
-            localStorage.setItem("score", score);
-            localStorage.setItem("question", currentQuestion);
-            localStorage.setItem("answeredCorrectly", answeredCorrectly);
-        });
-
-        // Function to set the maximum height for restaurant images
-        function setMaxImageHeight() {
-            var maxImageHeight = 0;
-            var restaurantImages = document.querySelectorAll('.restaurant-card .card-img-top');
-
-            restaurantImages.forEach(function (image) {
-                image.style.height = 'auto';
-
-                var imageHeight = image.clientHeight;
-                if (imageHeight > maxImageHeight) {
-                    maxImageHeight = imageHeight;
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#1e40af',
+                            sky: '#60a5fa',
+                            light: '#eff6ff',
+                            white: '#ffffff'
+                        }
+                    }
                 }
-            });
-
-            // Set the maximum height to all restaurant images
-            restaurantImages.forEach(function (image) {
-                image.style.height = `${maxImageHeight}px`;
-            });
-        }
-
-        // Attach the function to the resize event
-        window.addEventListener('resize', setMaxImageHeight);
-
-        window.onload = function () {
-            setMaxImageHeight();
-
-            function openTikTokModal(card) {
-                var videoId = card.getAttribute('data-tiktok-id');
-                var tiktokIframe = document.getElementById('tiktokIframe');
-
-                // Set the iframe's source to the TikTok embed URL using the video ID
-                tiktokIframe.src = `https://www.tiktok.com/embed/${videoId}`;
-
-                var restaurantModal = new bootstrap.Modal(document.getElementById('restaurantModal'));
-                restaurantModal.show();
             }
-
-            var restaurantCards = document.querySelectorAll('.restaurant-card');
-            restaurantCards.forEach(function (card, index) {
-                card.addEventListener('click', function () {
-                    openTikTokModal(card);
-                });
-            });
-        };
+        }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
-</body>
+</head>
+<body>
+    <div id="root"></div>
 
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- RESTAURANT DATABASE ---
+        const RESTAURANTS = [
+            {
+                id: 1,
+                name: "Pic-A-Lilli Inn",
+                city: "Shamong, NJ",
+                type: "Wings",
+                discount: "15% OFF",
+                desc: "The undisputed king of wings in the Pine Barrens. Get the 'Smoked' sauce.",
+                logo: "/Images/picLogo.png",
+                tiktokId: "7262868213384400171",
+                featured: true,
+                tiktokHeadline: "This spot has 50 different wing flavors 🍗"
+            },
+            {
+                id: 2,
+                name: "Lillo's Tomato Pies",
+                city: "Hainesport, NJ",
+                type: "Pizza",
+                discount: "20% OFF",
+                desc: "Authentic Trenton style tomato pies. Thin, crispy, and sauce on top.",
+                logo: "/Images/lillosLogo.png",
+                tiktokId: "7231695429392682286",
+                featured: true,
+                tiktokHeadline: "Trying the wildest pizza in Jersey! 🍕🤯"
+            },
+            {
+                id: 3,
+                name: "Friendly Food Mart",
+                city: "Runnemede, NJ",
+                type: "Deli",
+                discount: "20% OFF",
+                desc: "Hidden gem inside a convenience store. The breakfast sandwiches are legendary.",
+                logo: "/Images/foodMartLogo.png",
+                tiktokId: "7203508461517425963",
+                featured: false
+            },
+            {
+                id: 4,
+                name: "Pizza Villa",
+                city: "Clayton, NJ",
+                type: "Pizza",
+                discount: "10% OFF",
+                desc: "Classic local slices that define the South Jersey flavor profile.",
+                logo: "/Images/pizzaVillaLogo.png",
+                tiktokId: "6974164228458548485",
+                featured: false
+            },
+            {
+                id: 5,
+                name: "Holy City Publick House",
+                city: "Gloucester City, NJ",
+                type: "Pub",
+                discount: "10% OFF",
+                desc: "Great vibes, better burgers, and a solid craft beer selection.",
+                logo: "/Images/holyCityLogo.png",
+                tiktokId: "7330419649441516843",
+                featured: true,
+                tiktokHeadline: "Is this the best burger in NJ? 🍔🔥"
+            },
+            {
+                id: 6,
+                name: "Wilson's Pub",
+                city: "Gibbstown, NJ",
+                type: "Pub",
+                discount: "10% OFF",
+                desc: "Your neighborhood spot for comfort food and good times.",
+                logo: "/Images/wilsonsLogo.png",
+                tiktokId: "7055090515661983023",
+                featured: true,
+                tiktokHeadline: "Secret Menu Item Unlocked! 🤫🌮"
+            },
+            {
+                id: 7,
+                name: "Bank Bar",
+                city: "Clayton, NJ",
+                type: "Pub",
+                discount: "10% OFF",
+                desc: "Historic bar with modern eats and a great atmosphere.",
+                logo: "/Images/bankBarLogo.png",
+                tiktokId: "7322637556959431978",
+                featured: false
+            },
+            {
+                id: 8,
+                name: "Keg and Kitchen",
+                city: "Sewell, NJ",
+                type: "Pub",
+                discount: "15% OFF",
+                desc: "Craft beers and elevated pub fare in a lively setting.",
+                logo: "/Images/kegAndKitchenLogo.png",
+                tiktokId: "",
+                featured: false
+            },
+            {
+                id: 9,
+                name: "Kid Rips",
+                city: "Clementon, NJ",
+                type: "Pizza",
+                discount: "10% OFF",
+                desc: "Unique pizza creations that push the boundaries of flavor.",
+                logo: "/Images/kidRipsLogo.png",
+                tiktokId: "7302216662042955050",
+                featured: false
+            },
+            {
+                id: 10,
+                name: "Mount Royal Inn",
+                city: "Clementon, NJ",
+                type: "Pub",
+                discount: "10% OFF",
+                desc: "Local favorite for wings, burgers, and cold beer.",
+                logo: "/Images/mriLogo.png",
+                tiktokId: "7120744992095685931",
+                featured: false
+            }
+        ];
+
+        // --- COMPONENTS ---
+
+        const Logo = () => (
+            <div className="w-14 h-14 relative group cursor-pointer">
+                <img src="/Images/ttbLogo.png" alt="Traveling Tastebuds Logo" className="w-full h-full object-contain drop-shadow-md hover:scale-105 transition" />
+            </div>
+        );
+
+        const VideoModal = ({ restaurant, onClose }) => {
+            useEffect(() => {
+                lucide.createIcons();
+            }, []);
+
+            return (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4" onClick={onClose}>
+                    <div className="relative w-full max-w-2xl bg-black rounded-3xl overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
+                        <button onClick={onClose} className="absolute top-4 right-4 z-50 bg-black/50 text-white rounded-full p-2 hover:bg-red-500 transition">
+                            <i data-lucide="x" className="w-6 h-6"></i>
+                        </button>
+
+                        {restaurant.tiktokId ? (
+                            <iframe
+                                src={`https://www.tiktok.com/embed/${restaurant.tiktokId}`}
+                                width="100%"
+                                height="600px"
+                                frameBorder="0"
+                                allowFullScreen
+                                className="w-full"
+                            ></iframe>
+                        ) : (
+                            <div className="p-12 text-center text-white">
+                                <p className="text-xl mb-4">Video coming soon!</p>
+                                <p className="text-gray-400">Check back later for our review of {restaurant.name}</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const Navbar = ({ setView, activeView }) => {
+            useEffect(() => {
+                lucide.createIcons();
+            }, []);
+
+            return (
+                <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur shadow-sm border-b border-gray-100">
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="flex justify-between items-center h-20">
+                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('home')}>
+                                <Logo />
+                                <div className="hidden md:block">
+                                    <h1 className="brand-font text-3xl text-brand-blue leading-none">Traveling</h1>
+                                    <h1 className="brand-font text-3xl text-brand-sky leading-none">Tastebuds</h1>
+                                </div>
+                            </div>
+
+                            <div className="hidden md:flex gap-8 items-center">
+                                {['Home', 'Reviews', 'Merch'].map((item) => (
+                                    <button
+                                        key={item}
+                                        onClick={() => setView(item.toLowerCase())}
+                                        className={`font-bold uppercase tracking-wide text-sm hover:text-brand-sky transition ${activeView === item.toLowerCase() ? 'text-brand-blue border-b-2 border-brand-blue' : 'text-gray-500'}`}
+                                    >
+                                        {item}
+                                    </button>
+                                ))}
+                                <a href="https://www.tiktok.com/@the.traveling.tastebuds" target="_blank" rel="noopener noreferrer" className="bg-brand-blue text-white px-6 py-2 rounded-full font-bold hover:bg-blue-900 transition shadow-lg shadow-blue-200">
+                                    Follow Us
+                                </a>
+                            </div>
+
+                            <button className="md:hidden text-brand-blue">
+                                <i data-lucide="menu" className="w-8 h-8"></i>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        const Hero = ({ setView }) => {
+            const featuredRestaurants = RESTAURANTS.filter(r => r.featured);
+            const [startIndex, setStartIndex] = useState(0);
+            const visibleCards = 3;
+
+            useEffect(() => {
+                lucide.createIcons();
+            }, [startIndex]);
+
+            const nextSlide = () => {
+                setStartIndex((prev) => (prev + 1) % featuredRestaurants.length);
+            };
+
+            const prevSlide = () => {
+                setStartIndex((prev) => (prev - 1 + featuredRestaurants.length) % featuredRestaurants.length);
+            };
+
+            const getVisibleSlides = () => {
+                let slides = [];
+                if (featuredRestaurants.length === 0) return [];
+                for (let i = 0; i < visibleCards; i++) {
+                    slides.push(featuredRestaurants[(startIndex + i) % featuredRestaurants.length]);
+                }
+                return slides;
+            };
+
+            return (
+                <div className="relative overflow-hidden bg-white py-12 lg:py-24">
+                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[600px] h-[600px] bg-brand-light rounded-full blur-3xl opacity-60 z-0 pointer-events-none"></div>
+
+                    <div className="max-w-7xl mx-auto px-4 flex flex-col lg:flex-row gap-16 items-center relative z-10">
+
+                        <div className="text-center lg:text-left lg:w-5/12">
+                            <h1 className="brand-font text-6xl lg:text-8xl text-brand-blue mb-6 leading-none tracking-tight">
+                                Eat Good.<br/>
+                                <span className="text-brand-sky">Travel Often.</span>
+                            </h1>
+                            <p className="text-xl text-gray-500 mb-8 leading-relaxed font-light max-w-lg mx-auto lg:mx-0">
+                                Join PJ on a mission to find the best eats in Jersey. From hidden gems to 5-star plates, we review it all.
+                            </p>
+                            <div className="flex gap-4 justify-center lg:justify-start flex-wrap">
+                                <button onClick={() => setView('reviews')} className="bg-brand-blue text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl hover:scale-105 transition flex items-center gap-3">
+                                    <i data-lucide="map" className="w-6 h-6"></i> Explore Reviews
+                                </button>
+                                <button onClick={() => setView('merch')} className="text-brand-blue px-8 py-4 rounded-xl font-bold text-lg hover:bg-brand-light transition flex items-center gap-2">
+                                    Shop Merch
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="relative lg:w-7/12 w-full h-[500px] flex items-center justify-center lg:justify-end">
+
+                            {featuredRestaurants.length > 0 && (
+                                <>
+                                    <button onClick={prevSlide} className="absolute left-0 z-20 bg-white p-3 rounded-full shadow-lg text-brand-blue hover:bg-brand-sky hover:text-white transition">
+                                        <i data-lucide="chevron-left" className="w-6 h-6"></i>
+                                    </button>
+
+                                    <div className="flex gap-6 overflow-hidden w-full justify-center py-10 px-4">
+                                        {getVisibleSlides().map((restaurant, idx) => (
+                                            <div
+                                                key={`${restaurant.id}-${idx}`}
+                                                className={`relative w-[260px] h-[420px] flex-shrink-0 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 transform bg-white border border-gray-100
+                                                    ${idx === 1
+                                                        ? 'scale-110 z-10 ring-4 ring-brand-sky ring-offset-2'
+                                                        : 'scale-90 opacity-60 blur-[1px] grayscale'}`}
+                                            >
+                                                <div className="w-full h-full bg-gradient-to-br from-brand-light to-white flex items-center justify-center p-8">
+                                                    <img src={restaurant.logo} className="max-w-full max-h-full object-contain" alt={restaurant.name} />
+                                                </div>
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent">
+                                                    <div className="absolute bottom-0 p-5 text-white w-full">
+                                                        <p className="font-bold text-lg leading-tight mb-2 line-clamp-2">{restaurant.tiktokHeadline || restaurant.name}</p>
+                                                        <div className="flex items-center gap-2 text-xs font-medium text-brand-sky uppercase tracking-wider">
+                                                            <i data-lucide="play-circle" className="w-4 h-4"></i> Watch Review
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <button onClick={nextSlide} className="absolute right-0 z-20 bg-white p-3 rounded-full shadow-lg text-brand-blue hover:bg-brand-sky hover:text-white transition">
+                                        <i data-lucide="chevron-right" className="w-6 h-6"></i>
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const ReviewCard = ({ restaurant, onOpenModal }) => {
+            useEffect(() => {
+                lucide.createIcons();
+            }, []);
+
+            return (
+                <div
+                    onClick={() => onOpenModal(restaurant)}
+                    className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-gray-100 overflow-hidden flex flex-col h-full group cursor-pointer"
+                >
+                    <div className="h-40 relative bg-brand-light/50 flex items-center justify-center p-6 group-hover:bg-brand-light transition duration-500">
+                        <div className="w-20 h-20 rounded-full bg-white shadow-md overflow-hidden border-4 border-white group-hover:scale-110 transition duration-500 relative z-10 flex items-center justify-center p-2">
+                            <img src={restaurant.logo} className="w-full h-full object-contain" alt={restaurant.name} />
+                        </div>
+
+                        <div className="absolute top-3 right-3 bg-brand-sky text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider shadow-sm z-20">
+                            {restaurant.type}
+                        </div>
+                    </div>
+
+                    <div className="p-6 flex flex-col flex-grow text-center">
+                        <h3 className="font-bold text-xl text-brand-blue leading-tight mb-1">{restaurant.name}</h3>
+                        <p className="text-gray-400 text-xs flex items-center justify-center gap-1 mb-3">
+                            <i data-lucide="map-pin" className="w-3 h-3"></i> {restaurant.city}
+                        </p>
+
+                        {restaurant.discount && (
+                            <div className="inline-block mx-auto bg-green-50 text-green-600 text-xs font-bold px-3 py-1 rounded-lg border border-green-100 mb-4">
+                                {restaurant.discount}
+                            </div>
+                        )}
+
+                        <p className="text-gray-500 text-sm mb-4 leading-relaxed line-clamp-2 text-left">{restaurant.desc}</p>
+
+                        <div className="mt-auto pt-4 border-t border-gray-100">
+                            <button className="w-full text-brand-blue py-2 rounded-lg font-bold text-sm hover:text-brand-sky transition flex items-center justify-center gap-2 group-hover:gap-3">
+                                Watch Review <i data-lucide="arrow-right" className="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const Footer = () => {
+            useEffect(() => {
+                lucide.createIcons();
+            }, []);
+
+            return (
+                <footer className="bg-brand-blue text-white py-12 border-t border-blue-800">
+                    <div className="max-w-7xl mx-auto px-4 text-center">
+                        <div className="w-16 h-16 mx-auto mb-6 bg-white rounded-full flex items-center justify-center p-2">
+                            <img src="/Images/ttbLogo.png" alt="Logo" className="w-full h-full object-contain" />
+                        </div>
+                        <h2 className="brand-font text-3xl mb-2">Traveling Tastebuds</h2>
+                        <p className="text-blue-200 mb-8 max-w-md mx-auto">
+                            Exploring the best food in NJ and beyond. Tag us to get featured!
+                        </p>
+                        <div className="flex justify-center gap-6 mb-8 flex-wrap">
+                            <a href="https://www.instagram.com/the.traveling.tastebuds/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-sky font-bold text-sm uppercase tracking-widest">Instagram</a>
+                            <a href="https://www.tiktok.com/@the.traveling.tastebuds" target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-sky font-bold text-sm uppercase tracking-widest">TikTok</a>
+                            <a href="https://www.youtube.com/@travelingtastebuds5208" target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-sky font-bold text-sm uppercase tracking-widest">YouTube</a>
+                            <a href="https://www.facebook.com/TTBReviews" target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-sky font-bold text-sm uppercase tracking-widest">Facebook</a>
+                        </div>
+                        <p className="text-blue-400 text-xs">© 2025 Traveling Tastebuds. All rights reserved.</p>
+                    </div>
+                </footer>
+            );
+        };
+
+        const App = () => {
+            const [view, setView] = useState('home');
+            const [modalRestaurant, setModalRestaurant] = useState(null);
+
+            useEffect(() => {
+                lucide.createIcons();
+            }, [view]);
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    <Navbar setView={setView} activeView={view} />
+
+                    {modalRestaurant && <VideoModal restaurant={modalRestaurant} onClose={() => setModalRestaurant(null)} />}
+
+                    <main className="flex-grow">
+                        {view === 'home' && (
+                            <>
+                                <Hero setView={setView} />
+                                <div className="max-w-7xl mx-auto px-4 py-16">
+                                    <div className="text-center mb-12">
+                                        <h2 className="brand-font text-4xl text-brand-blue">Partner Perks</h2>
+                                        <p className="text-gray-500 mt-2">Rock the tee, get the deal. It's that simple.</p>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                        {RESTAURANTS.map(restaurant => (
+                                            <ReviewCard
+                                                key={restaurant.id}
+                                                restaurant={restaurant}
+                                                onOpenModal={setModalRestaurant}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        {view === 'reviews' && (
+                            <div className="max-w-7xl mx-auto px-4 py-24 text-center">
+                                <h2 className="brand-font text-5xl text-brand-blue mb-4">Food Reviews</h2>
+                                <p className="text-xl text-gray-500 mb-8">Interactive map and reviews coming soon!</p>
+                                <p className="text-gray-400 mb-8">We're building an awesome interactive map to help you find all our reviewed spots.</p>
+                                <button onClick={() => window.location.href = '/food-reviews'} className="bg-brand-blue text-white px-8 py-3 rounded-xl font-bold text-lg hover:scale-105 transition">
+                                    Preview New Reviews Page
+                                </button>
+                            </div>
+                        )}
+
+                        {view === 'merch' && (
+                            <div className="max-w-7xl mx-auto px-4 py-24 text-center">
+                                <h2 className="brand-font text-5xl text-brand-blue mb-4">Merch Store</h2>
+                                <p className="text-xl text-gray-500 mb-8">Get your official Traveling Tastebuds gear!</p>
+                                <button onClick={() => window.location.href = '/merch'} className="bg-brand-blue text-white px-8 py-3 rounded-xl font-bold text-lg hover:scale-105 transition">
+                                    Shop Now
+                                </button>
+                            </div>
+                        )}
+                    </main>
+
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
 </html>
