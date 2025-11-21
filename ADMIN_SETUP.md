@@ -20,16 +20,26 @@ Your admin panel is now secured with authentication and integrates directly with
 
 ### Step 2: Configure the Admin Panel
 
-1. Open `/admin-config.js` in your code editor
-2. Find this line:
+1. Copy `admin-config.example.js` to `admin-config.js`:
+   ```bash
+   cp admin-config.example.js admin-config.js
+   ```
+2. Open `/admin-config.js` in your code editor
+3. Find this line:
    ```javascript
    token: 'YOUR_GITHUB_TOKEN_HERE',
    ```
-3. Replace `'YOUR_GITHUB_TOKEN_HERE'` with your actual token:
+4. Replace `'YOUR_GITHUB_TOKEN_HERE'` with your actual token:
    ```javascript
    token: 'ghp_abc123xyz...',  // Your real token
    ```
-4. Save the file
+5. Save the file
+
+**⚠️ IMPORTANT SECURITY NOTE:**
+- `admin-config.js` is in `.gitignore` and will NOT be committed to GitHub
+- This prevents your token from being exposed in your repository
+- You'll need to configure this file on each machine where you want to use the admin panel
+- The admin panel will only work where you have configured the token locally
 
 ###Step 3: Change Default Passwords (IMPORTANT!)
 
@@ -83,15 +93,18 @@ const ADMIN_USERS = [
 ];
 ```
 
-### Step 4: Commit and Push
+### Step 4: You're Ready!
 
-```bash
-git add admin-config.js
-git commit -m "Configure admin panel with GitHub token"
-git push
-```
+Your admin panel is now configured locally. Since `admin-config.js` is in `.gitignore`, your token is safe and won't be committed to GitHub.
 
-**Note:** If you're concerned about security, you can add `admin-config.js` to `.gitignore`, but you'll need to manage it separately.
+**To use the admin panel:**
+1. Open `/admin.html` in your browser locally
+2. Or deploy your site and access `/admin.html` (you'll need to configure the token on the deployed server)
+
+**Note:** If you want your buddy to use the admin panel, they'll need to:
+1. Clone the repository
+2. Copy `admin-config.example.js` to `admin-config.js`
+3. Add their own GitHub Personal Access Token to the file
 
 ---
 
