@@ -24,6 +24,9 @@
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
+    <!-- Admin Configuration -->
+    <script src="/admin-config.js"></script>
+
     <!-- Restaurant Database -->
     <script src="/data/restaurants.js"></script>
 
@@ -68,6 +71,14 @@
         .form-label {
             @apply block text-sm font-semibold text-gray-700 mb-2;
         }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
     </style>
 
     <script>
@@ -95,14 +106,403 @@
         const { RestaurantCard, VideoModal } = window;
         const db = window.restaurantDB;
 
-        const AdminApp = () => {
+        // ==================== AUTHENTICATION SYSTEM ====================
+
+        class AuthManager {
+            constructor() {
+                this.sessionKey = 'ttb_admin_session';
+                this.lastActivityKey = 'ttb_last_activity';
+            }
+
+            async hashPassword(password) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(password);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+
+            async login(username, password) {
+                const passwordHash = await this.hashPassword(password);
+                const user = window.ADMIN_USERS.find(
+                    u => u.username === username && u.passwordHash === passwordHash
+                );
+
+                if (user) {
+                    const session = {
+                        username: user.username,
+                        loginTime: Date.now()
+                    };
+                    sessionStorage.setItem(this.sessionKey, JSON.stringify(session));
+                    this.updateActivity();
+                    return true;
+                }
+                return false;
+            }
+
+            logout() {
+                sessionStorage.removeItem(this.sessionKey);
+                sessionStorage.removeItem(this.lastActivityKey);
+            }
+
+            isAuthenticated() {
+                const session = this.getSession();
+                if (!session) return false;
+
+                const lastActivity = parseInt(sessionStorage.getItem(this.lastActivityKey) || '0');
+                const now = Date.now();
+
+                if (now - lastActivity > window.SESSION_TIMEOUT) {
+                    this.logout();
+                    return false;
+                }
+
+                this.updateActivity();
+                return true;
+            }
+
+            getSession() {
+                const sessionData = sessionStorage.getItem(this.sessionKey);
+                return sessionData ? JSON.parse(sessionData) : null;
+            }
+
+            updateActivity() {
+                sessionStorage.setItem(this.lastActivityKey, Date.now().toString());
+            }
+
+            getUsername() {
+                const session = this.getSession();
+                return session ? session.username : null;
+            }
+        }
+
+        const authManager = new AuthManager();
+
+        // ==================== GITHUB INTEGRATION ====================
+
+        class GitHubSync {
+            constructor(config) {
+                this.config = config;
+            }
+
+            async getCurrentFile() {
+                const url = `https://api.github.com/repos/${this.config.owner}/${this.config.repo}/contents/${this.config.filePath}?ref=${this.config.branch}`;
+
+                try {
+                    const response = await fetch(url, {
+                        headers: {
+                            'Authorization': `token ${this.config.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`GitHub API error: ${response.statusText}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching file from GitHub:', error);
+                    throw error;
+                }
+            }
+
+            generateFileContent(restaurants) {
+                return `/**
+ * Traveling Tastebuds - Central Restaurant Database
+ * Last updated: ${new Date().toISOString()}
+ * Updated by: ${authManager.getUsername()}
+ */
+
+const DEFAULT_RESTAURANTS = ${JSON.stringify(restaurants, null, 4)};
+
+/**
+ * Restaurant Database Manager
+ * Handles loading and saving restaurant data with localStorage persistence
+ */
+class RestaurantDatabase {
+    constructor() {
+        this.storageKey = 'ttb_restaurants';
+        this.restaurants = this.loadRestaurants();
+    }
+
+    loadRestaurants() {
+        try {
+            const stored = localStorage.getItem(this.storageKey);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    return parsed;
+                }
+            }
+        } catch (e) {
+            console.warn('Error loading stored restaurants:', e);
+        }
+        return [...DEFAULT_RESTAURANTS];
+    }
+
+    saveRestaurants() {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(this.restaurants));
+            return true;
+        } catch (e) {
+            console.error('Error saving restaurants:', e);
+            return false;
+        }
+    }
+
+    getAll() {
+        return [...this.restaurants];
+    }
+
+    getById(id) {
+        return this.restaurants.find(r => r.id === id);
+    }
+
+    getFeatured() {
+        return this.restaurants.filter(r => r.featured);
+    }
+
+    getByType(type) {
+        return this.restaurants.filter(r => r.type === type);
+    }
+
+    getTypes() {
+        const types = new Set(this.restaurants.map(r => r.type));
+        return Array.from(types).sort();
+    }
+
+    add(restaurant) {
+        const maxId = Math.max(0, ...this.restaurants.map(r => r.id));
+        const newRestaurant = {
+            ...restaurant,
+            id: maxId + 1
+        };
+        this.restaurants.push(newRestaurant);
+        this.saveRestaurants();
+        return newRestaurant;
+    }
+
+    update(id, updates) {
+        const index = this.restaurants.findIndex(r => r.id === id);
+        if (index !== -1) {
+            this.restaurants[index] = {
+                ...this.restaurants[index],
+                ...updates,
+                id
+            };
+            this.saveRestaurants();
+            return this.restaurants[index];
+        }
+        return null;
+    }
+
+    delete(id) {
+        const index = this.restaurants.findIndex(r => r.id === id);
+        if (index !== -1) {
+            const deleted = this.restaurants.splice(index, 1)[0];
+            this.saveRestaurants();
+            return deleted;
+        }
+        return null;
+    }
+
+    reset() {
+        this.restaurants = [...DEFAULT_RESTAURANTS];
+        this.saveRestaurants();
+        return this.restaurants;
+    }
+
+    exportJSON() {
+        return JSON.stringify(this.restaurants, null, 2);
+    }
+
+    importJSON(jsonString) {
+        try {
+            const parsed = JSON.parse(jsonString);
+            if (Array.isArray(parsed)) {
+                this.restaurants = parsed;
+                this.saveRestaurants();
+                return true;
+            }
+        } catch (e) {
+            console.error('Error importing JSON:', e);
+        }
+        return false;
+    }
+}
+
+if (typeof window !== 'undefined') {
+    window.restaurantDB = new RestaurantDatabase();
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { RestaurantDatabase, DEFAULT_RESTAURANTS };
+}
+`;
+            }
+
+            async pushToGitHub(restaurants, commitMessage) {
+                try {
+                    // Get current file to get its SHA
+                    const currentFile = await this.getCurrentFile();
+
+                    // Generate new file content
+                    const content = this.generateFileContent(restaurants);
+                    const contentBase64 = btoa(unescape(encodeURIComponent(content)));
+
+                    // Update file on GitHub
+                    const url = `https://api.github.com/repos/${this.config.owner}/${this.config.repo}/contents/${this.config.filePath}`;
+
+                    const response = await fetch(url, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${this.config.token}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: commitMessage || this.config.commitMessage,
+                            content: contentBase64,
+                            sha: currentFile.sha,
+                            branch: this.config.branch
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.message || `GitHub API error: ${response.statusText}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error pushing to GitHub:', error);
+                    throw error;
+                }
+            }
+
+            isConfigured() {
+                return this.config.token && this.config.token !== 'YOUR_GITHUB_TOKEN_HERE';
+            }
+        }
+
+        const githubSync = new GitHubSync(window.GITHUB_CONFIG);
+
+        // ==================== LOGIN COMPONENT ====================
+
+        const LoginScreen = ({ onLogin }) => {
+            const [username, setUsername] = useState('');
+            const [password, setPassword] = useState('');
+            const [error, setError] = useState('');
+            const [loading, setLoading] = useState(false);
+
+            useEffect(() => {
+                lucide.createIcons();
+            }, []);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setError('');
+                setLoading(true);
+
+                const success = await authManager.login(username, password);
+
+                if (success) {
+                    onLogin();
+                } else {
+                    setError('Invalid username or password');
+                    setLoading(false);
+                }
+            };
+
+            return (
+                <div className="login-container">
+                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+                        <div className="text-center mb-8">
+                            <img src="/Images/ttbLogo.png" alt="Logo" className="w-20 h-20 mx-auto mb-4" />
+                            <h1 className="brand-font text-4xl text-brand-blue mb-2">Admin Login</h1>
+                            <p className="text-gray-600">Restaurant Database Manager</p>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div>
+                                <label className="form-label">Username</label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        className="form-input pl-10"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        placeholder="Enter username"
+                                        required
+                                        autoFocus
+                                    />
+                                    <i data-lucide="user" className="w-5 h-5 absolute left-3 top-3 text-gray-400"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="form-label">Password</label>
+                                <div className="relative">
+                                    <input
+                                        type="password"
+                                        className="form-input pl-10"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="Enter password"
+                                        required
+                                    />
+                                    <i data-lucide="lock" className="w-5 h-5 absolute left-3 top-3 text-gray-400"></i>
+                                </div>
+                            </div>
+
+                            {error && (
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+                                    <i data-lucide="alert-circle" className="w-5 h-5"></i>
+                                    <span>{error}</span>
+                                </div>
+                            )}
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full bg-brand-blue text-white py-3 rounded-lg font-bold hover:bg-blue-900 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            >
+                                {loading ? (
+                                    <>
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        Logging in...
+                                    </>
+                                ) : (
+                                    <>
+                                        <i data-lucide="log-in" className="w-5 h-5"></i>
+                                        Login
+                                    </>
+                                )}
+                            </button>
+                        </form>
+
+                        <div className="mt-6 pt-6 border-t border-gray-200">
+                            <p className="text-xs text-gray-500 text-center">
+                                Authorized personnel only. All actions are logged.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ==================== ADMIN APP COMPONENT ====================
+
+        const AdminApp = ({ onLogout }) => {
             const [restaurants, setRestaurants] = useState([]);
             const [selectedRestaurant, setSelectedRestaurant] = useState(null);
             const [isEditing, setIsEditing] = useState(false);
-            const [previewRestaurant, setPreviewRestaurant] = useState(null);
             const [formData, setFormData] = useState(getEmptyForm());
             const [showSuccess, setShowSuccess] = useState(false);
             const [successMessage, setSuccessMessage] = useState('');
+            const [isSyncing, setIsSyncing] = useState(false);
+            const [syncError, setSyncError] = useState('');
 
             useEffect(() => {
                 loadRestaurants();
@@ -112,6 +512,17 @@
             useEffect(() => {
                 lucide.createIcons();
             }, [restaurants, selectedRestaurant, isEditing]);
+
+            // Auto-logout on inactivity
+            useEffect(() => {
+                const checkAuth = setInterval(() => {
+                    if (!authManager.isAuthenticated()) {
+                        onLogout();
+                    }
+                }, 60000); // Check every minute
+
+                return () => clearInterval(checkAuth);
+            }, [onLogout]);
 
             function getEmptyForm() {
                 return {
@@ -169,8 +580,7 @@
                 }
             }
 
-            function handleSave() {
-                // Validate required fields
+            async function handleSave() {
                 if (!formData.name || !formData.city || !formData.desc || !formData.logo) {
                     alert('Please fill in all required fields (Name, City, Description, Logo)');
                     return;
@@ -192,14 +602,39 @@
 
                 if (isEditing && selectedRestaurant) {
                     db.update(selectedRestaurant.id, restaurantData);
-                    showSuccessNotification('Restaurant updated successfully!');
+                    showSuccessNotification('Restaurant updated! Click "Sync to GitHub" to publish.');
                 } else {
                     db.add(restaurantData);
-                    showSuccessNotification('Restaurant added successfully!');
+                    showSuccessNotification('Restaurant added! Click "Sync to GitHub" to publish.');
                 }
 
                 loadRestaurants();
                 handleCancel();
+            }
+
+            async function handleSyncToGitHub() {
+                if (!githubSync.isConfigured()) {
+                    alert('GitHub is not configured! Please update admin-config.js with your GitHub token.');
+                    return;
+                }
+
+                if (!confirm('This will commit your changes to GitHub. The changes will be live once the site rebuilds. Continue?')) {
+                    return;
+                }
+
+                setIsSyncing(true);
+                setSyncError('');
+
+                try {
+                    const restaurants = db.getAll();
+                    await githubSync.pushToGitHub(restaurants);
+                    showSuccessNotification('Successfully synced to GitHub! Changes will be live in 1-2 minutes.');
+                } catch (error) {
+                    setSyncError(error.message);
+                    alert(`Error syncing to GitHub: ${error.message}`);
+                } finally {
+                    setIsSyncing(false);
+                }
             }
 
             function handleCancel() {
@@ -215,7 +650,7 @@
             }
 
             function handleReset() {
-                if (confirm('Are you sure you want to reset to default restaurants? This will delete all custom changes.')) {
+                if (confirm('Are you sure you want to reset to default restaurants? This will delete all custom changes in localStorage (but not on GitHub until you sync).')) {
                     db.reset();
                     loadRestaurants();
                     handleCancel();
@@ -261,7 +696,7 @@
             function showSuccessNotification(message) {
                 setSuccessMessage(message);
                 setShowSuccess(true);
-                setTimeout(() => setShowSuccess(false), 3000);
+                setTimeout(() => setShowSuccess(false), 4000);
             }
 
             function getPreviewData() {
@@ -285,7 +720,7 @@
                 <div className="min-h-screen bg-gray-50">
                     {/* Success Notification */}
                     {showSuccess && (
-                        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in">
+                        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
                             <i data-lucide="check-circle" className="w-5 h-5"></i>
                             {successMessage}
                         </div>
@@ -299,10 +734,27 @@
                                     <img src="/Images/ttbLogo.png" alt="Logo" className="w-12 h-12 object-contain" />
                                     <div>
                                         <h1 className="brand-font text-3xl text-brand-blue">Restaurant Database Manager</h1>
-                                        <p className="text-sm text-gray-500">Manage your restaurant listings</p>
+                                        <p className="text-sm text-gray-500">Logged in as: <span className="font-semibold">{authManager.getUsername()}</span></p>
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
+                                    <button
+                                        onClick={handleSyncToGitHub}
+                                        disabled={isSyncing}
+                                        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {isSyncing ? (
+                                            <>
+                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                Syncing...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i data-lucide="github" className="w-4 h-4"></i>
+                                                Sync to GitHub
+                                            </>
+                                        )}
+                                    </button>
                                     <button
                                         onClick={() => window.location.href = '/'}
                                         className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center gap-2"
@@ -310,12 +762,32 @@
                                         <i data-lucide="home" className="w-4 h-4"></i>
                                         Back to Site
                                     </button>
+                                    <button
+                                        onClick={onLogout}
+                                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition flex items-center gap-2"
+                                    >
+                                        <i data-lucide="log-out" className="w-4 h-4"></i>
+                                        Logout
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </header>
 
                     <div className="max-w-7xl mx-auto px-4 py-8">
+                        {!githubSync.isConfigured() && (
+                            <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start gap-3">
+                                <i data-lucide="alert-triangle" className="w-5 h-5 text-yellow-600 mt-0.5"></i>
+                                <div className="flex-1">
+                                    <h3 className="font-semibold text-yellow-800 mb-1">GitHub Not Configured</h3>
+                                    <p className="text-sm text-yellow-700">
+                                        Please update <code className="bg-yellow-100 px-1 rounded">admin-config.js</code> with your GitHub Personal Access Token to enable auto-sync.
+                                        Changes will only be saved locally until configured.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Left Sidebar - Restaurant List */}
                             <div className="lg:col-span-1">
@@ -677,8 +1149,33 @@
             );
         };
 
+        // ==================== MAIN APP ====================
+
+        const MainApp = () => {
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+            useEffect(() => {
+                setIsAuthenticated(authManager.isAuthenticated());
+            }, []);
+
+            const handleLogin = () => {
+                setIsAuthenticated(true);
+            };
+
+            const handleLogout = () => {
+                authManager.logout();
+                setIsAuthenticated(false);
+            };
+
+            return isAuthenticated ? (
+                <AdminApp onLogout={handleLogout} />
+            ) : (
+                <LoginScreen onLogin={handleLogin} />
+            );
+        };
+
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<AdminApp />);
+        root.render(<MainApp />);
     </script>
 </body>
 </html>
