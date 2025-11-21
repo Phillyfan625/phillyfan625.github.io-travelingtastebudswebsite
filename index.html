@@ -24,6 +24,12 @@
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
+    <!-- Restaurant Database -->
+    <script src="/data/restaurants.js"></script>
+
+    <!-- Restaurant Card Component -->
+    <script src="/components/RestaurantCard.js"></script>
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -83,124 +89,8 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
-
-        // --- RESTAURANT DATABASE ---
-        const RESTAURANTS = [
-            {
-                id: 1,
-                name: "Pic-A-Lilli Inn",
-                city: "Shamong, NJ",
-                type: "Wings",
-                discount: "15% OFF",
-                desc: "The undisputed king of wings in the Pine Barrens. Get the 'Smoked' sauce.",
-                logo: "/Images/picLogo.png",
-                tiktokId: "7262868213384400171",
-                featured: true,
-                tiktokHeadline: "This spot has 50 different wing flavors 🍗"
-            },
-            {
-                id: 2,
-                name: "Lillo's Tomato Pies",
-                city: "Hainesport, NJ",
-                type: "Pizza",
-                discount: "20% OFF",
-                desc: "Authentic Trenton style tomato pies. Thin, crispy, and sauce on top.",
-                logo: "/Images/lillosLogo.png",
-                tiktokId: "7231695429392682286",
-                featured: true,
-                tiktokHeadline: "Trying the wildest pizza in Jersey! 🍕🤯"
-            },
-            {
-                id: 3,
-                name: "Friendly Food Mart",
-                city: "Runnemede, NJ",
-                type: "Deli",
-                discount: "20% OFF",
-                desc: "Hidden gem inside a convenience store. The breakfast sandwiches are legendary.",
-                logo: "/Images/foodMartLogo.png",
-                tiktokId: "7203508461517425963",
-                featured: false
-            },
-            {
-                id: 4,
-                name: "Pizza Villa",
-                city: "Clayton, NJ",
-                type: "Pizza",
-                discount: "10% OFF",
-                desc: "Classic local slices that define the South Jersey flavor profile.",
-                logo: "/Images/pizzaVillaLogo.png",
-                tiktokId: "6974164228458548485",
-                featured: false
-            },
-            {
-                id: 5,
-                name: "Holy City Publick House",
-                city: "Gloucester City, NJ",
-                type: "Pub",
-                discount: "10% OFF",
-                desc: "Great vibes, better burgers, and a solid craft beer selection.",
-                logo: "/Images/holyCityLogo.png",
-                tiktokId: "7330419649441516843",
-                featured: true,
-                tiktokHeadline: "Is this the best burger in NJ? 🍔🔥"
-            },
-            {
-                id: 6,
-                name: "Wilson's Pub",
-                city: "Gibbstown, NJ",
-                type: "Pub",
-                discount: "10% OFF",
-                desc: "Your neighborhood spot for comfort food and good times.",
-                logo: "/Images/wilsonsLogo.png",
-                tiktokId: "7055090515661983023",
-                featured: true,
-                tiktokHeadline: "Secret Menu Item Unlocked! 🤫🌮"
-            },
-            {
-                id: 7,
-                name: "Bank Bar",
-                city: "Clayton, NJ",
-                type: "Pub",
-                discount: "10% OFF",
-                desc: "Historic bar with modern eats and a great atmosphere.",
-                logo: "/Images/bankBarLogo.png",
-                tiktokId: "7322637556959431978",
-                featured: false
-            },
-            {
-                id: 8,
-                name: "Keg and Kitchen",
-                city: "Sewell, NJ",
-                type: "Pub",
-                discount: "15% OFF",
-                desc: "Craft beers and elevated pub fare in a lively setting.",
-                logo: "/Images/kegAndKitchenLogo.png",
-                tiktokId: "",
-                featured: false
-            },
-            {
-                id: 9,
-                name: "Kid Rips",
-                city: "Clementon, NJ",
-                type: "Pizza",
-                discount: "10% OFF",
-                desc: "Unique pizza creations that push the boundaries of flavor.",
-                logo: "/Images/kidRipsLogo.png",
-                tiktokId: "7302216662042955050",
-                featured: false
-            },
-            {
-                id: 10,
-                name: "Mount Royal Inn",
-                city: "Clementon, NJ",
-                type: "Pub",
-                discount: "10% OFF",
-                desc: "Local favorite for wings, burgers, and cold beer.",
-                logo: "/Images/mriLogo.png",
-                tiktokId: "7120744992095685931",
-                featured: false
-            }
-        ];
+        const { RestaurantCard, VideoModal } = window;
+        const db = window.restaurantDB;
 
         // --- COMPONENTS ---
 
@@ -209,38 +99,6 @@
                 <img src="/Images/ttbLogo.png" alt="Traveling Tastebuds Logo" className="w-full h-full object-contain drop-shadow-md hover:scale-105 transition" />
             </div>
         );
-
-        const VideoModal = ({ restaurant, onClose }) => {
-            useEffect(() => {
-                lucide.createIcons();
-            }, []);
-
-            return (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4" onClick={onClose}>
-                    <div className="relative w-full max-w-2xl bg-black rounded-3xl overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
-                        <button onClick={onClose} className="absolute top-4 right-4 z-50 bg-black/50 text-white rounded-full p-2 hover:bg-red-500 transition">
-                            <i data-lucide="x" className="w-6 h-6"></i>
-                        </button>
-
-                        {restaurant.tiktokId ? (
-                            <iframe
-                                src={`https://www.tiktok.com/embed/${restaurant.tiktokId}`}
-                                width="100%"
-                                height="600px"
-                                frameBorder="0"
-                                allowFullScreen
-                                className="w-full"
-                            ></iframe>
-                        ) : (
-                            <div className="p-12 text-center text-white">
-                                <p className="text-xl mb-4">Video coming soon!</p>
-                                <p className="text-gray-400">Check back later for our review of {restaurant.name}</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            );
-        };
 
         const Navbar = ({ setView, activeView }) => {
             useEffect(() => {
@@ -283,8 +141,8 @@
             );
         };
 
-        const Hero = ({ setView }) => {
-            const featuredRestaurants = RESTAURANTS.filter(r => r.featured);
+        const Hero = ({ setView, restaurants }) => {
+            const featuredRestaurants = restaurants.filter(r => r.featured);
             const [startIndex, setStartIndex] = useState(0);
             const visibleCards = 3;
 
@@ -376,50 +234,6 @@
             );
         };
 
-        const ReviewCard = ({ restaurant, onOpenModal }) => {
-            useEffect(() => {
-                lucide.createIcons();
-            }, []);
-
-            return (
-                <div
-                    onClick={() => onOpenModal(restaurant)}
-                    className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-gray-100 overflow-hidden flex flex-col h-full group cursor-pointer"
-                >
-                    <div className="h-40 relative bg-brand-light/50 flex items-center justify-center p-6 group-hover:bg-brand-light transition duration-500">
-                        <div className="w-20 h-20 rounded-full bg-white shadow-md overflow-hidden border-4 border-white group-hover:scale-110 transition duration-500 relative z-10 flex items-center justify-center p-2">
-                            <img src={restaurant.logo} className="w-full h-full object-contain" alt={restaurant.name} />
-                        </div>
-
-                        <div className="absolute top-3 right-3 bg-brand-sky text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider shadow-sm z-20">
-                            {restaurant.type}
-                        </div>
-                    </div>
-
-                    <div className="p-6 flex flex-col flex-grow text-center">
-                        <h3 className="font-bold text-xl text-brand-blue leading-tight mb-1">{restaurant.name}</h3>
-                        <p className="text-gray-400 text-xs flex items-center justify-center gap-1 mb-3">
-                            <i data-lucide="map-pin" className="w-3 h-3"></i> {restaurant.city}
-                        </p>
-
-                        {restaurant.discount && (
-                            <div className="inline-block mx-auto bg-green-50 text-green-600 text-xs font-bold px-3 py-1 rounded-lg border border-green-100 mb-4">
-                                {restaurant.discount}
-                            </div>
-                        )}
-
-                        <p className="text-gray-500 text-sm mb-4 leading-relaxed line-clamp-2 text-left">{restaurant.desc}</p>
-
-                        <div className="mt-auto pt-4 border-t border-gray-100">
-                            <button className="w-full text-brand-blue py-2 rounded-lg font-bold text-sm hover:text-brand-sky transition flex items-center justify-center gap-2 group-hover:gap-3">
-                                Watch Review <i data-lucide="arrow-right" className="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
         const Footer = () => {
             useEffect(() => {
                 lucide.createIcons();
@@ -450,10 +264,26 @@
         const App = () => {
             const [view, setView] = useState('home');
             const [modalRestaurant, setModalRestaurant] = useState(null);
+            const [restaurants, setRestaurants] = useState([]);
+
+            useEffect(() => {
+                // Load restaurants from database
+                setRestaurants(db.getAll());
+                lucide.createIcons();
+            }, []);
 
             useEffect(() => {
                 lucide.createIcons();
-            }, [view]);
+            }, [view, restaurants]);
+
+            // Listen for storage events to update when database changes
+            useEffect(() => {
+                const handleStorageChange = () => {
+                    setRestaurants(db.getAll());
+                };
+                window.addEventListener('storage', handleStorageChange);
+                return () => window.removeEventListener('storage', handleStorageChange);
+            }, []);
 
             return (
                 <div className="min-h-screen flex flex-col">
@@ -464,22 +294,28 @@
                     <main className="flex-grow">
                         {view === 'home' && (
                             <>
-                                <Hero setView={setView} />
+                                <Hero setView={setView} restaurants={restaurants} />
                                 <div className="max-w-7xl mx-auto px-4 py-16">
                                     <div className="text-center mb-12">
                                         <h2 className="brand-font text-4xl text-brand-blue">Partner Perks</h2>
                                         <p className="text-gray-500 mt-2">Rock the tee, get the deal. It's that simple.</p>
                                     </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                        {RESTAURANTS.map(restaurant => (
-                                            <ReviewCard
-                                                key={restaurant.id}
-                                                restaurant={restaurant}
-                                                onOpenModal={setModalRestaurant}
-                                            />
-                                        ))}
-                                    </div>
+                                    {restaurants.length > 0 ? (
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                            {restaurants.map(restaurant => (
+                                                <RestaurantCard
+                                                    key={restaurant.id}
+                                                    restaurant={restaurant}
+                                                    onOpenModal={setModalRestaurant}
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-12">
+                                            <p className="text-gray-500">No restaurants found. Visit the admin panel to add some!</p>
+                                        </div>
+                                    )}
                                 </div>
                             </>
                         )}
@@ -487,10 +323,9 @@
                         {view === 'reviews' && (
                             <div className="max-w-7xl mx-auto px-4 py-24 text-center">
                                 <h2 className="brand-font text-5xl text-brand-blue mb-4">Food Reviews</h2>
-                                <p className="text-xl text-gray-500 mb-8">Interactive map and reviews coming soon!</p>
-                                <p className="text-gray-400 mb-8">We're building an awesome interactive map to help you find all our reviewed spots.</p>
+                                <p className="text-xl text-gray-500 mb-8">Interactive map and reviews!</p>
                                 <button onClick={() => window.location.href = '/food-reviews'} className="bg-brand-blue text-white px-8 py-3 rounded-xl font-bold text-lg hover:scale-105 transition">
-                                    Preview New Reviews Page
+                                    View Reviews Map
                                 </button>
                             </div>
                         )}

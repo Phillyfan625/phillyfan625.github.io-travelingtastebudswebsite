@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Database Manager - Traveling Tastebuds</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Chewy&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <!-- Restaurant Database -->
+    <script src="/data/restaurants.js"></script>
+
+    <!-- Restaurant Card Component -->
+    <script src="/components/RestaurantCard.js"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+            color: #1e3a8a;
+        }
+        .brand-font {
+            font-family: 'Chewy', cursive;
+        }
+
+        .card-highlight {
+            animation: pulse-border 2s infinite;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.3);
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(96, 165, 250, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .admin-sidebar {
+            max-height: calc(100vh - 2rem);
+            overflow-y: auto;
+        }
+
+        .form-input {
+            @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+        }
+
+        .form-label {
+            @apply block text-sm font-semibold text-gray-700 mb-2;
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#1e40af',
+                            sky: '#60a5fa',
+                            light: '#eff6ff',
+                            white: '#ffffff'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { RestaurantCard, VideoModal } = window;
+        const db = window.restaurantDB;
+
+        const AdminApp = () => {
+            const [restaurants, setRestaurants] = useState([]);
+            const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+            const [isEditing, setIsEditing] = useState(false);
+            const [previewRestaurant, setPreviewRestaurant] = useState(null);
+            const [formData, setFormData] = useState(getEmptyForm());
+            const [showSuccess, setShowSuccess] = useState(false);
+            const [successMessage, setSuccessMessage] = useState('');
+
+            useEffect(() => {
+                loadRestaurants();
+                lucide.createIcons();
+            }, []);
+
+            useEffect(() => {
+                lucide.createIcons();
+            }, [restaurants, selectedRestaurant, isEditing]);
+
+            function getEmptyForm() {
+                return {
+                    name: '',
+                    city: '',
+                    lat: '',
+                    lng: '',
+                    type: 'Pizza',
+                    discount: '',
+                    desc: '',
+                    logo: '',
+                    tiktokId: '',
+                    featured: false,
+                    tiktokHeadline: ''
+                };
+            }
+
+            function loadRestaurants() {
+                setRestaurants(db.getAll());
+            }
+
+            function handleInputChange(field, value) {
+                setFormData(prev => ({
+                    ...prev,
+                    [field]: value
+                }));
+            }
+
+            function handleEdit(restaurant) {
+                setSelectedRestaurant(restaurant);
+                setIsEditing(true);
+                setFormData({
+                    name: restaurant.name,
+                    city: restaurant.city,
+                    lat: restaurant.lat.toString(),
+                    lng: restaurant.lng.toString(),
+                    type: restaurant.type,
+                    discount: restaurant.discount || '',
+                    desc: restaurant.desc,
+                    logo: restaurant.logo,
+                    tiktokId: restaurant.tiktokId || '',
+                    featured: restaurant.featured,
+                    tiktokHeadline: restaurant.tiktokHeadline || ''
+                });
+            }
+
+            function handleDelete(id) {
+                if (confirm('Are you sure you want to delete this restaurant? This cannot be undone.')) {
+                    db.delete(id);
+                    loadRestaurants();
+                    if (selectedRestaurant?.id === id) {
+                        handleCancel();
+                    }
+                    showSuccessNotification('Restaurant deleted successfully!');
+                }
+            }
+
+            function handleSave() {
+                // Validate required fields
+                if (!formData.name || !formData.city || !formData.desc || !formData.logo) {
+                    alert('Please fill in all required fields (Name, City, Description, Logo)');
+                    return;
+                }
+
+                const restaurantData = {
+                    name: formData.name,
+                    city: formData.city,
+                    lat: parseFloat(formData.lat) || 0,
+                    lng: parseFloat(formData.lng) || 0,
+                    type: formData.type,
+                    discount: formData.discount || null,
+                    desc: formData.desc,
+                    logo: formData.logo,
+                    tiktokId: formData.tiktokId || '',
+                    featured: formData.featured,
+                    tiktokHeadline: formData.tiktokHeadline || null
+                };
+
+                if (isEditing && selectedRestaurant) {
+                    db.update(selectedRestaurant.id, restaurantData);
+                    showSuccessNotification('Restaurant updated successfully!');
+                } else {
+                    db.add(restaurantData);
+                    showSuccessNotification('Restaurant added successfully!');
+                }
+
+                loadRestaurants();
+                handleCancel();
+            }
+
+            function handleCancel() {
+                setSelectedRestaurant(null);
+                setIsEditing(false);
+                setFormData(getEmptyForm());
+            }
+
+            function handleNewRestaurant() {
+                setSelectedRestaurant(null);
+                setIsEditing(true);
+                setFormData(getEmptyForm());
+            }
+
+            function handleReset() {
+                if (confirm('Are you sure you want to reset to default restaurants? This will delete all custom changes.')) {
+                    db.reset();
+                    loadRestaurants();
+                    handleCancel();
+                    showSuccessNotification('Database reset to defaults!');
+                }
+            }
+
+            function handleExport() {
+                const json = db.exportJSON();
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ttb-restaurants-${Date.now()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showSuccessNotification('Database exported!');
+            }
+
+            function handleImport() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            if (db.importJSON(event.target.result)) {
+                                loadRestaurants();
+                                handleCancel();
+                                showSuccessNotification('Database imported successfully!');
+                            } else {
+                                alert('Error importing file. Please check the JSON format.');
+                            }
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+                input.click();
+            }
+
+            function showSuccessNotification(message) {
+                setSuccessMessage(message);
+                setShowSuccess(true);
+                setTimeout(() => setShowSuccess(false), 3000);
+            }
+
+            function getPreviewData() {
+                return {
+                    id: selectedRestaurant?.id || 999,
+                    name: formData.name || 'Restaurant Name',
+                    city: formData.city || 'City, NJ',
+                    lat: parseFloat(formData.lat) || 0,
+                    lng: parseFloat(formData.lng) || 0,
+                    type: formData.type,
+                    discount: formData.discount || null,
+                    desc: formData.desc || 'Restaurant description will appear here...',
+                    logo: formData.logo || '/Images/ttbLogo.png',
+                    tiktokId: formData.tiktokId || '',
+                    featured: formData.featured,
+                    tiktokHeadline: formData.tiktokHeadline || null
+                };
+            }
+
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    {/* Success Notification */}
+                    {showSuccess && (
+                        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in">
+                            <i data-lucide="check-circle" className="w-5 h-5"></i>
+                            {successMessage}
+                        </div>
+                    )}
+
+                    {/* Header */}
+                    <header className="bg-white shadow-sm border-b border-gray-200">
+                        <div className="max-w-7xl mx-auto px-4 py-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <img src="/Images/ttbLogo.png" alt="Logo" className="w-12 h-12 object-contain" />
+                                    <div>
+                                        <h1 className="brand-font text-3xl text-brand-blue">Restaurant Database Manager</h1>
+                                        <p className="text-sm text-gray-500">Manage your restaurant listings</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => window.location.href = '/'}
+                                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center gap-2"
+                                    >
+                                        <i data-lucide="home" className="w-4 h-4"></i>
+                                        Back to Site
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div className="max-w-7xl mx-auto px-4 py-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            {/* Left Sidebar - Restaurant List */}
+                            <div className="lg:col-span-1">
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 admin-sidebar">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h2 className="text-xl font-bold text-gray-800">Restaurants ({restaurants.length})</h2>
+                                        <button
+                                            onClick={handleNewRestaurant}
+                                            className="bg-brand-blue text-white p-2 rounded-lg hover:bg-blue-900 transition"
+                                        >
+                                            <i data-lucide="plus" className="w-5 h-5"></i>
+                                        </button>
+                                    </div>
+
+                                    <div className="space-y-2 mb-4">
+                                        {restaurants.map(restaurant => (
+                                            <div
+                                                key={restaurant.id}
+                                                className={`p-3 rounded-lg border cursor-pointer transition ${
+                                                    selectedRestaurant?.id === restaurant.id
+                                                        ? 'border-brand-blue bg-brand-light'
+                                                        : 'border-gray-200 hover:border-brand-sky hover:bg-gray-50'
+                                                }`}
+                                                onClick={() => !isEditing && setSelectedRestaurant(restaurant)}
+                                            >
+                                                <div className="flex items-start gap-3">
+                                                    <img src={restaurant.logo} className="w-10 h-10 object-contain rounded" alt={restaurant.name} />
+                                                    <div className="flex-1 min-w-0">
+                                                        <h3 className="font-semibold text-sm text-gray-800 truncate">{restaurant.name}</h3>
+                                                        <p className="text-xs text-gray-500">{restaurant.city}</p>
+                                                        <span className="inline-block text-[10px] bg-brand-sky text-white px-2 py-0.5 rounded mt-1">
+                                                            {restaurant.type}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-1 mt-2">
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleEdit(restaurant);
+                                                        }}
+                                                        className="flex-1 bg-blue-50 text-brand-blue px-2 py-1 rounded text-xs hover:bg-blue-100 transition flex items-center justify-center gap-1"
+                                                    >
+                                                        <i data-lucide="edit-2" className="w-3 h-3"></i> Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDelete(restaurant.id);
+                                                        }}
+                                                        className="flex-1 bg-red-50 text-red-600 px-2 py-1 rounded text-xs hover:bg-red-100 transition flex items-center justify-center gap-1"
+                                                    >
+                                                        <i data-lucide="trash-2" className="w-3 h-3"></i> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="border-t pt-4 space-y-2">
+                                        <button
+                                            onClick={handleExport}
+                                            className="w-full bg-green-50 text-green-700 px-4 py-2 rounded-lg hover:bg-green-100 transition flex items-center justify-center gap-2 text-sm font-semibold"
+                                        >
+                                            <i data-lucide="download" className="w-4 h-4"></i>
+                                            Export Database
+                                        </button>
+                                        <button
+                                            onClick={handleImport}
+                                            className="w-full bg-purple-50 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-100 transition flex items-center justify-center gap-2 text-sm font-semibold"
+                                        >
+                                            <i data-lucide="upload" className="w-4 h-4"></i>
+                                            Import Database
+                                        </button>
+                                        <button
+                                            onClick={handleReset}
+                                            className="w-full bg-orange-50 text-orange-700 px-4 py-2 rounded-lg hover:bg-orange-100 transition flex items-center justify-center gap-2 text-sm font-semibold"
+                                        >
+                                            <i data-lucide="refresh-ccw" className="w-4 h-4"></i>
+                                            Reset to Defaults
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right Content - Editor or Preview */}
+                            <div className="lg:col-span-2">
+                                {isEditing ? (
+                                    <div className="space-y-6">
+                                        {/* Editor Form */}
+                                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                                                {selectedRestaurant ? 'Edit Restaurant' : 'Add New Restaurant'}
+                                            </h2>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="form-label">Restaurant Name *</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-input"
+                                                        value={formData.name}
+                                                        onChange={(e) => handleInputChange('name', e.target.value)}
+                                                        placeholder="e.g., Pic-A-Lilli Inn"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="form-label">City *</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-input"
+                                                        value={formData.city}
+                                                        onChange={(e) => handleInputChange('city', e.target.value)}
+                                                        placeholder="e.g., Shamong, NJ"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="form-label">Latitude</label>
+                                                    <input
+                                                        type="number"
+                                                        step="0.0001"
+                                                        className="form-input"
+                                                        value={formData.lat}
+                                                        onChange={(e) => handleInputChange('lat', e.target.value)}
+                                                        placeholder="e.g., 39.8026"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="form-label">Longitude</label>
+                                                    <input
+                                                        type="number"
+                                                        step="0.0001"
+                                                        className="form-input"
+                                                        value={formData.lng}
+                                                        onChange={(e) => handleInputChange('lng', e.target.value)}
+                                                        placeholder="e.g., -74.7299"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="form-label">Type *</label>
+                                                    <select
+                                                        className="form-input"
+                                                        value={formData.type}
+                                                        onChange={(e) => handleInputChange('type', e.target.value)}
+                                                    >
+                                                        <option>Pizza</option>
+                                                        <option>Wings</option>
+                                                        <option>Pub</option>
+                                                        <option>Deli</option>
+                                                        <option>Burger</option>
+                                                        <option>Italian</option>
+                                                        <option>Mexican</option>
+                                                        <option>Asian</option>
+                                                        <option>Seafood</option>
+                                                        <option>Other</option>
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label className="form-label">Discount</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-input"
+                                                        value={formData.discount}
+                                                        onChange={(e) => handleInputChange('discount', e.target.value)}
+                                                        placeholder="e.g., 15% OFF"
+                                                    />
+                                                </div>
+
+                                                <div className="md:col-span-2">
+                                                    <label className="form-label">Logo URL *</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-input"
+                                                        value={formData.logo}
+                                                        onChange={(e) => handleInputChange('logo', e.target.value)}
+                                                        placeholder="/Images/restaurantLogo.png"
+                                                    />
+                                                </div>
+
+                                                <div className="md:col-span-2">
+                                                    <label className="form-label">Description *</label>
+                                                    <textarea
+                                                        className="form-input"
+                                                        rows="3"
+                                                        value={formData.desc}
+                                                        onChange={(e) => handleInputChange('desc', e.target.value)}
+                                                        placeholder="Brief description of the restaurant..."
+                                                    ></textarea>
+                                                </div>
+
+                                                <div className="md:col-span-2">
+                                                    <label className="form-label">TikTok Video ID</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-input"
+                                                        value={formData.tiktokId}
+                                                        onChange={(e) => handleInputChange('tiktokId', e.target.value)}
+                                                        placeholder="e.g., 7262868213384400171"
+                                                    />
+                                                    <p className="text-xs text-gray-500 mt-1">Extract from TikTok URL: tiktok.com/embed/[THIS_PART]</p>
+                                                </div>
+
+                                                <div className="md:col-span-2">
+                                                    <div className="flex items-center gap-3">
+                                                        <input
+                                                            type="checkbox"
+                                                            id="featured"
+                                                            className="w-5 h-5 text-brand-blue rounded focus:ring-2 focus:ring-brand-blue"
+                                                            checked={formData.featured}
+                                                            onChange={(e) => handleInputChange('featured', e.target.checked)}
+                                                        />
+                                                        <label htmlFor="featured" className="text-sm font-semibold text-gray-700">
+                                                            Feature in Homepage Carousel
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                {formData.featured && (
+                                                    <div className="md:col-span-2">
+                                                        <label className="form-label">TikTok Headline (for carousel)</label>
+                                                        <input
+                                                            type="text"
+                                                            className="form-input"
+                                                            value={formData.tiktokHeadline}
+                                                            onChange={(e) => handleInputChange('tiktokHeadline', e.target.value)}
+                                                            placeholder="e.g., This spot has 50 different wing flavors 🍗"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="flex gap-3 mt-6">
+                                                <button
+                                                    onClick={handleSave}
+                                                    className="flex-1 bg-brand-blue text-white px-6 py-3 rounded-lg hover:bg-blue-900 transition flex items-center justify-center gap-2 font-semibold"
+                                                >
+                                                    <i data-lucide="save" className="w-5 h-5"></i>
+                                                    {selectedRestaurant ? 'Update Restaurant' : 'Add Restaurant'}
+                                                </button>
+                                                <button
+                                                    onClick={handleCancel}
+                                                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Live Preview */}
+                                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                            <h3 className="text-xl font-bold text-gray-800 mb-4">Live Preview</h3>
+                                            <p className="text-sm text-gray-600 mb-4">This is how your card will appear across the site:</p>
+                                            <div className="max-w-sm mx-auto">
+                                                <RestaurantCard
+                                                    restaurant={getPreviewData()}
+                                                    onOpenModal={() => {}}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : selectedRestaurant ? (
+                                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <h2 className="text-2xl font-bold text-gray-800">Restaurant Details</h2>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => handleEdit(selectedRestaurant)}
+                                                    className="bg-brand-blue text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition flex items-center gap-2"
+                                                >
+                                                    <i data-lucide="edit-2" className="w-4 h-4"></i>
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(selectedRestaurant.id)}
+                                                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition flex items-center gap-2"
+                                                >
+                                                    <i data-lucide="trash-2" className="w-4 h-4"></i>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">Name</label>
+                                                    <p className="text-lg font-semibold text-gray-800">{selectedRestaurant.name}</p>
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">Location</label>
+                                                    <p className="text-gray-700">{selectedRestaurant.city}</p>
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">Type</label>
+                                                    <p className="text-gray-700">{selectedRestaurant.type}</p>
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">Discount</label>
+                                                    <p className="text-gray-700">{selectedRestaurant.discount || 'None'}</p>
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">Coordinates</label>
+                                                    <p className="text-gray-700 text-sm">Lat: {selectedRestaurant.lat}, Lng: {selectedRestaurant.lng}</p>
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">Featured</label>
+                                                    <p className="text-gray-700">{selectedRestaurant.featured ? 'Yes' : 'No'}</p>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">Logo</label>
+                                                    <img src={selectedRestaurant.logo} className="w-24 h-24 object-contain border rounded-lg p-2" alt={selectedRestaurant.name} />
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">Description</label>
+                                                    <p className="text-gray-700">{selectedRestaurant.desc}</p>
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">TikTok ID</label>
+                                                    <p className="text-gray-700 text-sm">{selectedRestaurant.tiktokId || 'None'}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-8">
+                                            <h3 className="text-lg font-bold text-gray-800 mb-4">Card Preview</h3>
+                                            <div className="max-w-sm mx-auto">
+                                                <RestaurantCard
+                                                    restaurant={selectedRestaurant}
+                                                    onOpenModal={() => {}}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                                        <i data-lucide="restaurant" className="w-16 h-16 mx-auto mb-4 text-gray-300"></i>
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2">No Restaurant Selected</h3>
+                                        <p className="text-gray-600 mb-6">Select a restaurant from the list or add a new one</p>
+                                        <button
+                                            onClick={handleNewRestaurant}
+                                            className="bg-brand-blue text-white px-6 py-3 rounded-lg hover:bg-blue-900 transition inline-flex items-center gap-2"
+                                        >
+                                            <i data-lucide="plus" className="w-5 h-5"></i>
+                                            Add New Restaurant
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<AdminApp />);
+    </script>
+</body>
+</html>
