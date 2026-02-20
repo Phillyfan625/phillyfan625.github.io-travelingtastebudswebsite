@@ -172,10 +172,26 @@ const TTBData = (function () {
         return data;
     }
 
+    // ── Shared utilities ────────────────────────────────
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        var d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+    }
+
+    function sanitizeTikTokId(id) {
+        if (!id) return '';
+        return String(id).replace(/\D/g, '').slice(0, 25);
+    }
+
     // ── Public API ────────────────────────────────────
     return {
         getSpots,
         clearCache,
+        escapeHtml,
+        sanitizeTikTokId,
         // Admin
         login,
         logout,

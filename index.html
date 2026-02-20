@@ -123,7 +123,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <iframe id="tiktokIframe" width="100%" height="85vh" frameborder="0" allowfullscreen></iframe>
+                    <iframe id="tiktokIframe" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -196,18 +196,20 @@
             }
 
             // Populate carousel
+            var esc = TTBData.escapeHtml;
+            var safeTikTok = TTBData.sanitizeTikTokId;
             carousel.innerHTML = '';
             spots.forEach(function (spot) {
                 var card = document.createElement('div');
                 card.className = 'tiktok-card';
                 card.innerHTML =
                     '<div class="tiktok-card-video">' +
-                    '<iframe src="https://www.tiktok.com/embed/' + spot.tiktokId + '" allowfullscreen allow="encrypted-media" loading="lazy"></iframe>' +
+                    '<iframe src="https://www.tiktok.com/embed/' + safeTikTok(spot.tiktokId) + '" allowfullscreen allow="encrypted-media" loading="lazy"></iframe>' +
                     '</div>' +
                     '<div class="tiktok-card-info">' +
-                    '<div class="tiktok-card-name">' + spot.name + '</div>' +
-                    '<div class="tiktok-card-location"><i class="fas fa-map-marker-alt"></i> ' + spot.location + '</div>' +
-                    '<div class="tiktok-card-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + t + '</span>'; }).join('') + '</div>' +
+                    '<div class="tiktok-card-name">' + esc(spot.name) + '</div>' +
+                    '<div class="tiktok-card-location"><i class="fas fa-map-marker-alt"></i> ' + esc(spot.location) + '</div>' +
+                    '<div class="tiktok-card-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
                     '</div>';
                 carousel.appendChild(card);
             });
@@ -242,10 +244,10 @@
                 var card = document.createElement('div');
                 card.className = 'partner-card';
                 card.innerHTML =
-                    '<img src="' + (spot.logoImage || '') + '" alt="' + spot.name + '">' +
-                    '<div class="partner-card-name">' + spot.name + '</div>' +
-                    '<div class="partner-card-discount">' + spot.discount + '</div>';
-                card.addEventListener('click', function () { openTikTokModal(spot.tiktokId, spot.name); });
+                    '<img src="' + esc(spot.logoImage || '') + '" alt="' + esc(spot.name) + '">' +
+                    '<div class="partner-card-name">' + esc(spot.name) + '</div>' +
+                    '<div class="partner-card-discount">' + esc(spot.discount) + '</div>';
+                card.addEventListener('click', function () { openTikTokModal(safeTikTok(spot.tiktokId), spot.name); });
                 partnersScroll.appendChild(card);
             });
         })();
@@ -259,7 +261,7 @@
         // TikTok modal
         function openTikTokModal(videoId, name) {
             document.getElementById('tiktokModalLabel').textContent = name + ' - TikTok Review';
-            document.getElementById('tiktokIframe').src = 'https://www.tiktok.com/embed/' + videoId;
+            document.getElementById('tiktokIframe').src = 'https://www.tiktok.com/embed/' + TTBData.sanitizeTikTokId(videoId);
             new bootstrap.Modal(document.getElementById('tiktokModal')).show();
         }
 

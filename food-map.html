@@ -52,7 +52,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <iframe id="tiktokIframe" width="100%" height="85vh" frameborder="0" allowfullscreen></iframe>
+                    <iframe id="tiktokIframe" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -108,20 +108,28 @@
                 return;
             }
 
+            var esc = TTBData.escapeHtml;
+            var safeTikTok = TTBData.sanitizeTikTokId;
+
             allSpots.forEach(function (spot, index) {
                 if (!spot.lat || !spot.lng) return;
 
                 var marker = L.marker([spot.lat, spot.lng], { icon: createMarkerIcon(false) }).addTo(map);
-                var safeName = spot.name.replace(/'/g, "\\'");
+                var videoId = safeTikTok(spot.tiktokId);
 
                 marker.bindPopup(
-                    '<div class="ttb-map-popup"><h3>' + spot.name + '</h3><p>' + spot.location + '</p>' +
-                    '<div class="popup-tags">' + (spot.tags || []).map(function (t) { return '<span class="popup-tag">' + t + '</span>'; }).join('') + '</div>' +
-                    (spot.discount ? '<div class="popup-discount"><i class="fas fa-tag"></i> ' + spot.discount + '</div>' : '') +
-                    '<p style="font-size:0.8rem;color:#888;margin:0.3rem 0;">' + (spot.snippet || '') + '</p>' +
-                    '<button class="popup-btn" onclick="openTikTokModal(\'' + spot.tiktokId + '\',\'' + safeName + '\')"><i class="fab fa-tiktok"></i> Watch Review</button></div>',
+                    '<div class="ttb-map-popup"><h3>' + esc(spot.name) + '</h3><p>' + esc(spot.location) + '</p>' +
+                    '<div class="popup-tags">' + (spot.tags || []).map(function (t) { return '<span class="popup-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
+                    (spot.discount ? '<div class="popup-discount"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</div>' : '') +
+                    '<p style="font-size:0.8rem;color:#888;margin:0.3rem 0;">' + esc(spot.snippet || '') + '</p>' +
+                    '<button class="popup-btn" data-video="' + videoId + '" data-name="' + esc(spot.name) + '"><i class="fab fa-tiktok"></i> Watch Review</button></div>',
                     { maxWidth: 280, className: 'ttb-popup' }
                 );
+
+                marker.on('popupopen', function () {
+                    var btn = document.querySelector('.ttb-map-popup .popup-btn[data-video="' + videoId + '"]');
+                    if (btn) btn.addEventListener('click', function () { openTikTokModal(this.dataset.video, this.dataset.name); });
+                });
 
                 markers[index] = marker;
                 marker.on('click', function () { selectSpot(index); });
@@ -130,10 +138,10 @@
                 item.className = 'food-map-item';
                 item.setAttribute('data-index', index);
                 item.innerHTML =
-                    '<img src="' + (spot.logoImage || '') + '" alt="' + spot.name + '" class="food-map-item-img">' +
-                    '<div class="food-map-item-info"><h4>' + spot.name + '</h4>' +
-                    '<p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> ' + spot.location + '</p>' +
-                    (spot.discount ? '<div class="food-map-item-discount"><i class="fas fa-tag"></i> ' + spot.discount + '</div>' : '') +
+                    '<img src="' + esc(spot.logoImage || '') + '" alt="' + esc(spot.name) + '" class="food-map-item-img">' +
+                    '<div class="food-map-item-info"><h4>' + esc(spot.name) + '</h4>' +
+                    '<p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> ' + esc(spot.location) + '</p>' +
+                    (spot.discount ? '<div class="food-map-item-discount"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</div>' : '') +
                     '</div>';
                 item.addEventListener('click', function () { selectSpot(index); });
                 mapList.appendChild(item);
@@ -168,7 +176,7 @@
 
         function openTikTokModal(videoId, name) {
             document.getElementById('tiktokModalLabel').textContent = name + ' - TikTok Review';
-            document.getElementById('tiktokIframe').src = 'https://www.tiktok.com/embed/' + videoId;
+            document.getElementById('tiktokIframe').src = 'https://www.tiktok.com/embed/' + TTBData.sanitizeTikTokId(videoId);
             new bootstrap.Modal(document.getElementById('tiktokModal')).show();
         }
 

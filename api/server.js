@@ -9,11 +9,31 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// ── Startup validation ────────────────────────────
+
+const REQUIRED_ENV = ['MONGODB_URI', 'ADMIN_PASSWORD', 'JWT_SECRET'];
+for (const key of REQUIRED_ENV) {
+    if (!process.env[key]) {
+        console.error(`Missing required environment variable: ${key}`);
+        process.exit(1);
+    }
+}
+
+// ── Security headers ──────────────────────────────
+
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '0');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    next();
+});
+
 // ── Validation helpers ─────────────────────────────
 
 function sanitizeString(val, maxLen = 500) {
     if (typeof val !== 'string') return '';
-    return val.trim().slice(0, maxLen);
+    return val.trim().replace(/[<>]/g, '').slice(0, maxLen);
 }
 
 function validateSpot(body) {
@@ -23,6 +43,8 @@ function validateSpot(body) {
     }
     if (!body.tiktokId || typeof body.tiktokId !== 'string' || !body.tiktokId.trim()) {
         errors.push('TikTok Video ID is required');
+    } else if (!/^\d{5,25}$/.test(body.tiktokId.trim())) {
+        errors.push('TikTok Video ID must be a numeric string (5-25 digits)');
     }
     if (body.lat == null || typeof body.lat !== 'number' || body.lat < -90 || body.lat > 90) {
         errors.push('Valid latitude is required (-90 to 90)');
@@ -42,19 +64,26 @@ function validateSpot(body) {
     return errors;
 }
 
+function isValidImageUrl(url) {
+    if (!url) return true; // optional field
+    // Allow relative paths or https URLs only
+    return url.startsWith('/') || url.startsWith('https://');
+}
+
 function buildSpotDocument(body) {
+    const logoImage = sanitizeString(body.logoImage || '', 500);
     return {
         name: sanitizeString(body.name, 100),
-        tiktokId: sanitizeString(body.tiktokId, 50),
+        tiktokId: body.tiktokId ? body.tiktokId.trim().replace(/\D/g, '').slice(0, 25) : '',
         lat: Number(body.lat),
         lng: Number(body.lng),
         location: sanitizeString(body.location, 200),
         discount: sanitizeString(body.discount || '', 100),
-        logoImage: sanitizeString(body.logoImage || '', 500),
+        logoImage: isValidImageUrl(logoImage) ? logoImage : '',
         tags: Array.isArray(body.tags)
-            ? body.tags.map(t => sanitizeString(t, 50).toLowerCase()).filter(Boolean)
+            ? body.tags.map(t => sanitizeString(t, 50).toLowerCase()).filter(Boolean).slice(0, 20)
             : [],
-        rating: body.rating != null ? Math.min(10, Math.max(0, Number(body.rating))) : 0,
+        rating: body.rating != null ? Math.round(Math.min(10, Math.max(0, Number(body.rating))) * 2) / 2 : 0,
         snippet: sanitizeString(body.snippet || '', 300)
     };
 }
@@ -64,9 +93,6 @@ function buildSpotDocument(body) {
 let db;
 
 async function connectDB() {
-    if (!process.env.MONGODB_URI) {
-        throw new Error('MONGODB_URI environment variable is not set');
-    }
     const client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
     db = client.db('ttb');
@@ -91,7 +117,7 @@ app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (mobile apps, curl, etc in dev)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
+        if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
         callback(new Error('Not allowed by CORS'));
@@ -337,6 +363,12 @@ app.post('/api/seed', requireAuth, async (req, res) => {
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
+});
+
+// ── Graceful error handling ───────────────────────
+
+process.on('unhandledRejection', (err) => {
+    console.error('Unhandled rejection:', err);
 });
 
 // ── Start server ───────────────────────────────────

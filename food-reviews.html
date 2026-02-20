@@ -90,6 +90,9 @@
             renderReviews('all');
         })();
 
+        var esc = TTBData.escapeHtml;
+        var safeTikTok = TTBData.sanitizeTikTokId;
+
         function renderReviews(filter) {
             grid.innerHTML = '';
             var spots = filter === 'all' ? allSpots : allSpots.filter(function (s) { return (s.tags || []).includes(filter); });
@@ -102,15 +105,16 @@
             spots.forEach(function (spot) {
                 var card = document.createElement('div');
                 card.className = 'review-card';
+                var rating = parseFloat(spot.rating) || 0;
                 card.innerHTML =
-                    '<div class="review-card-video"><iframe src="https://www.tiktok.com/embed/' + spot.tiktokId + '" allowfullscreen allow="encrypted-media" loading="lazy"></iframe></div>' +
-                    '<div class="review-card-body"><h3>' + spot.name + '</h3>' +
-                    '<div class="review-location"><i class="fas fa-map-marker-alt"></i> ' + spot.location + '</div>' +
-                    '<p class="review-snippet">' + (spot.snippet || '') + '</p>' +
-                    '<div class="review-rating"><span class="rating-badge"><i class="fas fa-star"></i> ' + (spot.rating || 0) + '/10</span>' +
-                    (spot.discount ? '<span class="rating-badge" style="background:rgba(148,180,247,0.15);color:var(--header-color);"><i class="fas fa-tag"></i> ' + spot.discount + '</span>' : '') +
+                    '<div class="review-card-video"><iframe src="https://www.tiktok.com/embed/' + safeTikTok(spot.tiktokId) + '" allowfullscreen allow="encrypted-media" loading="lazy"></iframe></div>' +
+                    '<div class="review-card-body"><h3>' + esc(spot.name) + '</h3>' +
+                    '<div class="review-location"><i class="fas fa-map-marker-alt"></i> ' + esc(spot.location) + '</div>' +
+                    '<p class="review-snippet">' + esc(spot.snippet || '') + '</p>' +
+                    '<div class="review-rating"><span class="rating-badge"><i class="fas fa-star"></i> ' + rating + '/10</span>' +
+                    (spot.discount ? '<span class="rating-badge" style="background:rgba(148,180,247,0.15);color:var(--header-color);"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</span>' : '') +
                     '</div>' +
-                    '<div class="review-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + t + '</span>'; }).join('') + '</div>' +
+                    '<div class="review-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
                     '</div>';
                 grid.appendChild(card);
             });

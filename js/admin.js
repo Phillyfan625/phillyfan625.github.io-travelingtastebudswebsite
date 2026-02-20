@@ -10,12 +10,8 @@ let pendingDeleteId = null;
 
 // ── Utilities ──────────────────────────────────
 
-function escapeHtml(str) {
-    if (!str) return '';
-    const d = document.createElement('div');
-    d.textContent = str;
-    return d.innerHTML;
-}
+// Use shared escapeHtml from TTBData module
+var escapeHtml = TTBData.escapeHtml;
 
 function showToast(message, type) {
     type = type || 'info';
