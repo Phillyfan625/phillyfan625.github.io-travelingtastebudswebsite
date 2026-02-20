@@ -165,102 +165,105 @@
     <div id="footer-container"></div>
 
     <!-- Scripts -->
-    <script src="/data/spots.js"></script>
+    <script src="/js/ttb-data.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script>
         // ========================================
-        // POPULATE TIKTOK CAROUSEL FROM DATA
+        // LOAD ALL DATA DYNAMICALLY
         // ========================================
-        const carousel = document.getElementById('tiktokCarousel');
+        (async function loadHomepage() {
+            // Show skeleton loaders while loading
+            const carousel = document.getElementById('tiktokCarousel');
+            carousel.innerHTML = Array(4).fill(0).map(() =>
+                '<div class="tiktok-card" style="opacity:0.5;"><div class="tiktok-card-video skeleton" style="height:380px;"></div><div class="tiktok-card-info"><div class="skeleton" style="height:18px;width:70%;margin-bottom:8px;"></div><div class="skeleton" style="height:14px;width:50%;"></div></div></div>'
+            ).join('');
 
-        TTB_SPOTS.forEach(spot => {
-            const card = document.createElement('div');
-            card.className = 'tiktok-card';
-            card.innerHTML = `
-                <div class="tiktok-card-video">
-                    <iframe src="https://www.tiktok.com/embed/${spot.tiktokId}" allowfullscreen allow="encrypted-media"></iframe>
-                </div>
-                <div class="tiktok-card-info">
-                    <div class="tiktok-card-name">${spot.name}</div>
-                    <div class="tiktok-card-location">
-                        <i class="fas fa-map-marker-alt"></i> ${spot.location}
-                    </div>
-                    <div class="tiktok-card-tags">
-                        ${spot.tags.map(t => `<span class="tiktok-tag">${t}</span>`).join('')}
-                    </div>
-                </div>
-            `;
-            carousel.appendChild(card);
-        });
+            let spots = [];
+            try {
+                spots = await TTBData.getSpots();
+            } catch (err) {
+                console.error('Failed to load spots:', err);
+                carousel.innerHTML = '<p style="color:var(--text-muted);padding:2rem;text-align:center;">Could not load reviews right now. Please refresh the page.</p>';
+                return;
+            }
 
-        // Update spot count stat
-        document.getElementById('spotCount').textContent = TTB_SPOTS.length + '+';
+            if (!spots.length) {
+                carousel.innerHTML = '<p style="color:var(--text-muted);padding:2rem;text-align:center;">No reviews yet — check back soon!</p>';
+                return;
+            }
+
+            // Populate carousel
+            carousel.innerHTML = '';
+            spots.forEach(function (spot) {
+                var card = document.createElement('div');
+                card.className = 'tiktok-card';
+                card.innerHTML =
+                    '<div class="tiktok-card-video">' +
+                    '<iframe src="https://www.tiktok.com/embed/' + spot.tiktokId + '" allowfullscreen allow="encrypted-media" loading="lazy"></iframe>' +
+                    '</div>' +
+                    '<div class="tiktok-card-info">' +
+                    '<div class="tiktok-card-name">' + spot.name + '</div>' +
+                    '<div class="tiktok-card-location"><i class="fas fa-map-marker-alt"></i> ' + spot.location + '</div>' +
+                    '<div class="tiktok-card-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + t + '</span>'; }).join('') + '</div>' +
+                    '</div>';
+                carousel.appendChild(card);
+            });
+
+            // Spot count stat
+            document.getElementById('spotCount').textContent = spots.length + '+';
+
+            // Map teaser
+            var teaserMap = L.map('mapTeaserPreview', {
+                zoomControl: false, scrollWheelZoom: false, dragging: false,
+                touchZoom: false, doubleClickZoom: false, attributionControl: false
+            }).setView([39.83, -75.10], 10);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CARTO'
+            }).addTo(teaserMap);
+
+            var teaserIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="width:14px;height:14px;background:#94b4f7;border-radius:50%;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4);"></div>',
+                iconSize: [14, 14], iconAnchor: [7, 7]
+            });
+
+            spots.forEach(function (spot) {
+                if (spot.lat && spot.lng) L.marker([spot.lat, spot.lng], { icon: teaserIcon }).addTo(teaserMap);
+            });
+
+            // Partner discounts
+            var partnersScroll = document.getElementById('partnersScroll');
+            partnersScroll.innerHTML = '';
+            spots.filter(function (s) { return s.discount; }).forEach(function (spot) {
+                var card = document.createElement('div');
+                card.className = 'partner-card';
+                card.innerHTML =
+                    '<img src="' + (spot.logoImage || '') + '" alt="' + spot.name + '">' +
+                    '<div class="partner-card-name">' + spot.name + '</div>' +
+                    '<div class="partner-card-discount">' + spot.discount + '</div>';
+                card.addEventListener('click', function () { openTikTokModal(spot.tiktokId, spot.name); });
+                partnersScroll.appendChild(card);
+            });
+        })();
 
         // Carousel navigation
         function scrollCarousel(direction) {
-            const container = document.getElementById('tiktokCarousel');
-            const scrollAmount = 300;
-            container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+            var container = document.getElementById('tiktokCarousel');
+            container.scrollBy({ left: direction * 300, behavior: 'smooth' });
         }
 
-        // ========================================
-        // MAP TEASER PREVIEW
-        // ========================================
-        const teaserMap = L.map('mapTeaserPreview', {
-            zoomControl: false,
-            scrollWheelZoom: false,
-            dragging: false,
-            touchZoom: false,
-            doubleClickZoom: false,
-            attributionControl: false
-        }).setView([39.83, -75.10], 10);
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-        }).addTo(teaserMap);
-
-        const teaserIcon = L.divIcon({
-            className: 'custom-marker',
-            html: '<div style="width:14px;height:14px;background:var(--header-color,#94b4f7);border-radius:50%;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4);"></div>',
-            iconSize: [14, 14],
-            iconAnchor: [7, 7]
-        });
-
-        TTB_SPOTS.forEach(spot => {
-            L.marker([spot.lat, spot.lng], { icon: teaserIcon }).addTo(teaserMap);
-        });
-
-        // ========================================
-        // PARTNER DISCOUNTS (only spots with discounts)
-        // ========================================
-        const partnersScroll = document.getElementById('partnersScroll');
-        TTB_SPOTS.filter(s => s.discount).forEach(spot => {
-            const card = document.createElement('div');
-            card.className = 'partner-card';
-            card.setAttribute('data-tiktok-id', spot.tiktokId);
-            card.innerHTML = `
-                <img src="${spot.logoImage}" alt="${spot.name}">
-                <div class="partner-card-name">${spot.name}</div>
-                <div class="partner-card-discount">${spot.discount}</div>
-            `;
-            card.addEventListener('click', () => openTikTokModal(spot.tiktokId, spot.name));
-            partnersScroll.appendChild(card);
-        });
-
-        // ========================================
-        // TIKTOK MODAL
-        // ========================================
+        // TikTok modal
         function openTikTokModal(videoId, name) {
             document.getElementById('tiktokModalLabel').textContent = name + ' - TikTok Review';
             document.getElementById('tiktokIframe').src = 'https://www.tiktok.com/embed/' + videoId;
-            const modal = new bootstrap.Modal(document.getElementById('tiktokModal'));
-            modal.show();
+            new bootstrap.Modal(document.getElementById('tiktokModal')).show();
         }
 
-        document.getElementById('tiktokModal').addEventListener('hidden.bs.modal', () => {
+        document.getElementById('tiktokModal').addEventListener('hidden.bs.modal', function () {
             document.getElementById('tiktokIframe').src = '';
         });
 
