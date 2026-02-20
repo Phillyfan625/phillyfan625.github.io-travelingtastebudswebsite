@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Traveling Tastebuds | NJ & Philly Food Reviews</title>
     <link rel="stylesheet" href="/styles.css">
-    <script async src="https://www.tiktok.com/embed.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,229 +13,131 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="description" content="Traveling Tastebuds - Your guide to the best food spots in New Jersey and Philadelphia. Watch TikTok reviews, explore the interactive food map, and discover hidden gems.">
 </head>
 
 <body>
-    <!-- Navbar will be loaded here by navbar-loader.js -->
+    <!-- Navbar -->
     <script src="/navbar-loader.js"></script>
-    <div id="desktopCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-            <button type="button" data-bs-target="#desktopCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <a href="/merch"><img src="/Images/ttbStPattysDesktop.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbStPattysDesktop1.png"
-                        style="max-height: 450px; object-fit: cover;" class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDrop.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDrop1.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDrop2.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-                <a href="/merch" style="text-decoration: none;"><button class="carouselBtn btn">Buy
-                        Now!</button></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDrop3.png" style="max-height: 450px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#desktopCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#desktopCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-    <div id="mobileCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-            <button type="button" data-bs-target="#mobileCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <a href="/merch"><img src="/Images/ttbStPattysMobile.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbStPattysMobile1.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDropMobile.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDropMobile1.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDropMobile2.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-            <div class="carousel-item">
-                <a href="/merch"><img src="/Images/ttbNewDropMobile3.png" style="max-height: 600px; object-fit: cover;"
-                        class="d-block w-100" alt="PJ New Drop"></a>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#mobileCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#mobileCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-    <h3 class="text-center mx-3 mb-3 mt-4" style="color: white;">Welcome Tastebuddies! Is this the best website in New
-        Jersey?
-    </h3>
-    <h5 class="text-center m-3" style="color: white;">Check out these awesome discounts you'll receive from local
-        restaurants when you wear this shirt!</h5>
-    <div class="container mt-5">
-        <div class="row">
-            <!-- Restaurant Cards -->
-            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
-                <div class="card restaurant-card" data-tiktok-id="7262868213384400171">
-                    <img src="/Images/picLogo.png" class="card-img-top" style="object-fit: contain;" alt="Pic-a-Lilli">
-                    <div class="card-body">
-                        <h5 class="card-title">Pic-a-Lilli<br>15% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
-                <div class="card restaurant-card" data-tiktok-id="7231695429392682286">
-                    <img src="/Images/lillosLogo.png" class="card-img-top" style="object-fit: contain;"
-                        alt="Lillos Tomato Pies">
-                    <div class="card-body">
-                        <h5 class="card-title">Lillos Tomato Pies<br>20% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
-                <div class="card restaurant-card" data-tiktok-id="7203508461517425963">
-                    <img src="/Images/foodMartLogo.png" class="card-img-top" alt="Friendly Food Mart">
-                    <div class="card-body">
-                        <h5 class="card-title">Friendly Food Mart<br>20% Off (with food item)</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4" style="align-self: center;">
-                <div class="card restaurant-card" data-tiktok-id="6974164228458548485">
-                    <img src="/Images/pizzaVillaLogo.png" class="card-img-top p-4" style="object-fit: contain;"
-                        alt="Pizza Villa">
-                    <div class="card-body">
-                        <h5 class="card-title">Pizza Villa<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7322637556959431978">
-                    <img src="/Images/bankBarLogo.png" class="card-img-top"
-                        style="object-fit: contain; background-color: black;" alt="Bank Bar">
-                    <div class="card-body">
-                        <h5 class="card-title">Bank Bar<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7330419649441516843">
-                    <img src="/Images/holyCityLogo.png" class="card-img-top" style="object-fit: contain;"
-                        alt="Holy City">
-                    <div class="card-body">
-                        <h5 class="card-title">Holy City<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="https://www.tiktok.com/embed/restaurant1-tiktok-url">
-                    <img src="/Images/kegAndKitchenLogo.png" class="card-img-top"
-                        style="background-color: black; object-fit: contain;" alt="Keg and Kitchen">
-                    <div class="card-body">
-                        <h5 class="card-title">Keg and Kitchen<br>15% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7302216662042955050">
-                    <img src="/Images/kidRipsLogo.png" style="object-fit: contain;" class="card-img-top p-3"
-                        alt="Kid Rips">
-                    <div class="card-body">
-                        <h5 class="card-title">Kid Rips<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7120744992095685931">
-                    <img src="/Images/mriLogo.png" class="card-img-top p-4" style="object-fit: contain;"
-                        alt="Mount Royal Inn">
-                    <div class="card-body">
-                        <h5 class="card-title">Mount Royal Inn<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-6 mb-4">
-                <div class="card restaurant-card" data-tiktok-id="7055090515661983023">
-                    <img src="/Images/wilsonsLogo.png" class="card-img-top" style="object-fit: contain;"
-                        alt="Wilson's Pub">
-                    <div class="card-body">
-                        <h5 class="card-title">Wilson's Pub<br>10% Off</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <img src="/Images/ttbLogo.png" alt="Traveling Tastebuds" class="hero-logo">
+            <h1 class="hero-title">Your Guide to the Best<br>Food in NJ & Philly</h1>
+            <p class="hero-subtitle">
+                Discovering hidden gems, one bite at a time. Join the Tastebuddies and explore
+                the best local restaurants through honest reviews and mouthwatering content.
+            </p>
+            <div class="hero-cta">
+                <a href="#latest-reviews" class="btn-ttb btn-ttb-primary">
+                    <i class="fab fa-tiktok"></i> Watch Reviews
+                </a>
+                <a href="/food-map" class="btn-ttb btn-ttb-outline">
+                    <i class="fas fa-map-marked-alt"></i> Explore the Map
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-number" id="spotCount">10+</div>
+                    <div class="hero-stat-label">Spots Reviewed</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">100K+</div>
+                    <div class="hero-stat-label">TikTok Followers</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">NJ & Philly</div>
+                    <div class="hero-stat-label">Coverage Area</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Modal -->
-    <div class="modal fade" id="restaurantModal" tabindex="-1" aria-labelledby="restaurantModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+    <!-- ===== LATEST TIKTOK REVIEWS CAROUSEL ===== -->
+    <section id="latest-reviews" class="reviews-section">
+        <div class="container">
+            <h2 class="section-title">Latest Reviews</h2>
+            <p class="section-subtitle">Swipe through our latest food adventures - each card is a real TikTok review you can watch right here</p>
+            <hr class="section-divider">
+        </div>
+        <div class="tiktok-carousel-wrapper container">
+            <button class="carousel-nav-btn prev" onclick="scrollCarousel(-1)" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="tiktok-scroll-container" id="tiktokCarousel">
+                <!-- Cards populated by JavaScript from spots data -->
+            </div>
+            <button class="carousel-nav-btn next" onclick="scrollCarousel(1)" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== INTERACTIVE MAP TEASER ===== -->
+    <section class="map-teaser-section">
+        <div class="container">
+            <h2 class="section-title">Explore the Food Map</h2>
+            <p class="section-subtitle">Every spot we've reviewed, pinned on an interactive map. Find your next meal.</p>
+            <hr class="section-divider">
+            <div class="map-teaser-card">
+                <div class="map-teaser-preview">
+                    <div id="mapTeaserPreview"></div>
+                    <div class="map-teaser-overlay">
+                        <a href="/food-map" class="btn-ttb btn-ttb-primary">
+                            <i class="fas fa-expand"></i> Open Full Map
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== DISCOUNT PARTNERS (de-emphasized, horizontal scroll) ===== -->
+    <section class="partners-section">
+        <div class="container">
+            <h2 class="section-title">Partner Discounts</h2>
+            <p class="section-subtitle">Rock the TTB merch and get exclusive deals at these local favorites</p>
+            <hr class="section-divider">
+        </div>
+        <div class="container">
+            <div class="partners-scroll" id="partnersScroll">
+                <!-- Populated by JavaScript -->
+            </div>
+            <div class="text-center mt-3">
+                <a href="/merch" class="btn-ttb btn-ttb-accent" style="font-size: 0.9rem;">
+                    <i class="fas fa-shopping-bag"></i> Shop TTB Merch
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TIKTOK VIDEO MODAL ===== -->
+    <div class="modal fade" id="tiktokModal" tabindex="-1" aria-labelledby="tiktokModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="restaurantModalLabel">TikTok Video</h5>
+                    <h5 class="modal-title" id="tiktokModalLabel">TikTok Review</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="tiktokEmbedContainer">
-                    <iframe id="tiktokIframe" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+                <div class="modal-body">
+                    <iframe id="tiktokIframe" width="100%" height="85vh" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Question of the Day -->
+    <!-- ===== QUESTION OF THE DAY ===== -->
     <div class="backdrop"></div>
     <div class="question-of-the-day-widget d-none">
         <div class="widgetHover">
             <div class="exitBtn"
-                style="background-color: var(--header-color); color: black; width: fit-content; border-radius: 50%; padding: 0px 5px;">
+                style="background-color: var(--background-color); color: var(--header-color); width: fit-content; border-radius: 50%; padding: 0px 6px; font-size: 0.8rem;">
                 X</div>
             <div style="margin: 0 auto">
-                <img style="max-width: 100px; display: block; display: block; margin: 0 auto;" src="/Images/ttbLogo.png"
+                <img style="max-width: 80px; display: block; margin: 0 auto;" src="/Images/ttbLogo.png"
                     alt="Traveling Tastebuds Logo" />
             </div>
             <div class="widgetText text-center">
@@ -246,12 +147,12 @@
     </div>
     <div class="question-of-the-day">
         <div class="questionExitBtn">X</div>
-        <h3 class="qotdTitle">Question of the Day:</h3>
-        <img id="question-image" src="" style="max-width: 200px;" alt="Question Image">
+        <h3 class="qotdTitle">Question of the Day</h3>
+        <img id="question-image" src="" style="max-width: 180px; border-radius: 12px;" alt="Question Image">
         <p class="question-text"></p>
         <div class="answer">
-            <input type="ttbText" placeholder="Enter your answer here..." />
-            <button class="ttbBtn submit-button">Submit</button>
+            <input type="ttbText" placeholder="Enter your answer..." />
+            <button class="submit-button">Submit</button>
         </div>
         <div class="qotdContainer">
             <p class="feedback"></p>
@@ -259,7 +160,113 @@
         </div>
     </div>
     <div class="widget-chevron-left" style="opacity: 0">&#x2190;</div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="/data/spots.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
     <script>
+        // ========================================
+        // POPULATE TIKTOK CAROUSEL FROM DATA
+        // ========================================
+        const carousel = document.getElementById('tiktokCarousel');
+
+        TTB_SPOTS.forEach(spot => {
+            const card = document.createElement('div');
+            card.className = 'tiktok-card';
+            card.innerHTML = `
+                <div class="tiktok-card-video">
+                    <iframe src="https://www.tiktok.com/embed/${spot.tiktokId}" allowfullscreen allow="encrypted-media"></iframe>
+                </div>
+                <div class="tiktok-card-info">
+                    <div class="tiktok-card-name">${spot.name}</div>
+                    <div class="tiktok-card-location">
+                        <i class="fas fa-map-marker-alt"></i> ${spot.location}
+                    </div>
+                    <div class="tiktok-card-tags">
+                        ${spot.tags.map(t => `<span class="tiktok-tag">${t}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            carousel.appendChild(card);
+        });
+
+        // Update spot count stat
+        document.getElementById('spotCount').textContent = TTB_SPOTS.length + '+';
+
+        // Carousel navigation
+        function scrollCarousel(direction) {
+            const container = document.getElementById('tiktokCarousel');
+            const scrollAmount = 300;
+            container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        // ========================================
+        // MAP TEASER PREVIEW
+        // ========================================
+        const teaserMap = L.map('mapTeaserPreview', {
+            zoomControl: false,
+            scrollWheelZoom: false,
+            dragging: false,
+            touchZoom: false,
+            doubleClickZoom: false,
+            attributionControl: false
+        }).setView([39.83, -75.10], 10);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+        }).addTo(teaserMap);
+
+        const teaserIcon = L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="width:14px;height:14px;background:var(--header-color,#94b4f7);border-radius:50%;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4);"></div>',
+            iconSize: [14, 14],
+            iconAnchor: [7, 7]
+        });
+
+        TTB_SPOTS.forEach(spot => {
+            L.marker([spot.lat, spot.lng], { icon: teaserIcon }).addTo(teaserMap);
+        });
+
+        // ========================================
+        // PARTNER DISCOUNTS (only spots with discounts)
+        // ========================================
+        const partnersScroll = document.getElementById('partnersScroll');
+        TTB_SPOTS.filter(s => s.discount).forEach(spot => {
+            const card = document.createElement('div');
+            card.className = 'partner-card';
+            card.setAttribute('data-tiktok-id', spot.tiktokId);
+            card.innerHTML = `
+                <img src="${spot.logoImage}" alt="${spot.name}">
+                <div class="partner-card-name">${spot.name}</div>
+                <div class="partner-card-discount">${spot.discount}</div>
+            `;
+            card.addEventListener('click', () => openTikTokModal(spot.tiktokId, spot.name));
+            partnersScroll.appendChild(card);
+        });
+
+        // ========================================
+        // TIKTOK MODAL
+        // ========================================
+        function openTikTokModal(videoId, name) {
+            document.getElementById('tiktokModalLabel').textContent = name + ' - TikTok Review';
+            document.getElementById('tiktokIframe').src = 'https://www.tiktok.com/embed/' + videoId;
+            const modal = new bootstrap.Modal(document.getElementById('tiktokModal'));
+            modal.show();
+        }
+
+        document.getElementById('tiktokModal').addEventListener('hidden.bs.modal', () => {
+            document.getElementById('tiktokIframe').src = '';
+        });
+
+        // ========================================
+        // QUESTION OF THE DAY
+        // ========================================
         const questionWidget = document.querySelector(".question-of-the-day-widget");
         const questionWidgetExitBtn = document.querySelector(".exitBtn");
         const questionPopUp = document.querySelector(".question-of-the-day");
@@ -283,43 +290,32 @@
         });
 
         const questionExitBtn = document.querySelector(".questionExitBtn");
-
         questionExitBtn.addEventListener("click", () => {
             document.querySelector(".question-of-the-day").style.display = "none";
             document.querySelector(".backdrop").style.display = "none";
         });
 
-        // Create an array of question objects for the entire month
         const questions = [{
-            question: "Where is this food from 👀? (Hint: It's in Glassboro, New Jersey)",
+            question: "Where is this food from? (Hint: It's in Glassboro, New Jersey)",
             imageUrl: "/Images/qotdImages/peterAndSons.jpeg",
-            acceptedAnswers: [`peter and sons`, `peter & sons`, `peter &amp; sons`, `peter and son`],
-            correctFeedback: "Correct! Way to go, you know your New Jersey food spots! Come back tomorrow for another question of the day!",
-            incorrectFeedback: "That's not quite it - the correct answer was Peter and Sons - Stay tuned for tomorrow's Question of the Day!",
-        },];
+            acceptedAnswers: ["peter and sons", "peter & sons", "peter &amp; sons", "peter and son"],
+            correctFeedback: "Correct! Way to go, you know your New Jersey food spots! Come back tomorrow for another question!",
+            incorrectFeedback: "That's not quite it - the correct answer was Peter and Sons. Stay tuned for tomorrow's Question of the Day!",
+        }];
 
-        // Use the current date to select the question of the day
         const today = new Date();
         const questionIndex = (today.getDate() - 1) % questions.length;
-        const currentQuestion = `${questions[questionIndex].question}`;
-        const currentImage = `${questions[questionIndex].imageUrl}`;
+        const currentQuestion = questions[questionIndex].question;
+        const currentImage = questions[questionIndex].imageUrl;
 
-        questionToday = document.querySelector(".question-text");
-        questionToday.innerText = currentQuestion;
+        document.querySelector(".question-text").innerText = currentQuestion;
+        document.getElementById("question-image").src = currentImage;
 
-
-        const questionImage = document.getElementById("question-image"); // Get the image element
-        questionImage.src = currentImage;
-
-        // Get the user's score from local storage
         let score = parseInt(localStorage.getItem("score")) || 0;
-
-        // Check if the user has already answered the question correctly
         let answeredCorrectly = localStorage.getItem("answeredCorrectly");
-
         let previousQuestion = localStorage.getItem("question");
+
         if (previousQuestion !== currentQuestion) {
-            // Reset the "answeredCorrectly" value
             answeredCorrectly = false;
             localStorage.setItem("answeredCorrectly", false);
         }
@@ -331,80 +327,50 @@
 
         submitButton.addEventListener("click", () => {
             const answer = document.querySelector('input[type="ttbText"]').value.trim().toLowerCase();
-
-            // Access the accepted answers based on the current day
             const acceptedAnswers = questions[questionIndex].acceptedAnswers;
 
-            // Check if the user has already answered correctly today
-            if (answeredCorrectly) {
+            if (answeredCorrectly === "true" || answeredCorrectly === true) {
                 qotdContainer.style.display = "block";
-                feedback.innerText = "You already got it right! Tune in tomorrow for another foodie question of the day!";
-                leaderboard.innerHTML = "You are on a " + score + " day streak 🔥!<br> Way to go, come back tomorrow to keep the streak alive!";
+                feedback.innerText = "You already got it right! Tune in tomorrow for another foodie question!";
+                leaderboard.innerHTML = "You are on a " + score + " day streak! Way to go!";
             } else if (acceptedAnswers.includes(answer)) {
                 qotdContainer.style.display = "block";
-                feedback.innerText = questions[questionIndex].correctFeedback; // Update the feedback based on the correct answer
+                feedback.innerText = questions[questionIndex].correctFeedback;
                 score++;
                 answeredCorrectly = true;
-                leaderboard.innerHTML = "You are on a " + score + " day streak 🔥!<br> Way to go, come back tomorrow to keep the streak alive!";
+                leaderboard.innerHTML = "You are on a " + score + " day streak! Way to go!";
             } else {
                 qotdContainer.style.display = "block";
-                feedback.innerText = questions[questionIndex].incorrectFeedback; // Update the feedback based on the incorrect answer
+                feedback.innerText = questions[questionIndex].incorrectFeedback;
             }
-            // Store the updated values in localStorage
+
             localStorage.setItem("score", score);
             localStorage.setItem("question", currentQuestion);
             localStorage.setItem("answeredCorrectly", answeredCorrectly);
         });
 
-        // Function to set the maximum height for restaurant images
-        function setMaxImageHeight() {
-            var maxImageHeight = 0;
-            var restaurantImages = document.querySelectorAll('.restaurant-card .card-img-top');
-
-            restaurantImages.forEach(function (image) {
-                image.style.height = 'auto';
-
-                var imageHeight = image.clientHeight;
-                if (imageHeight > maxImageHeight) {
-                    maxImageHeight = imageHeight;
+        // ========================================
+        // SCROLL ANIMATIONS
+        // ========================================
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
             });
+        }, observerOptions);
 
-            // Set the maximum height to all restaurant images
-            restaurantImages.forEach(function (image) {
-                image.style.height = `${maxImageHeight}px`;
-            });
-        }
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
 
-        // Attach the function to the resize event
-        window.addEventListener('resize', setMaxImageHeight);
-
-        window.onload = function () {
-            setMaxImageHeight();
-
-            function openTikTokModal(card) {
-                var videoId = card.getAttribute('data-tiktok-id');
-                var tiktokIframe = document.getElementById('tiktokIframe');
-
-                // Set the iframe's source to the TikTok embed URL using the video ID
-                tiktokIframe.src = `https://www.tiktok.com/embed/${videoId}`;
-
-                var restaurantModal = new bootstrap.Modal(document.getElementById('restaurantModal'));
-                restaurantModal.show();
-            }
-
-            var restaurantCards = document.querySelectorAll('.restaurant-card');
-            restaurantCards.forEach(function (card, index) {
-                card.addEventListener('click', function () {
-                    openTikTokModal(card);
-                });
-            });
-        };
+        // ========================================
+        // LOAD FOOTER
+        // ========================================
+        fetch('/footer.html')
+            .then(r => r.text())
+            .then(html => { document.getElementById('footer-container').innerHTML = html; })
+            .catch(() => {});
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>

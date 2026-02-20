@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Map | Traveling Tastebuds</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="description" content="Interactive food map showing every restaurant reviewed by Traveling Tastebuds in NJ and Philly.">
+</head>
+
+<body class="food-map-page">
+    <!-- Navbar -->
+    <script src="/navbar-loader.js"></script>
+
+    <div class="food-map-container">
+        <!-- Sidebar -->
+        <div class="food-map-sidebar" id="mapSidebar">
+            <div class="food-map-sidebar-header">
+                <h5 style="color: var(--text-white); margin-bottom: 0.75rem; font-weight: 600;">
+                    <i class="fas fa-utensils" style="color: var(--accent);"></i> TTB Food Map
+                </h5>
+                <div style="position: relative;">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="food-map-search" id="mapSearch" placeholder="Search spots...">
+                </div>
+            </div>
+            <div class="food-map-list" id="mapList">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Map -->
+        <div id="foodMap"></div>
+    </div>
+
+    <!-- TikTok Video Modal -->
+    <div class="modal fade" id="tiktokModal" tabindex="-1" aria-labelledby="tiktokModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tiktokModalLabel">TikTok Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="tiktokIframe" width="100%" height="85vh" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/data/spots.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script>
+        // ========================================
+        // INTERACTIVE FOOD MAP
+        // ========================================
+
+        const map = L.map('foodMap', {
+            zoomControl: true
+        }).setView([39.83, -75.08], 11);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Custom marker icon
+        function createMarkerIcon(isActive) {
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="
+                    width: ${isActive ? '22px' : '16px'};
+                    height: ${isActive ? '22px' : '16px'};
+                    background: ${isActive ? '#f7a94b' : '#94b4f7'};
+                    border-radius: 50%;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+                    transition: all 0.3s ease;
+                "></div>`,
+                iconSize: [isActive ? 22 : 16, isActive ? 22 : 16],
+                iconAnchor: [isActive ? 11 : 8, isActive ? 11 : 8]
+            });
+        }
+
+        const markers = {};
+        const mapList = document.getElementById('mapList');
+        let activeSpot = null;
+
+        // Build sidebar list and map markers
+        TTB_SPOTS.forEach((spot, index) => {
+            // Create map marker
+            const marker = L.marker([spot.lat, spot.lng], {
+                icon: createMarkerIcon(false)
+            }).addTo(map);
+
+            // Create popup content
+            const popupContent = `
+                <div class="ttb-map-popup">
+                    <h3>${spot.name}</h3>
+                    <p>${spot.location}</p>
+                    <div class="popup-tags">
+                        ${spot.tags.map(t => `<span class="popup-tag">${t}</span>`).join('')}
+                    </div>
+                    ${spot.discount ? `<div class="popup-discount"><i class="fas fa-tag"></i> ${spot.discount}</div>` : ''}
+                    <p style="font-size:0.8rem;color:#888;margin:0.3rem 0;">${spot.snippet}</p>
+                    <button class="popup-btn" onclick="openTikTokModal('${spot.tiktokId}', '${spot.name.replace(/'/g, "\\'")}')">
+                        <i class="fab fa-tiktok"></i> Watch Review
+                    </button>
+                </div>
+            `;
+
+            marker.bindPopup(popupContent, {
+                maxWidth: 280,
+                className: 'ttb-popup'
+            });
+
+            markers[index] = marker;
+
+            // Create sidebar list item
+            const item = document.createElement('div');
+            item.className = 'food-map-item';
+            item.setAttribute('data-index', index);
+            item.innerHTML = `
+                <img src="${spot.logoImage}" alt="${spot.name}" class="food-map-item-img">
+                <div class="food-map-item-info">
+                    <h4>${spot.name}</h4>
+                    <p><i class="fas fa-map-marker-alt" style="color: var(--accent);"></i> ${spot.location}</p>
+                    ${spot.discount ? `<div class="food-map-item-discount"><i class="fas fa-tag"></i> ${spot.discount}</div>` : ''}
+                </div>
+            `;
+
+            item.addEventListener('click', () => {
+                selectSpot(index);
+            });
+
+            mapList.appendChild(item);
+        });
+
+        function selectSpot(index) {
+            // Remove active state from previous
+            if (activeSpot !== null) {
+                markers[activeSpot].setIcon(createMarkerIcon(false));
+                const prevItem = document.querySelector(`.food-map-item[data-index="${activeSpot}"]`);
+                if (prevItem) prevItem.classList.remove('active');
+            }
+
+            activeSpot = index;
+            const spot = TTB_SPOTS[index];
+            const marker = markers[index];
+
+            // Set active state
+            marker.setIcon(createMarkerIcon(true));
+            const item = document.querySelector(`.food-map-item[data-index="${index}"]`);
+            if (item) {
+                item.classList.add('active');
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            // Pan to marker and open popup
+            map.flyTo([spot.lat, spot.lng], 14, { duration: 0.8 });
+            marker.openPopup();
+        }
+
+        // Search functionality
+        document.getElementById('mapSearch').addEventListener('input', function () {
+            const query = this.value.toLowerCase();
+            const items = document.querySelectorAll('.food-map-item');
+
+            items.forEach((item, i) => {
+                const spot = TTB_SPOTS[i];
+                const matches = spot.name.toLowerCase().includes(query) ||
+                    spot.location.toLowerCase().includes(query) ||
+                    spot.tags.some(t => t.toLowerCase().includes(query));
+                item.style.display = matches ? 'flex' : 'none';
+            });
+        });
+
+        // TikTok Modal
+        function openTikTokModal(videoId, name) {
+            document.getElementById('tiktokModalLabel').textContent = name + ' - TikTok Review';
+            document.getElementById('tiktokIframe').src = 'https://www.tiktok.com/embed/' + videoId;
+            const modal = new bootstrap.Modal(document.getElementById('tiktokModal'));
+            modal.show();
+        }
+
+        document.getElementById('tiktokModal').addEventListener('hidden.bs.modal', () => {
+            document.getElementById('tiktokIframe').src = '';
+        });
+
+        // Handle marker click to update sidebar
+        Object.keys(markers).forEach(index => {
+            markers[index].on('click', () => {
+                selectSpot(parseInt(index));
+            });
+        });
+    </script>
+</body>
+
+</html>
