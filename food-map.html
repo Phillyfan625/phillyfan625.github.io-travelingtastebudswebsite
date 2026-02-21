@@ -118,7 +118,9 @@
                 var videoId = safeTikTok(spot.tiktokId);
 
                 marker.bindPopup(
-                    '<div class="ttb-map-popup"><h3>' + esc(spot.name) + '</h3><p>' + esc(spot.location) + '</p>' +
+                    '<div class="ttb-map-popup">' +
+                    '<img src="' + esc(spot.logoImage || '/Images/ttbLogo.png') + '" alt="' + esc(spot.name) + '" class="popup-logo"' + (spot.logoBgColor ? ' style="background:' + esc(spot.logoBgColor) + ';"' : '') + '>' +
+                    '<h3>' + esc(spot.name) + '</h3><p>' + esc(spot.location) + '</p>' +
                     '<div class="popup-tags">' + (spot.tags || []).map(function (t) { return '<span class="popup-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
                     (spot.discount ? '<div class="popup-discount"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</div>' : '') +
                     '<p style="font-size:0.8rem;color:#888;margin:0.3rem 0;">' + esc(spot.snippet || '') + '</p>' +
@@ -183,6 +185,9 @@
         document.getElementById('tiktokModal').addEventListener('hidden.bs.modal', function () {
             document.getElementById('tiktokIframe').src = '';
         });
+
+        // Fix Leaflet rendering on resize / orientation change
+        window.addEventListener('resize', function () { if (map) setTimeout(function () { map.invalidateSize(); }, 200); });
     </script>
 </body>
 
