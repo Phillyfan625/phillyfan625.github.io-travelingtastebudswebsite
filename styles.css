@@ -810,6 +810,17 @@ h1, h2, h3, h4, h5, h6,
 	font-family: 'Poppins', sans-serif;
 }
 
+.ttb-map-popup .popup-logo {
+	width: 60px;
+	height: 60px;
+	object-fit: contain;
+	border-radius: var(--radius-sm);
+	background: white;
+	padding: 4px;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	margin-bottom: 0.5rem;
+}
+
 .ttb-map-popup h3 {
 	font-size: 1rem;
 	font-weight: 600;
@@ -833,10 +844,11 @@ h1, h2, h3, h4, h5, h6,
 
 .ttb-map-popup .popup-tag {
 	font-size: 0.65rem;
-	background: #eef3ff;
-	color: var(--background-color);
-	padding: 0.15rem 0.5rem;
+	background: var(--header-color);
+	color: #ffffff;
+	padding: 0.2rem 0.6rem;
 	border-radius: 50px;
+	font-weight: 500;
 }
 
 .ttb-map-popup .popup-discount {
@@ -1675,16 +1687,20 @@ h1, h2, h3, h4, h5, h6,
 	/* Food map mobile */
 	.food-map-container {
 		flex-direction: column;
-		height: auto;
+		height: calc(100vh - 80px);
+		height: calc(100dvh - 80px);
 	}
 	.food-map-sidebar {
 		width: 100%;
-		max-height: 40vh;
+		max-height: 35%;
+		min-height: 120px;
 		border-right: none;
 		border-bottom: 1px solid var(--glass-border);
+		flex-shrink: 0;
 	}
 	#foodMap {
-		height: 60vh;
+		flex: 1;
+		min-height: 0;
 	}
 }
 
