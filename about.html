@@ -4,55 +4,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
-
+    <title>About | Traveling Tastebuds</title>
     <link rel="stylesheet" href="/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="description" content="Learn about PJ and the story behind Traveling Tastebuds - supporting local restaurants one video at a time.">
 </head>
 
 <body>
-    <!-- Navbar will be loaded here by navbar-loader.js -->
+    <!-- Navbar -->
     <script src="/navbar-loader.js"></script>
-    <div class="container">
-        <h1 class="text-center my-5" style="color: white;">About Me!</h1>
-        <div class="row my-5">
-            <div class="col-lg-6 mb-lg-0 mb-5" style="display: flex; max-height: 400px; position: relative;">
-                <img src="/Images/aboutMe.JPG" class="img-fluid" alt="About Me" style="object-fit: cover;">
-            </div>
-            <div class="col-lg-6 d-flex align-items-center text-center">
-                <h4 style="color: white;">In the summer of 2020, amidst the devastating impact of Covid-19 on small
-                    businesses, I witnessed firsthand the struggles facing the local restaurants in my community,
-                    establishments that held a special place in my heart. Fueled by a passion
-                    for creativity and a determination to make a difference, I embarked on a journey that has surpassed
-                    my wildest expectations.</h4><br><br>
-            </div>
-        </div>
 
-        <div class="row my-5">
-            <div class="col-lg-6 mb-lg-0 d-flex align-items-center text-center order-lg-1 order-2">
-                <h4 style="color: white;">Fast forward three years, and I've had the privilege of igniting online
-                    success for numerous restaurants, collaborating with esteemed local brands along the way. Yet, this
-                    is just the beginning. With a mission to explore and support every
-                    culinary gem in our community, I'm committed to uplifting the food and beverage industry, one
-                    captivating video at a time.</h4><br><br>
+    <!-- Hero -->
+    <section class="about-hero">
+        <div class="hero-content">
+            <img src="/Images/pjCartoon.png" alt="PJ" style="height: 100px; margin-bottom: 1rem; filter: drop-shadow(0 4px 15px rgba(30,64,175,0.2));">
+            <h1 class="section-title" style="font-size: 2.5rem;">The Story Behind TTB</h1>
+            <p class="section-subtitle">How a passion for local food and community turned into something bigger than I ever imagined</p>
+            <hr class="section-divider">
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="about-content-section">
+        <div class="container">
+            <!-- Story Block 1 -->
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="about-card" style="margin-bottom: 0;">
+                        <img src="/Images/aboutMe.JPG" class="about-card-img" alt="PJ at a restaurant">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div style="padding: 0 1rem;">
+                        <h3 style="color: var(--header-color); margin-bottom: 1rem;">Where It All Started</h3>
+                        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.8;">
+                            In the summer of 2020, amidst the devastating impact of Covid-19 on small businesses,
+                            I witnessed firsthand the struggles facing the local restaurants in my community -
+                            establishments that held a special place in my heart. Fueled by a passion for creativity
+                            and a determination to make a difference, I embarked on a journey that has surpassed my
+                            wildest expectations.
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-6 mb-lg-0 mb-5 order-lg-2 order-1"
-                style="display: flex; max-height: 400px; position: relative;">
-                <img src="/Images/aboutMe1.jpg" class="img-fluid" alt="About Me" style="object-fit: cover;">
+
+            <!-- Story Block 2 -->
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
+                    <div class="about-card" style="margin-bottom: 0;">
+                        <img src="/Images/aboutMe1.jpg" class="about-card-img" alt="PJ creating content">
+                    </div>
+                </div>
+                <div class="col-lg-6 order-lg-1">
+                    <div style="padding: 0 1rem;">
+                        <h3 style="color: var(--header-color); margin-bottom: 1rem;">The Mission Continues</h3>
+                        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.8;">
+                            Fast forward and I've had the privilege of igniting online success for numerous restaurants,
+                            collaborating with esteemed local brands along the way. Yet, this is just the beginning.
+                            With a mission to explore and support every culinary gem in our community, I'm committed
+                            to uplifting the food and beverage industry, one captivating video at a time.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center" style="padding: 2rem 0;">
+                <h3 style="color: var(--text-white); margin-bottom: 1rem;">Want to work together?</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Whether you're a restaurant looking for exposure or a brand looking to collaborate, let's connect.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/services" class="btn-ttb btn-ttb-primary"><i class="fas fa-briefcase"></i> View Services</a>
+                    <a href="/contact" class="btn-ttb btn-ttb-outline"><i class="fas fa-envelope"></i> Get In Touch</a>
+                </div>
             </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+    <script>
+        fetch('/footer.html')
+            .then(r => r.text())
+            .then(html => { document.getElementById('footer-container').innerHTML = html; })
+            .catch(() => {});
+    </script>
 </body>
 
 </html>

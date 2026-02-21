@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Traveling Tastebuds</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- LOGIN SCREEN -->
+    <div class="admin-login-wrapper" id="loginScreen">
+        <div class="admin-login-card">
+            <img src="/Images/ttbLogo.png" alt="TTB Logo">
+            <h2>TTB Admin</h2>
+            <p class="subtitle">Enter your password to manage spots</p>
+            <form id="loginForm" autocomplete="off">
+                <input type="password" class="form-control mb-3" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                <button type="submit" class="btn-ttb btn-ttb-primary" id="loginBtn" style="width:100%;justify-content:center;border:none;font-size:1rem;">
+                    <i class="fas fa-lock"></i> <span>Log In</span>
+                </button>
+            </form>
+            <p style="color:var(--text-muted);font-size:0.75rem;margin-top:1.5rem;margin-bottom:0;">
+                <a href="/" style="color:var(--header-color);text-decoration:none;">&larr; Back to site</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="admin-dashboard" id="dashboard">
+        <div class="admin-topbar">
+            <div class="admin-topbar-left">
+                <img src="/Images/ttbLogo.png" alt="TTB">
+                <h1>Spot Manager</h1>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+                <a href="/" class="btn-ttb btn-ttb-outline" style="padding:0.4rem 1rem;font-size:0.8rem;"><i class="fas fa-external-link-alt"></i> View Site</a>
+                <button class="btn-ttb btn-ttb-outline" style="padding:0.4rem 1rem;font-size:0.8rem;" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+            </div>
+        </div>
+        <div class="admin-stats" id="adminStats">
+            <div class="admin-stat-card"><div class="stat-number" id="statTotal">-</div><div class="stat-label">Total Spots</div></div>
+            <div class="admin-stat-card"><div class="stat-number" id="statDiscounts">-</div><div class="stat-label">With Discounts</div></div>
+            <div class="admin-stat-card"><div class="stat-number" id="statAvgRating">-</div><div class="stat-label">Avg Rating</div></div>
+            <div class="admin-stat-card"><div class="stat-number" id="statTags">-</div><div class="stat-label">Unique Tags</div></div>
+        </div>
+        <div class="admin-toolbar">
+            <div style="position:relative;flex:1;max-width:350px;">
+                <i class="fas fa-search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);"></i>
+                <input type="text" class="admin-search" id="adminSearch" placeholder="Search spots...">
+            </div>
+            <div style="display:flex;gap:0.5rem;">
+                <button class="btn-ttb btn-ttb-outline" style="font-size:0.85rem;padding:0.55rem 1.2rem;" onclick="handleSeedDB()"><i class="fas fa-database"></i> Seed DB</button>
+                <button class="btn-ttb btn-ttb-primary" style="font-size:0.85rem;padding:0.55rem 1.2rem;" onclick="openAddModal()"><i class="fas fa-plus"></i> Add Spot</button>
+            </div>
+        </div>
+        <div class="admin-table-wrapper">
+            <table class="admin-table">
+                <thead><tr><th></th><th>Name</th><th>Location</th><th>Tags</th><th>Rating</th><th>Discount</th><th>Actions</th></tr></thead>
+                <tbody id="spotsTableBody">
+                    <tr><td colspan="7">
+                        <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div>
+                        <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div>
+                        <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ADD/EDIT MODAL -->
+    <div class="admin-modal-backdrop" id="spotModal">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h2 id="modalTitle">Add New Spot</h2>
+                <button class="admin-modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="spotForm" autocomplete="off">
+                    <input type="hidden" id="spotId">
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Restaurant Name <span class="required">*</span></label>
+                            <input type="text" class="admin-input" id="spotName" placeholder="e.g. Joe's Pizza" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Location (City, State) <span class="required">*</span></label>
+                            <input type="text" class="admin-input" id="spotLocation" placeholder="e.g. Haddonfield, NJ" required>
+                        </div>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>TikTok Video ID <span class="required">*</span></label>
+                            <input type="text" class="admin-input" id="spotTiktokId" placeholder="e.g. 7262868213384400171" required>
+                            <p class="admin-form-help">The number at the end of the TikTok video URL</p>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Discount</label>
+                            <input type="text" class="admin-input" id="spotDiscount" placeholder="e.g. 15% Off">
+                            <p class="admin-form-help">Leave blank if no discount</p>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Short Description</label>
+                        <input type="text" class="admin-input" id="spotSnippet" placeholder="e.g. A South Jersey classic with great pub grub" maxlength="300">
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Logo / Image URL</label>
+                            <input type="text" class="admin-input" id="spotLogoImage" placeholder="e.g. /Images/myLogo.png">
+                            <p class="admin-form-help">Path to an image in /Images/ or a full URL</p>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Logo Background Color</label>
+                            <div style="display:flex;gap:0.5rem;align-items:center;">
+                                <input type="color" id="spotLogoBgColorPicker" value="#ffffff" style="width:44px;height:38px;border:1px solid var(--glass-border);border-radius:var(--radius-sm);cursor:pointer;background:var(--glass);padding:2px;">
+                                <input type="text" class="admin-input" id="spotLogoBgColor" placeholder="#ffffff" style="flex:1;" maxlength="9">
+                            </div>
+                            <p class="admin-form-help">Hex color behind the logo. Default is white. Use dark for white logos.</p>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Food Background Image URL</label>
+                        <input type="text" class="admin-input" id="spotFoodImage" placeholder="e.g. /Images/food/picALilli.jpg">
+                        <p class="admin-form-help">Background image for carousel card. Leave blank for default gradient.</p>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Tags</label>
+                        <div class="tags-input-wrapper" id="tagsWrapper">
+                            <input type="text" id="tagInput" placeholder="Type tag + Enter...">
+                        </div>
+                        <p class="admin-form-help">Press Enter or comma to add. Backspace to remove last.</p>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Rating</label>
+                        <div class="rating-slider-wrapper">
+                            <input type="range" id="spotRating" min="0" max="10" step="0.5" value="8">
+                            <div class="rating-display" id="ratingDisplay">8.0</div>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label><i class="fas fa-search" style="color:var(--header-color);"></i> Address Lookup</label>
+                        <div style="display:flex;gap:0.5rem;">
+                            <input type="text" class="admin-input" id="addressSearch" placeholder="e.g. 123 Main St, Philadelphia, PA" style="flex:1;">
+                            <button type="button" class="btn-ttb btn-ttb-primary" onclick="geocodeAddress()" style="font-size:0.85rem;padding:0.55rem 1rem;white-space:nowrap;">
+                                <i class="fas fa-map-marker-alt"></i> Lookup
+                            </button>
+                        </div>
+                        <p class="admin-form-help">Enter an address to auto-fill coordinates and place the map marker</p>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Latitude <span class="required">*</span></label>
+                            <input type="number" class="admin-input" id="spotLat" step="0.0001" placeholder="e.g. 39.8390" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Longitude <span class="required">*</span></label>
+                            <input type="number" class="admin-input" id="spotLng" step="0.0001" placeholder="e.g. -75.0540" required>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label><i class="fas fa-map-pin" style="color:var(--header-color);"></i> Pick on Map</label>
+                        <div class="map-picker-container"><div id="mapPicker"></div></div>
+                        <p class="map-picker-hint"><i class="fas fa-mouse-pointer"></i> Click the map to set coordinates</p>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn-ttb btn-ttb-outline" onclick="closeModal()" style="font-size:0.9rem;">Cancel</button>
+                <button class="btn-ttb btn-ttb-primary" id="saveSpotBtn" onclick="saveSpot()" style="font-size:0.9rem;">
+                    <i class="fas fa-save"></i> <span>Save Spot</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRM DIALOG -->
+    <div class="admin-modal-backdrop" id="confirmDialog">
+        <div class="confirm-dialog">
+            <h3 id="confirmTitle">Delete Spot?</h3>
+            <p id="confirmMessage">This action cannot be undone.</p>
+            <div class="btn-row">
+                <button class="btn-ttb btn-ttb-outline" onclick="closeConfirm()" style="font-size:0.9rem;">Cancel</button>
+                <button class="btn-ttb btn-danger" id="confirmBtn" style="font-size:0.9rem;"><i class="fas fa-trash-alt"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/ttb-data.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="/js/admin.js"></script>
+</body>
+</html>

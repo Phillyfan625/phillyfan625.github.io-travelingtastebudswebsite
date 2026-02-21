@@ -4,27 +4,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Reviews</title>
-
+    <title>Food Reviews | Traveling Tastebuds</title>
     <link rel="stylesheet" href="/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="description" content="All food reviews by Traveling Tastebuds - watch TikTok reviews of the best restaurants in NJ and Philly.">
 </head>
 
 <body>
-    <!-- Navbar will be loaded here by navbar-loader.js -->
+    <!-- Navbar -->
     <script src="/navbar-loader.js"></script>
-    <h1 class="text-center m-5" style="color: white;">COMING SOON...</h1>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+    <!-- Header -->
+    <section class="services-hero">
+        <div class="hero-content">
+            <h1 class="section-title" style="font-size: 2.5rem;">All Reviews</h1>
+            <p class="section-subtitle">Every spot we've tried, rated, and reviewed. Watch the TikTok reviews and discover your next favorite meal.</p>
+            <hr class="section-divider">
+        </div>
+    </section>
+
+    <!-- Filter Bar -->
+    <section class="container" style="padding-top: 2rem;">
+        <div class="reviews-filter-bar" id="filterBar">
+            <button class="filter-btn active" data-filter="all">All</button>
+        </div>
+    </section>
+
+    <!-- Reviews Grid -->
+    <section class="container" style="padding-bottom: 4rem;">
+        <div class="reviews-grid" id="reviewsGrid">
+            <!-- Populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="/js/ttb-data.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+    <script>
+        var allSpots = [];
+        var grid = document.getElementById('reviewsGrid');
+        var filterBar = document.getElementById('filterBar');
+
+        // Loading skeleton
+        grid.innerHTML = Array(3).fill(0).map(function () {
+            return '<div class="review-card" style="opacity:0.5;"><div class="skeleton" style="height:400px;"></div><div style="padding:1.25rem;"><div class="skeleton" style="height:20px;width:60%;margin-bottom:10px;"></div><div class="skeleton" style="height:14px;width:40%;"></div></div></div>';
+        }).join('');
+
+        (async function loadReviews() {
+            try {
+                allSpots = await TTBData.getSpots();
+            } catch (err) {
+                console.error('Failed to load reviews:', err);
+                grid.innerHTML = '<div style="text-align:center;padding:4rem 2rem;color:var(--text-muted);grid-column:1/-1;"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--accent);display:block;margin-bottom:1rem;"></i><h3>Could not load reviews</h3><p>Please refresh the page to try again.</p></div>';
+                return;
+            }
+
+            if (!allSpots.length) {
+                grid.innerHTML = '<div style="text-align:center;padding:4rem 2rem;color:var(--text-muted);grid-column:1/-1;"><i class="fas fa-utensils" style="font-size:2rem;display:block;margin-bottom:1rem;"></i><h3>No reviews yet</h3><p>Check back soon!</p></div>';
+                return;
+            }
+
+            // Build filter buttons
+            var tagSet = new Set();
+            allSpots.forEach(function (s) { (s.tags || []).forEach(function (t) { tagSet.add(t); }); });
+            Array.from(tagSet).sort().forEach(function (tag) {
+                var btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.setAttribute('data-filter', tag);
+                btn.textContent = tag;
+                filterBar.appendChild(btn);
+            });
+
+            renderReviews('all');
+        })();
+
+        var esc = TTBData.escapeHtml;
+        var safeTikTok = TTBData.sanitizeTikTokId;
+
+        function renderReviews(filter) {
+            grid.innerHTML = '';
+            var spots = filter === 'all' ? allSpots : allSpots.filter(function (s) { return (s.tags || []).includes(filter); });
+
+            if (!spots.length) {
+                grid.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);grid-column:1/-1;">No spots match this filter.</div>';
+                return;
+            }
+
+            spots.forEach(function (spot) {
+                var card = document.createElement('div');
+                card.className = 'review-card';
+                var rating = parseFloat(spot.rating) || 0;
+                card.innerHTML =
+                    '<div class="review-card-video"><iframe src="https://www.tiktok.com/embed/' + safeTikTok(spot.tiktokId) + '" allowfullscreen allow="encrypted-media" loading="lazy"></iframe></div>' +
+                    '<div class="review-card-body"><h3>' + esc(spot.name) + '</h3>' +
+                    '<div class="review-location"><i class="fas fa-map-marker-alt"></i> ' + esc(spot.location) + '</div>' +
+                    '<p class="review-snippet">' + esc(spot.snippet || '') + '</p>' +
+                    '<div class="review-rating"><span class="rating-badge"><i class="fas fa-star"></i> ' + rating + '/10</span>' +
+                    (spot.discount ? '<span class="rating-badge" style="background:rgba(30,64,175,0.1);color:var(--header-color);"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</span>' : '') +
+                    '</div>' +
+                    '<div class="review-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
+                    '</div>';
+                grid.appendChild(card);
+            });
+        }
+
+        filterBar.addEventListener('click', function (e) {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+                e.target.classList.add('active');
+                renderReviews(e.target.getAttribute('data-filter'));
+            }
+        });
+
+        fetch('/footer.html').then(function (r) { return r.text(); })
+            .then(function (html) { document.getElementById('footer-container').innerHTML = html; })
+            .catch(function () {});
+    </script>
 </body>
 
 </html>
