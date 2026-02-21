@@ -83,10 +83,25 @@ function showToast(message, type) {
                     renderTagChips();
                 }
                 this.value = '';
+                hideTagSuggestions();
             }
             if (e.key === 'Backspace' && !this.value && currentTags.length) {
                 currentTags.pop();
                 renderTagChips();
+            }
+            if (e.key === 'Escape') {
+                hideTagSuggestions();
+            }
+        });
+        tagInput.addEventListener('input', function () {
+            showTagSuggestions(this.value);
+        });
+        tagInput.addEventListener('focus', function () {
+            showTagSuggestions(this.value);
+        });
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.tags-input-wrapper') && !e.target.closest('.tag-suggestions')) {
+                hideTagSuggestions();
             }
         });
     }
@@ -95,6 +110,19 @@ function showToast(message, type) {
     if (tagsWrapper) {
         tagsWrapper.addEventListener('click', function () {
             document.getElementById('tagInput').focus();
+        });
+    }
+
+    var colorPicker = document.getElementById('spotLogoBgColorPicker');
+    var colorText = document.getElementById('spotLogoBgColor');
+    if (colorPicker && colorText) {
+        colorPicker.addEventListener('input', function () {
+            colorText.value = this.value;
+        });
+        colorText.addEventListener('input', function () {
+            if (/^#[0-9a-fA-F]{6}$/.test(this.value)) {
+                colorPicker.value = this.value;
+            }
         });
     }
 
@@ -211,7 +239,7 @@ function renderTable(spots) {
         var id = spot._id || '';
         var safeName = escapeHtml(spot.name);
         return '<tr class="admin-table-row" data-id="' + id + '">' +
-            '<td>' + (spot.logoImage ? '<img src="' + escapeHtml(spot.logoImage) + '" alt="" class="spot-logo">' : '<div class="spot-logo skeleton"></div>') + '</td>' +
+            '<td>' + (spot.logoImage ? '<img src="' + escapeHtml(spot.logoImage) + '" alt="" class="spot-logo"' + (spot.logoBgColor ? ' style="background:' + escapeHtml(spot.logoBgColor) + ';"' : '') + '>' : '<div class="spot-logo skeleton"></div>') + '</td>' +
             '<td class="spot-name">' + safeName + '</td>' +
             '<td style="color:var(--text-muted);font-size:0.85rem;">' + escapeHtml(spot.location) + '</td>' +
             '<td><div class="spot-tags">' + (spot.tags || []).map(function (t) { return '<span class="spot-tag">' + escapeHtml(t) + '</span>'; }).join('') + '</div></td>' +
@@ -233,6 +261,8 @@ function openAddModal() {
     document.getElementById('spotId').value = '';
     document.getElementById('spotRating').value = 8;
     document.getElementById('ratingDisplay').textContent = '8.0';
+    document.getElementById('spotLogoBgColor').value = '';
+    document.getElementById('spotLogoBgColorPicker').value = '#ffffff';
     currentTags = [];
     renderTagChips();
     openModal();
@@ -251,6 +281,9 @@ function openEditModal(id) {
     document.getElementById('spotDiscount').value = spot.discount || '';
     document.getElementById('spotSnippet').value = spot.snippet || '';
     document.getElementById('spotLogoImage').value = spot.logoImage || '';
+    document.getElementById('spotLogoBgColor').value = spot.logoBgColor || '';
+    document.getElementById('spotLogoBgColorPicker').value = spot.logoBgColor || '#ffffff';
+    document.getElementById('spotFoodImage').value = spot.foodImage || '';
     document.getElementById('spotLat').value = spot.lat || '';
     document.getElementById('spotLng').value = spot.lng || '';
     document.getElementById('spotRating').value = spot.rating || 0;
@@ -275,7 +308,7 @@ function openModal() {
     setTimeout(function () {
         if (!mapPicker) {
             mapPicker = L.map('mapPicker').setView([39.83, -75.08], 10);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; OSM &copy; CARTO'
             }).addTo(mapPicker);
             mapPicker.on('click', function (e) {
@@ -299,6 +332,49 @@ function setPickerMarker(lat, lng) {
     mapPickerMarker = L.marker([lat, lng]).addTo(mapPicker);
 }
 
+// ── Address Geocoding ─────────────────────────
+
+async function geocodeAddress() {
+    var address = document.getElementById('addressSearch').value.trim();
+    if (!address) { showToast('Enter an address to look up', 'error'); return; }
+
+    var btn = document.querySelector('[onclick="geocodeAddress()"]');
+    var originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Looking up...';
+
+    try {
+        var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(address);
+        var res = await fetch(url, {
+            headers: { 'Accept': 'application/json' }
+        });
+        var results = await res.json();
+
+        if (!results || results.length === 0) {
+            showToast('Address not found. Try a more specific address.', 'error');
+            return;
+        }
+
+        var lat = parseFloat(results[0].lat).toFixed(4);
+        var lng = parseFloat(results[0].lon).toFixed(4);
+
+        document.getElementById('spotLat').value = lat;
+        document.getElementById('spotLng').value = lng;
+
+        if (mapPicker) {
+            mapPicker.setView([lat, lng], 15);
+            setPickerMarker(lat, lng);
+        }
+
+        showToast('Found: ' + results[0].display_name.split(',').slice(0, 3).join(','), 'success');
+    } catch (err) {
+        showToast('Geocoding failed: ' + err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+    }
+}
+
 // ── Tags ───────────────────────────────────────
 
 function renderTagChips() {
@@ -318,6 +394,57 @@ function removeTag(index) {
     renderTagChips();
 }
 
+function getAllUniqueTags() {
+    var tagSet = new Set();
+    allSpots.forEach(function (s) {
+        (s.tags || []).forEach(function (t) { tagSet.add(t.toLowerCase()); });
+    });
+    return Array.from(tagSet).sort();
+}
+
+function showTagSuggestions(query) {
+    var existing = document.querySelector('.tag-suggestions');
+    if (existing) existing.remove();
+
+    var allTags = getAllUniqueTags();
+    var q = (query || '').trim().toLowerCase();
+
+    // Filter: show tags that match the query and aren't already selected
+    var matches = allTags.filter(function (t) {
+        return !currentTags.includes(t) && (q === '' || t.includes(q));
+    });
+
+    if (matches.length === 0) return;
+
+    var dropdown = document.createElement('div');
+    dropdown.className = 'tag-suggestions';
+    matches.slice(0, 8).forEach(function (tag) {
+        var item = document.createElement('div');
+        item.className = 'tag-suggestion-item';
+        item.textContent = tag;
+        item.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (!currentTags.includes(tag)) {
+                currentTags.push(tag);
+                renderTagChips();
+            }
+            document.getElementById('tagInput').value = '';
+            hideTagSuggestions();
+            document.getElementById('tagInput').focus();
+        });
+        dropdown.appendChild(item);
+    });
+
+    var wrapper = document.getElementById('tagsWrapper');
+    wrapper.parentElement.style.position = 'relative';
+    wrapper.parentElement.appendChild(dropdown);
+}
+
+function hideTagSuggestions() {
+    var existing = document.querySelector('.tag-suggestions');
+    if (existing) existing.remove();
+}
+
 // ── Save ───────────────────────────────────────
 
 async function saveSpot() {
@@ -332,6 +459,8 @@ async function saveSpot() {
         discount: document.getElementById('spotDiscount').value.trim(),
         snippet: document.getElementById('spotSnippet').value.trim(),
         logoImage: document.getElementById('spotLogoImage').value.trim(),
+        logoBgColor: document.getElementById('spotLogoBgColor').value.trim(),
+        foodImage: document.getElementById('spotFoodImage').value.trim(),
         lat: parseFloat(document.getElementById('spotLat').value),
         lng: parseFloat(document.getElementById('spotLng').value),
         rating: parseFloat(document.getElementById('spotRating').value),

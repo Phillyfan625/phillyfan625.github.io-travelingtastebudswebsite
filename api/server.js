@@ -61,6 +61,9 @@ function validateSpot(body) {
     if (body.tags && !Array.isArray(body.tags)) {
         errors.push('Tags must be an array');
     }
+    if (body.foodImage && !isValidImageUrl(body.foodImage)) {
+        errors.push('Food image URL must start with / or https://');
+    }
     return errors;
 }
 
@@ -72,6 +75,7 @@ function isValidImageUrl(url) {
 
 function buildSpotDocument(body) {
     const logoImage = sanitizeString(body.logoImage || '', 500);
+    const foodImage = sanitizeString(body.foodImage || '', 500);
     return {
         name: sanitizeString(body.name, 100),
         tiktokId: body.tiktokId ? body.tiktokId.trim().replace(/\D/g, '').slice(0, 25) : '',
@@ -80,11 +84,13 @@ function buildSpotDocument(body) {
         location: sanitizeString(body.location, 200),
         discount: sanitizeString(body.discount || '', 100),
         logoImage: isValidImageUrl(logoImage) ? logoImage : '',
+        foodImage: isValidImageUrl(foodImage) ? foodImage : '',
         tags: Array.isArray(body.tags)
             ? body.tags.map(t => sanitizeString(t, 50).toLowerCase()).filter(Boolean).slice(0, 20)
             : [],
         rating: body.rating != null ? Math.round(Math.min(10, Math.max(0, Number(body.rating))) * 2) / 2 : 0,
-        snippet: sanitizeString(body.snippet || '', 300)
+        snippet: sanitizeString(body.snippet || '', 300),
+        logoBgColor: /^#[0-9a-fA-F]{3,8}$/.test((body.logoBgColor || '').trim()) ? body.logoBgColor.trim() : ''
     };
 }
 

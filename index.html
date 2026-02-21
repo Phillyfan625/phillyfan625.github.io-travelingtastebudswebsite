@@ -10,7 +10,7 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -22,57 +22,55 @@
     <!-- Navbar -->
     <script src="/navbar-loader.js"></script>
 
-    <!-- ===== HERO SECTION ===== -->
-    <section class="hero-section">
-        <div class="hero-content">
-            <img src="/Images/ttbLogo.png" alt="Traveling Tastebuds" class="hero-logo">
-            <h1 class="hero-title">Your Guide to the Best<br>Food in NJ & Philly</h1>
-            <p class="hero-subtitle">
-                Discovering hidden gems, one bite at a time. Join the Tastebuddies and explore
-                the best local restaurants through honest reviews and mouthwatering content.
-            </p>
-            <div class="hero-cta">
-                <a href="#latest-reviews" class="btn-ttb btn-ttb-primary">
-                    <i class="fab fa-tiktok"></i> Watch Reviews
-                </a>
-                <a href="/food-map" class="btn-ttb btn-ttb-outline">
-                    <i class="fas fa-map-marked-alt"></i> Explore the Map
-                </a>
-            </div>
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="hero-stat-number" id="spotCount">10+</div>
-                    <div class="hero-stat-label">Spots Reviewed</div>
+    <!-- ===== HERO: TEXT + CAROUSEL SIDE BY SIDE ===== -->
+    <section class="hero-split" id="latest-reviews">
+        <div class="hero-split-inner">
+            <div class="hero-text-side">
+                <div class="hero-badge">
+                    <i class="fas fa-fire"></i> NEW JERSEY'S #1 FOODIE GUIDE
                 </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-number">100K+</div>
-                    <div class="hero-stat-label">TikTok Followers</div>
+                <h1 class="hero-split-title">
+                    Eat Good.<br>
+                    <span class="text-sky">Travel Often.</span>
+                </h1>
+                <p class="hero-split-subtitle">
+                    Discovering NJ & Philly's best eats, one bite at a time. Watch our TikTok reviews, explore the interactive map, and find your next favorite spot.
+                </p>
+                <div class="hero-split-buttons">
+                    <a href="/food-map" class="btn-ttb btn-ttb-primary">
+                        <i class="fas fa-map-marked-alt"></i> View Map
+                    </a>
+                    <a href="/merch" class="btn-ttb btn-ttb-outline">
+                        <i class="fas fa-shopping-bag"></i> Shop Merch
+                    </a>
                 </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-number">NJ & Philly</div>
-                    <div class="hero-stat-label">Coverage Area</div>
+                <div class="hero-split-stats">
+                    <div class="hero-mini-stat">
+                        <span class="hero-mini-number" id="spotCount">--</span>
+                        <span class="hero-mini-label">Spots Reviewed</span>
+                    </div>
+                    <div class="hero-mini-stat">
+                        <span class="hero-mini-number">100K+</span>
+                        <span class="hero-mini-label">TikTok Followers</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- ===== LATEST TIKTOK REVIEWS CAROUSEL ===== -->
-    <section id="latest-reviews" class="reviews-section">
-        <div class="container">
-            <h2 class="section-title">Latest Reviews</h2>
-            <p class="section-subtitle">Swipe through our latest food adventures - each card is a real TikTok review you can watch right here</p>
-            <hr class="section-divider">
-        </div>
-        <div class="tiktok-carousel-wrapper container">
-            <button class="carousel-nav-btn prev" onclick="scrollCarousel(-1)" aria-label="Previous">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <div class="tiktok-scroll-container" id="tiktokCarousel">
-                <!-- Cards populated by JavaScript from spots data -->
+            <div class="hero-carousel-side">
+                <button class="featured-nav-btn featured-prev" onclick="navigateCarousel(-1)" aria-label="Previous">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="featured-nav-btn featured-next" onclick="navigateCarousel(1)" aria-label="Next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="hero-carousel-wrapper">
+                    <div class="featured-carousel-track" id="featuredCarousel">
+                        <!-- Cards populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="featured-carousel-dots" id="carouselDots">
+                    <!-- Dots populated by JavaScript -->
+                </div>
             </div>
-            <button class="carousel-nav-btn next" onclick="scrollCarousel(1)" aria-label="Next">
-                <i class="fas fa-chevron-right"></i>
-            </button>
         </div>
     </section>
 
@@ -114,17 +112,31 @@
         </div>
     </section>
 
-    <!-- ===== TIKTOK VIDEO MODAL ===== -->
-    <div class="modal fade" id="tiktokModal" tabindex="-1" aria-labelledby="tiktokModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="tiktokModalLabel">TikTok Review</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- ===== TIKTOK VIDEO OVERLAY ===== -->
+    <div class="tiktok-overlay" id="tiktokOverlay">
+        <div class="tiktok-overlay-backdrop" id="tiktokOverlayBackdrop"></div>
+        <div class="tiktok-overlay-content">
+            <div class="tiktok-overlay-header">
+                <span class="tiktok-overlay-title" id="tiktokOverlayTitle">TikTok Review</span>
+                <button class="tiktok-overlay-close" id="tiktokOverlayClose" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="tiktok-overlay-frame">
+                <div class="tiktok-overlay-loader" id="tiktokOverlayLoader">
+                    <div class="tiktok-overlay-spinner"></div>
+                    <span>Loading review...</span>
                 </div>
-                <div class="modal-body">
-                    <iframe id="tiktokIframe" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
-                </div>
+                <iframe id="tiktokOverlayIframe" allowfullscreen allow="encrypted-media"></iframe>
+            </div>
+            <div class="tiktok-overlay-nav">
+                <button id="tiktokOverlayPrev" aria-label="Previous review">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span class="tiktok-overlay-counter" id="tiktokOverlayCounter">1 / 10</span>
+                <button id="tiktokOverlayNext" aria-label="Next review">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -172,47 +184,173 @@
         crossorigin="anonymous"></script>
     <script>
         // ========================================
+        // FEATURED CAROUSEL - 3-card center-highlight
+        // ========================================
+        var currentIndex = 0;
+        var carouselSpots = [];
+        var autoAdvanceTimer = null;
+
+        function buildFeaturedCarousel(spots) {
+            carouselSpots = spots;
+            var track = document.getElementById('featuredCarousel');
+            var dotsContainer = document.getElementById('carouselDots');
+            track.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            var esc = TTBData.escapeHtml;
+            var safeTikTok = TTBData.sanitizeTikTokId;
+
+            spots.forEach(function (spot, i) {
+                var card = document.createElement('div');
+                card.className = 'featured-card';
+                card.setAttribute('data-index', i);
+
+                var hasFoodImg = spot.foodImage && spot.foodImage.trim() !== '';
+                card.innerHTML =
+                    '<div class="featured-card-media">' +
+                        (hasFoodImg ? '<img src="' + esc(spot.foodImage) + '" alt="" class="featured-card-bg" loading="lazy">' : '') +
+                        '<div class="featured-card-placeholder' + (hasFoodImg ? ' has-food-bg' : '') + '">' +
+                            '<img src="' + esc(spot.logoImage || '/Images/ttbLogo.png') + '" alt="' + esc(spot.name) + '" class="featured-card-logo"' + (spot.logoBgColor ? ' style="background:' + esc(spot.logoBgColor) + ';"' : '') + '>' +
+                            '<div class="featured-card-play-btn"><i class="fas fa-play" style="margin-left:2px;"></i></div>' +
+                        '</div>' +
+                        '<div class="featured-card-overlay">' +
+                            '<span class="featured-card-name">' + esc(spot.name) + '</span>' +
+                            (spot.discount ? '<span class="featured-card-discount"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</span>' : '') +
+                        '</div>' +
+                    '</div>';
+
+                // Click: active card opens overlay, inactive cards navigate
+                (function(index) {
+                    card.addEventListener('click', function () {
+                        if (index === currentIndex) {
+                            openTikTokOverlay(index);
+                        } else {
+                            navigateToIndex(index);
+                        }
+                    });
+                })(i);
+
+                track.appendChild(card);
+
+                // Dot
+                var dot = document.createElement('button');
+                dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+                (function(index) {
+                    dot.addEventListener('click', function () { navigateToIndex(index); });
+                })(i);
+                dotsContainer.appendChild(dot);
+            });
+
+            // Set initial positions
+            updateCardPositions();
+
+            // Start auto-advance
+            startAutoAdvance();
+
+            // Touch/swipe support
+            var startX = 0;
+            var threshold = 50;
+            track.addEventListener('touchstart', function (e) {
+                startX = e.touches[0].clientX;
+            }, { passive: true });
+            track.addEventListener('touchend', function (e) {
+                var diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > threshold) {
+                    navigateCarousel(diff > 0 ? 1 : -1);
+                }
+            }, { passive: true });
+
+            // Pause auto-advance on hover
+            track.addEventListener('mouseenter', function () { stopAutoAdvance(); });
+            track.addEventListener('mouseleave', function () { startAutoAdvance(); });
+        }
+
+        function navigateCarousel(direction) {
+            var newIndex = currentIndex + direction;
+            if (newIndex < 0) newIndex = carouselSpots.length - 1;
+            if (newIndex >= carouselSpots.length) newIndex = 0;
+            navigateToIndex(newIndex);
+        }
+
+        function navigateToIndex(index) {
+            currentIndex = index;
+
+            // Update dots
+            var dots = document.querySelectorAll('.carousel-dot');
+            dots.forEach(function (dot, i) {
+                dot.classList.toggle('active', i === index);
+            });
+
+            updateCardPositions();
+
+            // Reset auto-advance timer
+            stopAutoAdvance();
+            startAutoAdvance();
+        }
+
+        function updateCardPositions() {
+            var cards = document.querySelectorAll('.featured-card');
+            var total = carouselSpots.length;
+            var prevIdx = (currentIndex - 1 + total) % total;
+            var nextIdx = (currentIndex + 1) % total;
+
+            cards.forEach(function (card, i) {
+                card.classList.remove('position-left', 'position-center', 'position-right');
+                if (i === prevIdx) {
+                    card.classList.add('position-left');
+                } else if (i === currentIndex) {
+                    card.classList.add('position-center');
+                } else if (i === nextIdx) {
+                    card.classList.add('position-right');
+                }
+            });
+        }
+
+        function startAutoAdvance() {
+            stopAutoAdvance();
+            autoAdvanceTimer = setInterval(function () { navigateCarousel(1); }, 6000);
+        }
+
+        function stopAutoAdvance() {
+            if (autoAdvanceTimer) {
+                clearInterval(autoAdvanceTimer);
+                autoAdvanceTimer = null;
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function () { updateCardPositions(); });
+
+        // ========================================
         // LOAD ALL DATA DYNAMICALLY
         // ========================================
         (async function loadHomepage() {
-            // Show skeleton loaders while loading
-            const carousel = document.getElementById('tiktokCarousel');
-            carousel.innerHTML = Array(4).fill(0).map(() =>
-                '<div class="tiktok-card" style="opacity:0.5;"><div class="tiktok-card-video skeleton" style="height:380px;"></div><div class="tiktok-card-info"><div class="skeleton" style="height:18px;width:70%;margin-bottom:8px;"></div><div class="skeleton" style="height:14px;width:50%;"></div></div></div>'
-            ).join('');
+            // Show skeleton loaders in carousel
+            var track = document.getElementById('featuredCarousel');
+            var skelPositions = ['position-left', 'position-center', 'position-right'];
+            track.innerHTML = skelPositions.map(function (pos) {
+                return '<div class="featured-card ' + pos + '">' +
+                    '<div class="featured-card-media"><div class="skeleton" style="width:100%;height:100%;position:absolute;inset:0;"></div></div>' +
+                    '</div>';
+            }).join('');
 
-            let spots = [];
+            var spots = [];
             try {
                 spots = await TTBData.getSpots();
             } catch (err) {
                 console.error('Failed to load spots:', err);
-                carousel.innerHTML = '<p style="color:var(--text-muted);padding:2rem;text-align:center;">Could not load reviews right now. Please refresh the page.</p>';
+                track.innerHTML = '<p style="color:var(--text-muted);padding:2rem;text-align:center;">Could not load reviews right now. Please refresh the page.</p>';
                 return;
             }
 
             if (!spots.length) {
-                carousel.innerHTML = '<p style="color:var(--text-muted);padding:2rem;text-align:center;">No reviews yet — check back soon!</p>';
+                track.innerHTML = '<p style="color:var(--text-muted);padding:2rem;text-align:center;">No reviews yet — check back soon!</p>';
                 return;
             }
 
-            // Populate carousel
-            var esc = TTBData.escapeHtml;
-            var safeTikTok = TTBData.sanitizeTikTokId;
-            carousel.innerHTML = '';
-            spots.forEach(function (spot) {
-                var card = document.createElement('div');
-                card.className = 'tiktok-card';
-                card.innerHTML =
-                    '<div class="tiktok-card-video">' +
-                    '<iframe src="https://www.tiktok.com/embed/' + safeTikTok(spot.tiktokId) + '" allowfullscreen allow="encrypted-media" loading="lazy"></iframe>' +
-                    '</div>' +
-                    '<div class="tiktok-card-info">' +
-                    '<div class="tiktok-card-name">' + esc(spot.name) + '</div>' +
-                    '<div class="tiktok-card-location"><i class="fas fa-map-marker-alt"></i> ' + esc(spot.location) + '</div>' +
-                    '<div class="tiktok-card-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
-                    '</div>';
-                carousel.appendChild(card);
-            });
+            // Build the featured carousel
+            buildFeaturedCarousel(spots);
 
             // Spot count stat
             document.getElementById('spotCount').textContent = spots.length + '+';
@@ -223,13 +361,13 @@
                 touchZoom: false, doubleClickZoom: false, attributionControl: false
             }).setView([39.83, -75.10], 10);
 
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; OpenStreetMap &copy; CARTO'
             }).addTo(teaserMap);
 
             var teaserIcon = L.divIcon({
                 className: 'custom-marker',
-                html: '<div style="width:14px;height:14px;background:#94b4f7;border-radius:50%;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4);"></div>',
+                html: '<div style="width:14px;height:14px;background:#1e40af;border-radius:50%;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.15);"></div>',
                 iconSize: [14, 14], iconAnchor: [7, 7]
             });
 
@@ -238,13 +376,15 @@
             });
 
             // Partner discounts
+            var esc = TTBData.escapeHtml;
+            var safeTikTok = TTBData.sanitizeTikTokId;
             var partnersScroll = document.getElementById('partnersScroll');
             partnersScroll.innerHTML = '';
             spots.filter(function (s) { return s.discount; }).forEach(function (spot) {
                 var card = document.createElement('div');
                 card.className = 'partner-card';
                 card.innerHTML =
-                    '<img src="' + esc(spot.logoImage || '') + '" alt="' + esc(spot.name) + '">' +
+                    '<img src="' + esc(spot.logoImage || '') + '" alt="' + esc(spot.name) + '"' + (spot.logoBgColor ? ' style="background:' + esc(spot.logoBgColor) + '; padding:6px;"' : '') + '>' +
                     '<div class="partner-card-name">' + esc(spot.name) + '</div>' +
                     '<div class="partner-card-discount">' + esc(spot.discount) + '</div>';
                 card.addEventListener('click', function () { openTikTokModal(safeTikTok(spot.tiktokId), spot.name); });
@@ -252,22 +392,97 @@
             });
         })();
 
-        // Carousel navigation
-        function scrollCarousel(direction) {
-            var container = document.getElementById('tiktokCarousel');
-            container.scrollBy({ left: direction * 300, behavior: 'smooth' });
+        // ========================================
+        // TIKTOK OVERLAY
+        // ========================================
+        function openTikTokOverlay(spotIndex) {
+            var spot = carouselSpots[spotIndex];
+            if (!spot) return;
+
+            var overlay = document.getElementById('tiktokOverlay');
+            var iframe = document.getElementById('tiktokOverlayIframe');
+            var loader = document.getElementById('tiktokOverlayLoader');
+            var title = document.getElementById('tiktokOverlayTitle');
+            var counter = document.getElementById('tiktokOverlayCounter');
+
+            // Set content
+            title.textContent = spot.name;
+            counter.textContent = (spotIndex + 1) + ' / ' + carouselSpots.length;
+            overlay.setAttribute('data-index', spotIndex);
+
+            // Show loader, load iframe
+            loader.classList.remove('hidden');
+            iframe.src = 'https://www.tiktok.com/embed/' + TTBData.sanitizeTikTokId(spot.tiktokId);
+            iframe.addEventListener('load', function () {
+                loader.classList.add('hidden');
+            }, { once: true });
+
+            // Show overlay
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            stopAutoAdvance();
         }
 
-        // TikTok modal
-        function openTikTokModal(videoId, name) {
-            document.getElementById('tiktokModalLabel').textContent = name + ' - TikTok Review';
-            document.getElementById('tiktokIframe').src = 'https://www.tiktok.com/embed/' + TTBData.sanitizeTikTokId(videoId);
-            new bootstrap.Modal(document.getElementById('tiktokModal')).show();
+        function closeTikTokOverlay() {
+            var overlay = document.getElementById('tiktokOverlay');
+            var iframe = document.getElementById('tiktokOverlayIframe');
+
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            iframe.removeAttribute('src');
+            startAutoAdvance();
         }
 
-        document.getElementById('tiktokModal').addEventListener('hidden.bs.modal', function () {
-            document.getElementById('tiktokIframe').src = '';
+        function navigateOverlay(direction) {
+            var overlay = document.getElementById('tiktokOverlay');
+            var idx = parseInt(overlay.getAttribute('data-index'), 10);
+            var newIdx = idx + direction;
+            if (newIdx < 0) newIdx = carouselSpots.length - 1;
+            if (newIdx >= carouselSpots.length) newIdx = 0;
+
+            // Also sync the carousel behind the overlay
+            navigateToIndex(newIdx);
+            openTikTokOverlay(newIdx);
+        }
+
+        // Overlay event listeners
+        document.getElementById('tiktokOverlayClose').addEventListener('click', closeTikTokOverlay);
+        document.getElementById('tiktokOverlayBackdrop').addEventListener('click', closeTikTokOverlay);
+        document.getElementById('tiktokOverlayPrev').addEventListener('click', function () { navigateOverlay(-1); });
+        document.getElementById('tiktokOverlayNext').addEventListener('click', function () { navigateOverlay(1); });
+        document.addEventListener('keydown', function (e) {
+            var overlay = document.getElementById('tiktokOverlay');
+            if (!overlay.classList.contains('active')) return;
+            if (e.key === 'Escape') closeTikTokOverlay();
+            if (e.key === 'ArrowLeft') navigateOverlay(-1);
+            if (e.key === 'ArrowRight') navigateOverlay(1);
         });
+
+        // Legacy wrapper for partner cards section
+        function openTikTokModal(videoId, name) {
+            var idx = carouselSpots.findIndex(function (s) {
+                return TTBData.sanitizeTikTokId(s.tiktokId) === TTBData.sanitizeTikTokId(videoId);
+            });
+            if (idx >= 0) {
+                navigateToIndex(idx);
+                openTikTokOverlay(idx);
+            } else {
+                // Fallback: open directly with video ID
+                var overlay = document.getElementById('tiktokOverlay');
+                var iframe = document.getElementById('tiktokOverlayIframe');
+                var loader = document.getElementById('tiktokOverlayLoader');
+                var title = document.getElementById('tiktokOverlayTitle');
+                var counter = document.getElementById('tiktokOverlayCounter');
+
+                title.textContent = name;
+                counter.textContent = '';
+                loader.classList.remove('hidden');
+                iframe.src = 'https://www.tiktok.com/embed/' + TTBData.sanitizeTikTokId(videoId);
+                iframe.addEventListener('load', function () { loader.classList.add('hidden'); }, { once: true });
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
 
         // ========================================
         // QUESTION OF THE DAY

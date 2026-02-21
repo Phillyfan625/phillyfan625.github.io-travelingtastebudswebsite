@@ -10,7 +10,7 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -112,7 +112,7 @@
                     '<div class="review-location"><i class="fas fa-map-marker-alt"></i> ' + esc(spot.location) + '</div>' +
                     '<p class="review-snippet">' + esc(spot.snippet || '') + '</p>' +
                     '<div class="review-rating"><span class="rating-badge"><i class="fas fa-star"></i> ' + rating + '/10</span>' +
-                    (spot.discount ? '<span class="rating-badge" style="background:rgba(148,180,247,0.15);color:var(--header-color);"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</span>' : '') +
+                    (spot.discount ? '<span class="rating-badge" style="background:rgba(30,64,175,0.1);color:var(--header-color);"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</span>' : '') +
                     '</div>' +
                     '<div class="review-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
                     '</div>';

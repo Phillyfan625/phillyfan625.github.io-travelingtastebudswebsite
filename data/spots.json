@@ -7,6 +7,8 @@
         "location": "Shamong, NJ",
         "discount": "15% Off",
         "logoImage": "/Images/picLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["pub", "american", "classic"],
         "rating": 8.5,
         "snippet": "A South Jersey classic with great pub grub and vibes"
@@ -19,6 +21,8 @@
         "location": "Runnemede, NJ",
         "discount": "20% Off",
         "logoImage": "/Images/lillosLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["pizza", "italian", "tomato pie"],
         "rating": 9.0,
         "snippet": "Incredible tomato pies that you have to taste to believe"
@@ -31,6 +35,8 @@
         "location": "Woodbury, NJ",
         "discount": "20% Off (with food item)",
         "logoImage": "/Images/foodMartLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["deli", "sandwiches", "local gem"],
         "rating": 8.0,
         "snippet": "Hidden gem deli with massive portions and fresh ingredients"
@@ -43,6 +49,8 @@
         "location": "Bellmawr, NJ",
         "discount": "10% Off",
         "logoImage": "/Images/pizzaVillaLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["pizza", "italian"],
         "rating": 8.0,
         "snippet": "Old-school pizza joint with a loyal following"
@@ -55,6 +63,8 @@
         "location": "Philadelphia, PA",
         "discount": "10% Off",
         "logoImage": "/Images/bankBarLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["bar", "cocktails", "philly"],
         "rating": 8.5,
         "snippet": "A cool Philly bar scene with great drinks and atmosphere"
@@ -67,6 +77,8 @@
         "location": "Philadelphia, PA",
         "discount": "10% Off",
         "logoImage": "/Images/holyCityLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["southern", "comfort food", "philly"],
         "rating": 8.5,
         "snippet": "Southern-inspired comfort food in the heart of Philly"
@@ -79,6 +91,8 @@
         "location": "Westmont, NJ",
         "discount": "15% Off",
         "logoImage": "/Images/kegAndKitchenLogo.png",
+        "foodImage": "",
+        "logoBgColor": "#1e293b",
         "tags": ["gastropub", "craft beer", "burgers"],
         "rating": 9.0,
         "snippet": "Upscale gastropub with killer craft beer selection"
@@ -91,6 +105,8 @@
         "location": "Haddon Heights, NJ",
         "discount": "10% Off",
         "logoImage": "/Images/kidRipsLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["bar", "wings", "sports"],
         "rating": 8.0,
         "snippet": "Great wings and a solid sports bar atmosphere"
@@ -103,6 +119,8 @@
         "location": "Mount Royal, NJ",
         "discount": "10% Off",
         "logoImage": "/Images/mriLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["bar", "comfort food", "local"],
         "rating": 7.5,
         "snippet": "Neighborhood bar with comfort food done right"
@@ -115,6 +133,8 @@
         "location": "Haddon Heights, NJ",
         "discount": "10% Off",
         "logoImage": "/Images/wilsonsLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["pub", "burgers", "neighborhood"],
         "rating": 8.0,
         "snippet": "Neighborhood pub with great burgers and a welcoming crowd"
@@ -127,6 +147,8 @@
         "location": "Glassboro, NJ",
         "discount": "",
         "logoImage": "/Images/qotdImages/peterAndSons.jpeg",
+        "foodImage": "",
+        "logoBgColor": "",
         "tags": ["italian", "family", "glassboro"],
         "rating": 8.5,
         "snippet": "Family-owned Italian spot beloved by the Glassboro community"

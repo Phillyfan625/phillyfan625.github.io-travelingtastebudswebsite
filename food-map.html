@@ -10,7 +10,7 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -75,7 +75,7 @@
             var half = isActive ? 11 : 8;
             return L.divIcon({
                 className: 'custom-marker',
-                html: '<div style="width:' + size + 'px;height:' + size + 'px;background:' + (isActive ? '#f7a94b' : '#94b4f7') + ';border-radius:50%;border:3px solid white;box-shadow:0 2px 12px rgba(0,0,0,0.5);transition:all 0.3s ease;"></div>',
+                html: '<div style="width:' + size + 'px;height:' + size + 'px;background:' + (isActive ? '#f7a94b' : '#1e40af') + ';border-radius:50%;border:3px solid white;box-shadow:0 2px 12px rgba(0,0,0,0.15);transition:all 0.3s ease;"></div>',
                 iconSize: [size, size], iconAnchor: [half, half]
             });
         }
@@ -86,7 +86,7 @@
 
         (async function loadMap() {
             map = L.map('foodMap', { zoomControl: true }).setView([39.83, -75.08], 11);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
                 maxZoom: 19
             }).addTo(map);

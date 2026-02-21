@@ -9,7 +9,7 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -115,10 +115,25 @@
                         <label>Short Description</label>
                         <input type="text" class="admin-input" id="spotSnippet" placeholder="e.g. A South Jersey classic with great pub grub" maxlength="300">
                     </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Logo / Image URL</label>
+                            <input type="text" class="admin-input" id="spotLogoImage" placeholder="e.g. /Images/myLogo.png">
+                            <p class="admin-form-help">Path to an image in /Images/ or a full URL</p>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Logo Background Color</label>
+                            <div style="display:flex;gap:0.5rem;align-items:center;">
+                                <input type="color" id="spotLogoBgColorPicker" value="#ffffff" style="width:44px;height:38px;border:1px solid var(--glass-border);border-radius:var(--radius-sm);cursor:pointer;background:var(--glass);padding:2px;">
+                                <input type="text" class="admin-input" id="spotLogoBgColor" placeholder="#ffffff" style="flex:1;" maxlength="9">
+                            </div>
+                            <p class="admin-form-help">Hex color behind the logo. Default is white. Use dark for white logos.</p>
+                        </div>
+                    </div>
                     <div class="admin-form-group">
-                        <label>Logo / Image URL</label>
-                        <input type="text" class="admin-input" id="spotLogoImage" placeholder="e.g. /Images/myLogo.png">
-                        <p class="admin-form-help">Path to an image in /Images/ or a full URL</p>
+                        <label>Food Background Image URL</label>
+                        <input type="text" class="admin-input" id="spotFoodImage" placeholder="e.g. /Images/food/picALilli.jpg">
+                        <p class="admin-form-help">Background image for carousel card. Leave blank for default gradient.</p>
                     </div>
                     <div class="admin-form-group">
                         <label>Tags</label>
@@ -133,6 +148,16 @@
                             <input type="range" id="spotRating" min="0" max="10" step="0.5" value="8">
                             <div class="rating-display" id="ratingDisplay">8.0</div>
                         </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label><i class="fas fa-search" style="color:var(--header-color);"></i> Address Lookup</label>
+                        <div style="display:flex;gap:0.5rem;">
+                            <input type="text" class="admin-input" id="addressSearch" placeholder="e.g. 123 Main St, Philadelphia, PA" style="flex:1;">
+                            <button type="button" class="btn-ttb btn-ttb-primary" onclick="geocodeAddress()" style="font-size:0.85rem;padding:0.55rem 1rem;white-space:nowrap;">
+                                <i class="fas fa-map-marker-alt"></i> Lookup
+                            </button>
+                        </div>
+                        <p class="admin-form-help">Enter an address to auto-fill coordinates and place the map marker</p>
                     </div>
                     <div class="admin-form-row">
                         <div class="admin-form-group">
