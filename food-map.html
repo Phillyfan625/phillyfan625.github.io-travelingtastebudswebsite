@@ -140,7 +140,7 @@
                 item.className = 'food-map-item';
                 item.setAttribute('data-index', index);
                 item.innerHTML =
-                    '<img src="' + esc(spot.logoImage || '') + '" alt="' + esc(spot.name) + '" class="food-map-item-img">' +
+                    '<img src="' + esc(spot.logoImage || '') + '" alt="' + esc(spot.name) + '" class="food-map-item-img"' + (spot.logoBgColor ? ' style="background:' + esc(spot.logoBgColor) + ';"' : '') + '>' +
                     '<div class="food-map-item-info"><h4>' + esc(spot.name) + '</h4>' +
                     '<p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> ' + esc(spot.location) + '</p>' +
                     (spot.discount ? '<div class="food-map-item-discount"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</div>' : '') +
