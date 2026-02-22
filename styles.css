@@ -900,15 +900,93 @@ h1, h2, h3, h4, h5, h6,
 	box-shadow: 0 12px 40px rgba(30, 64, 175, 0.1);
 }
 
-.review-card-video {
-	height: 400px;
-	background: var(--bg-darker);
+.review-card-media {
+	position: relative;
+	width: 100%;
+	height: 240px;
+	overflow: hidden;
+	background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+	cursor: pointer;
 }
 
-.review-card-video iframe {
+.review-card-bg {
+	position: absolute;
+	inset: 0;
 	width: 100%;
 	height: 100%;
-	border: none;
+	object-fit: cover;
+	z-index: 1;
+}
+
+.review-card-placeholder.has-food-bg {
+	background: rgba(0, 0, 0, 0.35);
+}
+
+.review-card-placeholder {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	z-index: 2;
+}
+
+.review-card-logo {
+	width: 64px;
+	height: 64px;
+	object-fit: contain;
+	border-radius: 12px;
+	background: #ffffff;
+	padding: 6px;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+	border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.review-card-play-btn {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: var(--header-color);
+	color: #ffffff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.95rem;
+	box-shadow: 0 4px 20px rgba(30, 64, 175, 0.35);
+	transition: var(--transition);
+	animation: reviewPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes reviewPulse {
+	0%, 100% { box-shadow: 0 4px 20px rgba(30, 64, 175, 0.35); }
+	50% { box-shadow: 0 6px 30px rgba(30, 64, 175, 0.5); }
+}
+
+.review-card-media:hover .review-card-play-btn {
+	transform: scale(1.15);
+	box-shadow: 0 8px 35px rgba(30, 64, 175, 0.5);
+	background: #2563eb;
+	animation: none;
+}
+
+.review-card-overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 2.5rem 1rem 1rem;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+	z-index: 3;
+	pointer-events: none;
+}
+
+.review-card-name {
+	font-family: 'Chewy', cursive;
+	font-size: 0.9rem;
+	color: #ffffff;
+	text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 .review-card-body {
@@ -1805,6 +1883,21 @@ h1, h2, h3, h4, h5, h6,
 	min-height: calc(100vh - 80px);
 	display: flex;
 	align-items: center;
+	position: relative;
+}
+
+/* Subtle blue wave at bottom of hero */
+.hero-split::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 120px;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0,40 C240,100 480,0 720,50 C960,100 1200,20 1440,60 L1440,120 L0,120 Z' fill='%233b82f6' fill-opacity='0.08'/%3E%3Cpath d='M0,60 C300,10 600,90 900,40 C1100,10 1300,70 1440,50 L1440,120 L0,120 Z' fill='%231e40af' fill-opacity='0.12'/%3E%3Cpath d='M0,80 C200,60 500,100 750,70 C1000,40 1250,90 1440,75 L1440,120 L0,120 Z' fill='%231e3a8a' fill-opacity='0.07'/%3E%3C/svg%3E") no-repeat bottom center;
+	background-size: 100% 100%;
+	pointer-events: none;
+	z-index: 1;
 }
 
 .hero-split-inner {
@@ -2366,6 +2459,14 @@ h1, h2, h3, h4, h5, h6,
 @media (max-width: 991px) {
 	.hero-split {
 		min-height: auto;
+		flex-direction: column;
+		overflow-x: clip;
+		overflow-y: visible;
+	}
+	.hero-split::after {
+		position: sticky;
+		bottom: 0;
+		height: 100px;
 	}
 	.hero-split-inner {
 		flex-direction: column;

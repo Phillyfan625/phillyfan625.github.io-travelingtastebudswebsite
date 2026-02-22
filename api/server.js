@@ -330,6 +330,77 @@ app.delete('/api/spots/:id', requireAuth, async (req, res) => {
     }
 });
 
+// ── TikTok oEmbed proxy (admin only) ───────────────
+
+app.post('/api/tiktok/oembed', requireAuth, async (req, res) => {
+    try {
+        const { url } = req.body;
+        if (!url || typeof url !== 'string') {
+            return res.status(400).json({ error: 'TikTok URL is required' });
+        }
+
+        // Validate it looks like a TikTok URL
+        if (!url.includes('tiktok.com/')) {
+            return res.status(400).json({ error: 'Not a valid TikTok URL' });
+        }
+
+        const oembedUrl = 'https://www.tiktok.com/oembed?url=' + encodeURIComponent(url);
+        const response = await fetch(oembedUrl, {
+            headers: { 'Accept': 'application/json' },
+            signal: AbortSignal.timeout(10000)
+        });
+
+        if (!response.ok) {
+            return res.status(response.status).json({ error: 'TikTok oEmbed request failed (status ' + response.status + ')' });
+        }
+
+        const data = await response.json();
+        res.json(data);
+    } catch (err) {
+        console.error('oEmbed proxy error:', err);
+        res.status(500).json({ error: 'Failed to fetch TikTok data: ' + err.message });
+    }
+});
+
+// Batch oEmbed for multiple URLs
+app.post('/api/tiktok/oembed/batch', requireAuth, async (req, res) => {
+    try {
+        const { urls } = req.body;
+        if (!Array.isArray(urls) || urls.length === 0) {
+            return res.status(400).json({ error: 'Provide a "urls" array' });
+        }
+        if (urls.length > 50) {
+            return res.status(400).json({ error: 'Maximum 50 URLs per batch' });
+        }
+
+        const results = await Promise.allSettled(
+            urls.map(async (url) => {
+                if (!url || !url.includes('tiktok.com/')) {
+                    return { url, error: 'Invalid TikTok URL' };
+                }
+                const oembedUrl = 'https://www.tiktok.com/oembed?url=' + encodeURIComponent(url);
+                const response = await fetch(oembedUrl, {
+                    headers: { 'Accept': 'application/json' },
+                    signal: AbortSignal.timeout(10000)
+                });
+                if (!response.ok) throw new Error('Status ' + response.status);
+                const data = await response.json();
+                return { url, ...data };
+            })
+        );
+
+        const items = results.map((r, i) => {
+            if (r.status === 'fulfilled') return r.value;
+            return { url: urls[i], error: r.reason?.message || 'Failed' };
+        });
+
+        res.json({ results: items });
+    } catch (err) {
+        console.error('Batch oEmbed error:', err);
+        res.status(500).json({ error: 'Batch fetch failed' });
+    }
+});
+
 // ── Seed endpoint (admin only, one-time) ───────────
 
 app.post('/api/seed', requireAuth, async (req, res) => {

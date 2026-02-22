@@ -37,21 +37,6 @@ function showToast(message, type) {
 // ── Init ───────────────────────────────────────
 
 (function init() {
-    if (!TTBData.apiBase) {
-        document.getElementById('loginScreen').innerHTML =
-            '<div class="admin-login-card">' +
-            '<img src="/Images/ttbLogo.png" alt="TTB Logo">' +
-            '<h2>Admin Setup Required</h2>' +
-            '<p class="subtitle">The API hasn\'t been connected yet.<br>Deploy the API from <code>/api</code> (see setup guide), then paste the URL below.</p>' +
-            '<input type="url" class="form-control mb-3" id="apiUrlInput" placeholder="https://your-api.onrender.com">' +
-            '<button class="btn-ttb btn-ttb-primary" style="width:100%;justify-content:center;border:none;" onclick="setApiUrl()">' +
-            '<i class="fas fa-plug"></i> Connect API</button>' +
-            '<p style="color:var(--text-muted);font-size:0.75rem;margin-top:1.5rem;margin-bottom:0;">' +
-            '<a href="/" style="color:var(--header-color);text-decoration:none;">&larr; Back to site</a></p>' +
-            '</div>';
-        return;
-    }
-
     if (TTBData.isLoggedIn()) {
         verifyAndShowDashboard();
     }
@@ -135,22 +120,16 @@ function showToast(message, type) {
 
     // Close modals on Escape
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+        if (e.key === 'Escape') { closeModal(); closeConfirm(); closeImportModal(); }
     });
 
     var spotModalEl = document.getElementById('spotModal');
     if (spotModalEl) spotModalEl.addEventListener('click', function (e) { if (e.target === this) closeModal(); });
     var confirmEl = document.getElementById('confirmDialog');
     if (confirmEl) confirmEl.addEventListener('click', function (e) { if (e.target === this) closeConfirm(); });
+    var importEl = document.getElementById('importModal');
+    if (importEl) importEl.addEventListener('click', function (e) { if (e.target === this) closeImportModal(); });
 })();
-
-function setApiUrl() {
-    var url = document.getElementById('apiUrlInput').value.trim().replace(/\/+$/, '');
-    if (!url) { showToast('Please enter a valid API URL', 'error'); return; }
-    localStorage.setItem('ttb_api_url', url);
-    showToast('API URL saved! Reloading...', 'success');
-    setTimeout(function () { window.location.reload(); }, 1000);
-}
 
 // ── Auth ───────────────────────────────────────
 
@@ -496,6 +475,17 @@ async function saveSpot() {
         }
         closeModal();
         loadSpots();
+
+        // If in batch import mode, advance to next
+        if (!isEdit && batchImportQueue.length > 1 && batchImportIndex < batchImportQueue.length - 1) {
+            batchImportIndex++;
+            setTimeout(function() {
+                prefillFromImport(batchImportQueue[batchImportIndex]);
+            }, 500);
+        } else if (batchImportQueue.length > 0) {
+            batchImportQueue = [];
+            batchImportIndex = 0;
+        }
     } catch (err) {
         showToast(err.message, 'error');
     } finally {
@@ -533,6 +523,233 @@ function confirmDelete(id, name) {
 function closeConfirm() {
     document.getElementById('confirmDialog').classList.remove('show');
     pendingDeleteId = null;
+}
+
+// ── TikTok Import ──────────────────────────────
+
+var fetchedImports = [];
+
+function openImportModal() {
+    document.getElementById('importModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('importUrls').value = '';
+    document.getElementById('importResults').style.display = 'none';
+    document.getElementById('importFooter').style.display = 'none';
+    document.getElementById('importList').innerHTML = '';
+    document.getElementById('importStatus').textContent = '';
+    fetchedImports = [];
+}
+
+function closeImportModal() {
+    document.getElementById('importModal').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+function extractVideoId(url) {
+    // Match patterns like /video/7262868213384400171
+    var match = url.match(/\/video\/(\d+)/);
+    if (match) return match[1];
+    // Also try extracting just a bare numeric ID
+    var cleaned = url.trim().replace(/\D/g, '');
+    if (cleaned.length >= 5 && cleaned.length <= 25) return cleaned;
+    return null;
+}
+
+function parseRestaurantName(title) {
+    if (!title) return '';
+    // TikTok titles often have patterns like "Restaurant Name - description"
+    // or "Trying Restaurant Name!" or "Restaurant Name review"
+    // Try to extract the most useful part
+    var name = title;
+    // Remove common hashtags
+    name = name.replace(/#\w+/g, '').trim();
+    // Remove common phrases
+    var removePatterns = [
+        /\b(review|trying|tried|must try|food review|best|amazing|incredible|check out)\b/gi,
+        /[!?]{2,}/g,
+        /\s{2,}/g
+    ];
+    removePatterns.forEach(function(p) { name = name.replace(p, ' '); });
+    name = name.trim();
+    // If too long, take first meaningful chunk
+    if (name.length > 60) {
+        var dash = name.indexOf(' - ');
+        var pipe = name.indexOf(' | ');
+        if (dash > 0 && dash < 50) name = name.substring(0, dash);
+        else if (pipe > 0 && pipe < 50) name = name.substring(0, pipe);
+        else name = name.substring(0, 60);
+    }
+    return name.trim();
+}
+
+async function fetchTikTokData() {
+    var textarea = document.getElementById('importUrls');
+    var btn = document.getElementById('importFetchBtn');
+    var status = document.getElementById('importStatus');
+    var raw = textarea.value.trim();
+
+    if (!raw) {
+        showToast('Paste at least one TikTok URL', 'error');
+        return;
+    }
+
+    // Split by newlines, filter empty
+    var urls = raw.split(/\n+/).map(function(u) { return u.trim(); }).filter(Boolean);
+
+    // Deduplicate
+    urls = urls.filter(function(u, i) { return urls.indexOf(u) === i; });
+
+    if (urls.length === 0) {
+        showToast('No valid URLs found', 'error');
+        return;
+    }
+
+    // Check which video IDs already exist in the database
+    var existingIds = new Set(allSpots.map(function(s) { return s.tiktokId; }));
+
+    btn.disabled = true;
+    btn.querySelector('span').textContent = 'Fetching...';
+    status.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:0.4rem;"></i> Fetching ' + urls.length + ' video(s)...';
+
+    try {
+        var res = await fetch(TTBData.apiBase + '/api/tiktok/oembed/batch', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + TTBData.getToken()
+            },
+            body: JSON.stringify({ urls: urls })
+        });
+
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Fetch failed');
+
+        fetchedImports = [];
+        var listEl = document.getElementById('importList');
+        listEl.innerHTML = '';
+        var successCount = 0;
+        var skipCount = 0;
+
+        data.results.forEach(function(item) {
+            if (item.error) return;
+
+            var videoId = extractVideoId(item.url || '');
+            if (!videoId) return;
+
+            // Check if already exists
+            var alreadyExists = existingIds.has(videoId);
+            if (alreadyExists) {
+                skipCount++;
+                return;
+            }
+
+            var parsed = {
+                url: item.url,
+                videoId: videoId,
+                title: item.title || '',
+                parsedName: parseRestaurantName(item.title || ''),
+                thumbnail: item.thumbnail_url || '',
+                author: item.author_name || ''
+            };
+            fetchedImports.push(parsed);
+            successCount++;
+
+            var card = document.createElement('div');
+            card.className = 'import-item';
+            card.innerHTML =
+                '<div class="import-item-thumb">' +
+                    (parsed.thumbnail ? '<img src="' + escapeHtml(parsed.thumbnail) + '" alt="">' : '<div class="import-item-no-thumb"><i class="fab fa-tiktok"></i></div>') +
+                '</div>' +
+                '<div class="import-item-info">' +
+                    '<div class="import-item-name">' + escapeHtml(parsed.parsedName || 'Untitled') + '</div>' +
+                    '<div class="import-item-meta">' +
+                        '<span><i class="fas fa-fingerprint"></i> ' + escapeHtml(parsed.videoId) + '</span>' +
+                    '</div>' +
+                    '<div class="import-item-title">' + escapeHtml(parsed.title).substring(0, 120) + '</div>' +
+                '</div>' +
+                '<div class="import-item-actions">' +
+                    '<button class="btn-ttb btn-ttb-primary" style="font-size:0.75rem;padding:0.35rem 0.75rem;" onclick="importSingle(' + (fetchedImports.length - 1) + ')"><i class="fas fa-plus"></i> Add</button>' +
+                '</div>';
+            listEl.appendChild(card);
+        });
+
+        var statusMsg = successCount + ' new video(s) found';
+        if (skipCount > 0) statusMsg += ', ' + skipCount + ' already in database';
+        status.innerHTML = '<i class="fas fa-check-circle" style="color:var(--accent);margin-right:0.4rem;"></i> ' + statusMsg;
+
+        if (fetchedImports.length > 0) {
+            document.getElementById('importResults').style.display = 'block';
+            document.getElementById('importFooter').style.display = 'flex';
+        } else {
+            document.getElementById('importResults').style.display = 'none';
+            document.getElementById('importFooter').style.display = 'none';
+            if (skipCount > 0) {
+                showToast('All videos are already in the database!', 'info');
+            }
+        }
+    } catch (err) {
+        status.innerHTML = '<i class="fas fa-exclamation-circle" style="color:#ef4444;margin-right:0.4rem;"></i> ' + err.message;
+        showToast('Failed to fetch TikTok data: ' + err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.querySelector('span').textContent = 'Fetch Data';
+    }
+}
+
+function importSingle(index) {
+    var item = fetchedImports[index];
+    if (!item) return;
+    closeImportModal();
+    prefillFromImport(item);
+}
+
+function importAllFetched() {
+    if (fetchedImports.length === 0) return;
+    if (fetchedImports.length === 1) {
+        importSingle(0);
+        return;
+    }
+    // For multiple, create them one at a time starting with the first
+    closeImportModal();
+    startBatchImport(0);
+}
+
+var batchImportQueue = [];
+var batchImportIndex = 0;
+
+function startBatchImport(startIndex) {
+    batchImportQueue = fetchedImports.slice();
+    batchImportIndex = startIndex;
+    showToast('Importing ' + batchImportQueue.length + ' videos. Fill out each one and save.', 'info');
+    prefillFromImport(batchImportQueue[batchImportIndex]);
+}
+
+function prefillFromImport(item) {
+    // Open the add modal with pre-filled data
+    document.getElementById('modalTitle').textContent = 'Add: ' + (item.parsedName || 'New Spot');
+    document.getElementById('saveSpotBtn').querySelector('span').textContent = 'Save Spot';
+    document.getElementById('spotForm').reset();
+    document.getElementById('spotId').value = '';
+
+    // Pre-fill what we know
+    document.getElementById('spotName').value = item.parsedName || '';
+    document.getElementById('spotTiktokId').value = item.videoId || '';
+    document.getElementById('spotFoodImage').value = item.thumbnail || '';
+    document.getElementById('spotRating').value = 8;
+    document.getElementById('ratingDisplay').textContent = '8.0';
+    document.getElementById('spotLogoBgColor').value = '';
+    document.getElementById('spotLogoBgColorPicker').value = '#ffffff';
+    currentTags = [];
+    renderTagChips();
+    openModal();
+
+    // Show a helper message
+    showToast('Video ID and thumbnail auto-filled! Add location, coordinates, and review.', 'success');
+
+    // If batch mode, show progress
+    if (batchImportQueue.length > 1) {
+        showToast('Video ' + (batchImportIndex + 1) + ' of ' + batchImportQueue.length, 'info');
+    }
 }
 
 // ── Seed DB (one-time import from local JSON) ──

@@ -62,6 +62,7 @@
             </div>
             <div style="display:flex;gap:0.5rem;">
                 <button class="btn-ttb btn-ttb-outline" style="font-size:0.85rem;padding:0.55rem 1.2rem;" onclick="handleSeedDB()"><i class="fas fa-database"></i> Seed DB</button>
+                <button class="btn-ttb btn-ttb-accent" style="font-size:0.85rem;padding:0.55rem 1.2rem;" onclick="openImportModal()"><i class="fab fa-tiktok"></i> Import TikToks</button>
                 <button class="btn-ttb btn-ttb-primary" style="font-size:0.85rem;padding:0.55rem 1.2rem;" onclick="openAddModal()"><i class="fas fa-plus"></i> Add Spot</button>
             </div>
         </div>
@@ -193,6 +194,42 @@
             <div class="btn-row">
                 <button class="btn-ttb btn-ttb-outline" onclick="closeConfirm()" style="font-size:0.9rem;">Cancel</button>
                 <button class="btn-ttb btn-danger" id="confirmBtn" style="font-size:0.9rem;"><i class="fas fa-trash-alt"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TIKTOK IMPORT MODAL -->
+    <div class="admin-modal-backdrop" id="importModal">
+        <div class="admin-modal" style="max-width:700px;">
+            <div class="admin-modal-header">
+                <h2><i class="fab fa-tiktok" style="margin-right:0.5rem;"></i> Import from TikTok</h2>
+                <button class="admin-modal-close" onclick="closeImportModal()">&times;</button>
+            </div>
+            <div class="admin-modal-body">
+                <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">
+                    Paste one or more TikTok URLs (one per line). We'll auto-fill the restaurant name, video ID, and thumbnail. You just review and add the location + coordinates.
+                </p>
+                <div class="admin-form-group">
+                    <label><i class="fas fa-link" style="color:var(--header-color);margin-right:0.3rem;"></i> TikTok URL(s)</label>
+                    <textarea class="admin-input" id="importUrls" rows="4" placeholder="https://www.tiktok.com/@travelingtastebuds/video/7262868213384400171&#10;https://www.tiktok.com/@travelingtastebuds/video/7231695429392682286&#10;...paste as many as you want" style="resize:vertical;font-size:0.85rem;font-family:'Poppins',monospace;"></textarea>
+                </div>
+                <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;">
+                    <button class="btn-ttb btn-ttb-primary" id="importFetchBtn" onclick="fetchTikTokData()" style="font-size:0.85rem;padding:0.55rem 1.2rem;">
+                        <i class="fas fa-download"></i> <span>Fetch Data</span>
+                    </button>
+                    <span id="importStatus" style="color:var(--text-muted);font-size:0.85rem;display:flex;align-items:center;"></span>
+                </div>
+                <div id="importResults" style="display:none;">
+                    <hr style="border-color:var(--glass-border);margin-bottom:1rem;">
+                    <h3 style="font-size:1rem;margin-bottom:0.75rem;">Found Videos</h3>
+                    <div id="importList"></div>
+                </div>
+            </div>
+            <div class="admin-modal-footer" id="importFooter" style="display:none;">
+                <button class="btn-ttb btn-ttb-outline" onclick="closeImportModal()" style="font-size:0.9rem;">Cancel</button>
+                <button class="btn-ttb btn-ttb-primary" id="importAllBtn" onclick="importAllFetched()" style="font-size:0.9rem;">
+                    <i class="fas fa-file-import"></i> <span>Import All to Form</span>
+                </button>
             </div>
         </div>
     </div>

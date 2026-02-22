@@ -15,9 +15,7 @@
 
 const TTBData = (function () {
     // ── Config ────────────────────────────────────────
-    // Set this to your deployed API URL (e.g. https://ttb-api.onrender.com)
-    // Leave empty string to skip API and always use the local JSON file
-    const API_BASE = localStorage.getItem('ttb_api_url') || '';
+    const API_BASE = localStorage.getItem('ttb_api_url') || 'https://ttb-website-hior.onrender.com';
 
     const FALLBACK_JSON = '/data/spots.json';
     const CACHE_KEY = 'ttb_spots_cache';

@@ -44,6 +44,35 @@
         </div>
     </section>
 
+    <!-- TikTok Video Overlay -->
+    <div class="tiktok-overlay" id="tiktokOverlay">
+        <div class="tiktok-overlay-backdrop" id="tiktokOverlayBackdrop"></div>
+        <div class="tiktok-overlay-content">
+            <div class="tiktok-overlay-header">
+                <span class="tiktok-overlay-title" id="tiktokOverlayTitle">TikTok Review</span>
+                <button class="tiktok-overlay-close" id="tiktokOverlayClose" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="tiktok-overlay-frame">
+                <div class="tiktok-overlay-loader" id="tiktokOverlayLoader">
+                    <div class="tiktok-overlay-spinner"></div>
+                    <span>Loading review...</span>
+                </div>
+                <iframe id="tiktokOverlayIframe" allowfullscreen allow="encrypted-media"></iframe>
+            </div>
+            <div class="tiktok-overlay-nav">
+                <button id="tiktokOverlayPrev" aria-label="Previous review">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span class="tiktok-overlay-counter" id="tiktokOverlayCounter">1 / 10</span>
+                <button id="tiktokOverlayNext" aria-label="Next review">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <div id="footer-container"></div>
 
@@ -92,22 +121,34 @@
 
         var esc = TTBData.escapeHtml;
         var safeTikTok = TTBData.sanitizeTikTokId;
+        var filteredSpots = [];
 
         function renderReviews(filter) {
             grid.innerHTML = '';
-            var spots = filter === 'all' ? allSpots : allSpots.filter(function (s) { return (s.tags || []).includes(filter); });
+            filteredSpots = filter === 'all' ? allSpots.slice() : allSpots.filter(function (s) { return (s.tags || []).includes(filter); });
 
-            if (!spots.length) {
+            if (!filteredSpots.length) {
                 grid.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);grid-column:1/-1;">No spots match this filter.</div>';
                 return;
             }
 
-            spots.forEach(function (spot) {
+            filteredSpots.forEach(function (spot, index) {
                 var card = document.createElement('div');
                 card.className = 'review-card';
                 var rating = parseFloat(spot.rating) || 0;
+                var hasFoodImg = spot.foodImage && spot.foodImage.trim() !== '';
+
                 card.innerHTML =
-                    '<div class="review-card-video"><iframe src="https://www.tiktok.com/embed/' + safeTikTok(spot.tiktokId) + '" allowfullscreen allow="encrypted-media" loading="lazy"></iframe></div>' +
+                    '<div class="review-card-media">' +
+                        (hasFoodImg ? '<img src="' + esc(spot.foodImage) + '" alt="" class="review-card-bg" loading="lazy">' : '') +
+                        '<div class="review-card-placeholder' + (hasFoodImg ? ' has-food-bg' : '') + '">' +
+                            '<img src="' + esc(spot.logoImage || '/Images/ttbLogo.png') + '" alt="' + esc(spot.name) + '" class="review-card-logo"' + (spot.logoBgColor ? ' style="background:' + esc(spot.logoBgColor) + ';"' : '') + '>' +
+                            '<div class="review-card-play-btn"><i class="fas fa-play" style="margin-left:2px;"></i></div>' +
+                        '</div>' +
+                        '<div class="review-card-overlay">' +
+                            '<span class="review-card-name">' + esc(spot.name) + '</span>' +
+                        '</div>' +
+                    '</div>' +
                     '<div class="review-card-body"><h3>' + esc(spot.name) + '</h3>' +
                     '<div class="review-location"><i class="fas fa-map-marker-alt"></i> ' + esc(spot.location) + '</div>' +
                     '<p class="review-snippet">' + esc(spot.snippet || '') + '</p>' +
@@ -116,9 +157,72 @@
                     '</div>' +
                     '<div class="review-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
                     '</div>';
+
+                (function(idx) {
+                    card.querySelector('.review-card-media').addEventListener('click', function () {
+                        openReviewOverlay(idx);
+                    });
+                })(index);
+
                 grid.appendChild(card);
             });
         }
+
+        // ========================================
+        // TIKTOK OVERLAY
+        // ========================================
+        function openReviewOverlay(spotIndex) {
+            var spot = filteredSpots[spotIndex];
+            if (!spot) return;
+
+            var overlay = document.getElementById('tiktokOverlay');
+            var iframe = document.getElementById('tiktokOverlayIframe');
+            var loader = document.getElementById('tiktokOverlayLoader');
+            var title = document.getElementById('tiktokOverlayTitle');
+            var counter = document.getElementById('tiktokOverlayCounter');
+
+            title.textContent = spot.name;
+            counter.textContent = (spotIndex + 1) + ' / ' + filteredSpots.length;
+            overlay.setAttribute('data-index', spotIndex);
+
+            loader.classList.remove('hidden');
+            iframe.src = 'https://www.tiktok.com/embed/' + safeTikTok(spot.tiktokId);
+            iframe.addEventListener('load', function () {
+                loader.classList.add('hidden');
+            }, { once: true });
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReviewOverlay() {
+            var overlay = document.getElementById('tiktokOverlay');
+            var iframe = document.getElementById('tiktokOverlayIframe');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            iframe.removeAttribute('src');
+        }
+
+        function navigateOverlay(direction) {
+            var overlay = document.getElementById('tiktokOverlay');
+            var idx = parseInt(overlay.getAttribute('data-index'), 10);
+            var newIdx = idx + direction;
+            if (newIdx < 0) newIdx = filteredSpots.length - 1;
+            if (newIdx >= filteredSpots.length) newIdx = 0;
+            openReviewOverlay(newIdx);
+        }
+
+        document.getElementById('tiktokOverlayClose').addEventListener('click', closeReviewOverlay);
+        document.getElementById('tiktokOverlayBackdrop').addEventListener('click', closeReviewOverlay);
+        document.getElementById('tiktokOverlayPrev').addEventListener('click', function () { navigateOverlay(-1); });
+        document.getElementById('tiktokOverlayNext').addEventListener('click', function () { navigateOverlay(1); });
+        document.addEventListener('keydown', function (e) {
+            var overlay = document.getElementById('tiktokOverlay');
+            if (!overlay.classList.contains('active')) return;
+            if (e.key === 'Escape') closeReviewOverlay();
+            if (e.key === 'ArrowLeft') navigateOverlay(-1);
+            if (e.key === 'ArrowRight') navigateOverlay(1);
+        });
 
         filterBar.addEventListener('click', function (e) {
             if (e.target.classList.contains('filter-btn')) {
