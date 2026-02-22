@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /api/
+Disallow: /data/
+
+Sitemap: https://travelingtastebuds.org/sitemap.xml

@@ -14,7 +14,28 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <meta name="description" content="Get in touch with Traveling Tastebuds - business inquiries, collaborations, or just to say hi.">
+    <meta name="description" content="Contact Traveling Tastebuds for restaurant marketing, food influencer partnerships, and content creation in South Jersey, Philadelphia, and beyond.">
+    <link rel="canonical" href="https://travelingtastebuds.org/contact">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Contact | Traveling Tastebuds">
+    <meta property="og:description" content="Contact Traveling Tastebuds for restaurant marketing, food influencer partnerships, and content creation in South Jersey, Philadelphia, and beyond.">
+    <meta property="og:image" content="https://travelingtastebuds.org/Images/ttbLogo.png">
+    <meta property="og:url" content="https://travelingtastebuds.org/contact">
+    <meta property="og:site_name" content="Traveling Tastebuds">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Contact | Traveling Tastebuds">
+    <meta name="twitter:description" content="Contact Traveling Tastebuds for restaurant marketing and food influencer partnerships in South Jersey and Philadelphia.">
+    <meta name="twitter:image" content="https://travelingtastebuds.org/Images/ttbLogo.png">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://travelingtastebuds.org/" },
+            { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://travelingtastebuds.org/contact" }
+        ]
+    }
+    </script>
 </head>
 
 <body>
@@ -108,6 +129,15 @@
                 const messageField = document.getElementById('message');
                 if (messageField) {
                     messageField.value = packageMessages[pkg];
+                }
+            }
+
+            // Pre-fill message from testimonial subject parameter
+            const subject = params.get('subject');
+            if (subject === 'Testimonial') {
+                const messageField = document.getElementById('message');
+                if (messageField) {
+                    messageField.value = "I'd like to share my experience working with Traveling Tastebuds!\n\nRestaurant Name: \nWhat results did you see: \n";
                 }
             }
         });

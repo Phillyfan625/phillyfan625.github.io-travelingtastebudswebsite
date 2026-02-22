@@ -472,6 +472,414 @@
     flex-shrink: 0;
 }
 
+/* ===== Admin Tabs ===== */
+
+.admin-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--glass-border);
+    background: var(--bg-dark);
+}
+
+.admin-tab {
+    padding: 0.85rem 1.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-tab:hover { color: var(--text-white); }
+
+.admin-tab.active {
+    color: var(--header-color);
+    border-bottom-color: var(--header-color);
+    font-weight: 600;
+}
+
+.admin-tab .tab-count {
+    font-size: 0.7rem;
+    background: var(--glass);
+    padding: 0.1rem 0.5rem;
+    border-radius: 50px;
+    color: var(--text-muted);
+}
+
+.admin-tab.active .tab-count {
+    background: rgba(30,64,175,0.15);
+    color: var(--header-color);
+}
+
+/* ===== Trust Stats Editor ===== */
+
+.trust-stats-editor {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 1.5rem 2rem;
+}
+
+.trust-stats-editor-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.trust-stats-editor-title i { color: var(--header-color); }
+
+.trust-stat-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.trust-stat-row select {
+    width: 50px;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    color: var(--text-white);
+    font-family: 'Font Awesome 6 Free', 'Poppins', sans-serif;
+    font-size: 1rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+.trust-stat-row select:focus { outline: none; border-color: var(--header-color); }
+
+.trust-stat-row .stat-number-input {
+    width: 90px;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    color: var(--text-white);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.trust-stat-row .stat-number-input:focus { outline: none; border-color: var(--header-color); }
+
+.trust-stat-row .stat-label-input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    color: var(--text-white);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+}
+
+.trust-stat-row .stat-label-input:focus { outline: none; border-color: var(--header-color); }
+
+.trust-stats-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+/* ===== Testimonial Admin Cards ===== */
+
+.testimonial-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1rem;
+    padding: 0 2rem 2rem;
+}
+
+.testimonial-admin-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.testimonial-admin-card:hover { border-color: var(--header-color); }
+
+/* Admin card header: logo + restaurant info */
+.testimonial-admin-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.testimonial-admin-logo-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 3px;
+    flex-shrink: 0;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.testimonial-admin-header-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.testimonial-admin-restaurant-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.testimonial-admin-location {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+}
+
+.testimonial-admin-location i {
+    color: var(--accent);
+    margin-right: 0.15rem;
+    font-size: 0.7rem;
+}
+
+.testimonial-admin-stars {
+    color: var(--accent);
+    font-size: 0.7rem;
+    display: flex;
+    gap: 1px;
+    margin-top: 0.15rem;
+}
+
+.testimonial-admin-quote {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+}
+
+.testimonial-admin-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--glass-border);
+    gap: 0.5rem;
+}
+
+.testimonial-admin-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+
+.testimonial-admin-author {
+    font-weight: 600;
+    color: var(--text-white);
+    font-size: 0.85rem;
+}
+
+.testimonial-admin-date {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.testimonial-admin-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+/* Star rating picker */
+.star-rating-picker {
+    display: flex;
+    gap: 4px;
+}
+
+.star-rating-picker i {
+    font-size: 1.3rem;
+    color: var(--glass-border);
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.star-rating-picker i.active { color: var(--accent); }
+.star-rating-picker i:hover { color: var(--accent); }
+
+/* Icon picker for result icons */
+.icon-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+}
+
+.icon-picker-option {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    background: var(--glass);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.icon-picker-option:hover { border-color: var(--header-color); color: var(--header-color); }
+.icon-picker-option.active { border-color: var(--header-color); color: var(--header-color); background: rgba(30,64,175,0.1); }
+
+/* Testimonial card extras */
+.testimonial-admin-result {
+    font-size: 0.8rem;
+    color: var(--accent);
+    padding: 0.4rem 0.6rem;
+    background: rgba(16,185,129,0.08);
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.75rem;
+    display: inline-block;
+}
+
+.testimonial-admin-result i {
+    margin-right: 0.3rem;
+}
+
+.testimonial-admin-tiktok {
+    font-size: 0.75rem;
+    color: var(--header-color);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background: rgba(30,64,175,0.08);
+    transition: background 0.2s;
+}
+
+.testimonial-admin-tiktok:hover {
+    background: rgba(30,64,175,0.15);
+    color: var(--header-color);
+}
+
+/* Spot search dropdown (testimonial modal) */
+.spot-search-wrapper { position: relative; }
+
+.spot-search-selected {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--glass);
+    border: 1px solid var(--header-color);
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.5rem;
+}
+
+.spot-search-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    object-fit: contain;
+    background: #fff;
+    padding: 2px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.spot-search-selected span { flex: 1; color: var(--text-white); font-weight: 600; font-size: 0.9rem; }
+.spot-search-clear { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 0 0.25rem; line-height: 1; }
+.spot-search-clear:hover { color: #ef4444; }
+
+.spot-search-dropdown {
+    display: none;
+    position: absolute;
+    left: 0; right: 0;
+    top: 100%;
+    margin-top: 4px;
+    background: var(--bg-dark);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 50;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.spot-suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.spot-suggestion-item:hover { background: rgba(30,64,175,0.1); }
+
+.spot-suggestion-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    object-fit: contain;
+    background: #fff;
+    padding: 2px;
+    flex-shrink: 0;
+}
+.spot-suggestion-logo-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+.spot-suggestion-name { font-weight: 600; font-size: 0.85rem; color: var(--text-white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.spot-suggestion-location { font-size: 0.75rem; color: var(--text-muted); }
+.spot-suggestion-empty { padding: 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+
+/* Spot logo in admin card header */
+.testimonial-admin-spot-logo {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    object-fit: contain;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .admin-topbar { padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
@@ -481,4 +889,10 @@
     .admin-modal-body { padding: 1.25rem; }
     .admin-modal-footer { padding: 1rem 1.25rem; }
     .admin-form-row { grid-template-columns: 1fr; }
+    .admin-tabs { padding: 0 1rem; gap: 0; }
+    .admin-tab { font-size: 0.8rem; padding: 0.65rem 0.8rem; }
+    .trust-stats-editor { margin: 1rem; }
+    .trust-stat-row { flex-wrap: wrap; }
+    .trust-stat-row select { min-width: 100%; }
+    .testimonial-admin-grid { padding: 0 1rem 1rem; grid-template-columns: 1fr; }
 }

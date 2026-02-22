@@ -170,6 +170,114 @@ const TTBData = (function () {
         return data;
     }
 
+    // ── Testimonials ──────────────────────────────────
+
+    const TESTIMONIALS_CACHE_KEY = 'ttb_testimonials_cache';
+    let _testimonialsPromise = null;
+
+    function getTestimonials(forceRefresh) {
+        if (_testimonialsPromise && !forceRefresh) return _testimonialsPromise;
+        _testimonialsPromise = _fetchTestimonials(forceRefresh);
+        return _testimonialsPromise;
+    }
+
+    async function _fetchTestimonials(forceRefresh) {
+        if (!forceRefresh) {
+            try {
+                const raw = sessionStorage.getItem(TESTIMONIALS_CACHE_KEY);
+                if (raw) {
+                    const { data, ts } = JSON.parse(raw);
+                    if (Date.now() - ts < CACHE_TTL) return data;
+                }
+            } catch {}
+        }
+
+        if (API_BASE) {
+            try {
+                const res = await fetch(API_BASE + '/api/testimonials', {
+                    signal: AbortSignal.timeout(5000)
+                });
+                if (!res.ok) throw new Error('API returned ' + res.status);
+                const data = await res.json();
+                const testimonials = data.testimonials || data;
+                try {
+                    sessionStorage.setItem(TESTIMONIALS_CACHE_KEY, JSON.stringify({ data: testimonials, ts: Date.now() }));
+                } catch {}
+                return testimonials;
+            } catch (err) {
+                console.warn('TTBData: Could not load testimonials from API.', err.message);
+            }
+        }
+        return [];
+    }
+
+    async function createTestimonial(testimonial) {
+        const res = await fetch(API_BASE + '/api/testimonials', {
+            method: 'POST',
+            headers: _authHeaders(),
+            body: JSON.stringify(testimonial)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to create testimonial');
+        sessionStorage.removeItem(TESTIMONIALS_CACHE_KEY);
+        _testimonialsPromise = null;
+        return data;
+    }
+
+    async function updateTestimonial(id, updates) {
+        const res = await fetch(API_BASE + '/api/testimonials/' + id, {
+            method: 'PUT',
+            headers: _authHeaders(),
+            body: JSON.stringify(updates)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to update testimonial');
+        sessionStorage.removeItem(TESTIMONIALS_CACHE_KEY);
+        _testimonialsPromise = null;
+        return data;
+    }
+
+    async function deleteTestimonial(id) {
+        const res = await fetch(API_BASE + '/api/testimonials/' + id, {
+            method: 'DELETE',
+            headers: _authHeaders()
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to delete testimonial');
+        sessionStorage.removeItem(TESTIMONIALS_CACHE_KEY);
+        _testimonialsPromise = null;
+        return data;
+    }
+
+    // ── Trust Stats (Settings) ───────────────────────
+
+    async function getTrustStats() {
+        if (API_BASE) {
+            try {
+                const res = await fetch(API_BASE + '/api/settings/trustStats', {
+                    signal: AbortSignal.timeout(5000)
+                });
+                if (!res.ok) throw new Error('API returned ' + res.status);
+                const data = await res.json();
+                return data.stats || [];
+            } catch (err) {
+                console.warn('TTBData: Could not load trust stats.', err.message);
+            }
+        }
+        return [];
+    }
+
+    async function updateTrustStats(stats) {
+        const res = await fetch(API_BASE + '/api/settings/trustStats', {
+            method: 'PUT',
+            headers: _authHeaders(),
+            body: JSON.stringify({ stats })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to update trust stats');
+        return data;
+    }
+
     // ── Shared utilities ────────────────────────────────
 
     function escapeHtml(str) {
@@ -198,6 +306,14 @@ const TTBData = (function () {
         createSpot,
         updateSpot,
         deleteSpot,
+        // Testimonials
+        getTestimonials,
+        createTestimonial,
+        updateTestimonial,
+        deleteTestimonial,
+        // Settings
+        getTrustStats,
+        updateTrustStats,
         // Config
         get apiBase() { return API_BASE; }
     };

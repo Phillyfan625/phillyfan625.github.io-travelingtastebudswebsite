@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <title>Admin | Traveling Tastebuds</title>
     <link rel="stylesheet" href="/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -41,7 +42,7 @@
         <div class="admin-topbar">
             <div class="admin-topbar-left">
                 <img src="/Images/ttbLogo.png" alt="TTB">
-                <h1>Spot Manager</h1>
+                <h1>Dashboard</h1>
                 <span class="admin-badge">ADMIN</span>
             </div>
             <div style="display:flex;gap:0.5rem;align-items:center;">
@@ -49,6 +50,13 @@
                 <button class="btn-ttb btn-ttb-outline" style="padding:0.4rem 1rem;font-size:0.8rem;" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</button>
             </div>
         </div>
+        <div class="admin-tabs">
+            <button class="admin-tab active" id="tabSpots" onclick="switchTab('spots')"><i class="fas fa-utensils"></i> Spots <span class="tab-count" id="tabSpotsCount">0</span></button>
+            <button class="admin-tab" id="tabTestimonials" onclick="switchTab('testimonials')"><i class="fas fa-quote-left"></i> Testimonials <span class="tab-count" id="tabTestimonialsCount">0</span></button>
+        </div>
+
+        <!-- ═══ SPOTS TAB ═══ -->
+        <div id="spotsTab">
         <div class="admin-stats" id="adminStats">
             <div class="admin-stat-card"><div class="stat-number" id="statTotal">-</div><div class="stat-label">Total Spots</div></div>
             <div class="admin-stat-card"><div class="stat-number" id="statDiscounts">-</div><div class="stat-label">With Discounts</div></div>
@@ -78,9 +86,120 @@
                 </tbody>
             </table>
         </div>
+        </div><!-- /spotsTab -->
+
+        <!-- ═══ TESTIMONIALS TAB ═══ -->
+        <div id="testimonialsTab" style="display:none;">
+
+            <!-- Trust Stats Editor -->
+            <div class="trust-stats-editor">
+                <div class="trust-stats-editor-title">
+                    <i class="fas fa-chart-bar"></i> Trust Stats Bar
+                    <span style="font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-left:0.5rem;">— These appear on the public testimonials page</span>
+                </div>
+                <div id="trustStatsRows">
+                    <div class="trust-stat-row" data-index="0">
+                        <select class="trust-stat-icon-select" data-field="icon">
+                            <option value="fas fa-utensils">🍴 Utensils</option>
+                            <option value="fas fa-star">⭐ Star</option>
+                            <option value="fas fa-eye">👁 Eye</option>
+                            <option value="fas fa-handshake">🤝 Handshake</option>
+                            <option value="fas fa-chart-line">📈 Chart</option>
+                            <option value="fas fa-users">👥 Users</option>
+                            <option value="fas fa-trophy">🏆 Trophy</option>
+                            <option value="fas fa-heart">❤ Heart</option>
+                            <option value="fas fa-fire">🔥 Fire</option>
+                            <option value="fas fa-bolt">⚡ Bolt</option>
+                            <option value="fas fa-thumbs-up">👍 Thumbs Up</option>
+                            <option value="fas fa-crown">👑 Crown</option>
+                        </select>
+                        <input type="text" class="stat-number-input" data-field="number" placeholder="50+" maxlength="15">
+                        <input type="text" class="stat-label-input" data-field="label" placeholder="Restaurants Featured" maxlength="40">
+                    </div>
+                    <div class="trust-stat-row" data-index="1">
+                        <select class="trust-stat-icon-select" data-field="icon">
+                            <option value="fas fa-utensils">🍴 Utensils</option>
+                            <option value="fas fa-star" selected>⭐ Star</option>
+                            <option value="fas fa-eye">👁 Eye</option>
+                            <option value="fas fa-handshake">🤝 Handshake</option>
+                            <option value="fas fa-chart-line">📈 Chart</option>
+                            <option value="fas fa-users">👥 Users</option>
+                            <option value="fas fa-trophy">🏆 Trophy</option>
+                            <option value="fas fa-heart">❤ Heart</option>
+                            <option value="fas fa-fire">🔥 Fire</option>
+                            <option value="fas fa-bolt">⚡ Bolt</option>
+                            <option value="fas fa-thumbs-up">👍 Thumbs Up</option>
+                            <option value="fas fa-crown">👑 Crown</option>
+                        </select>
+                        <input type="text" class="stat-number-input" data-field="number" placeholder="5.0" maxlength="15">
+                        <input type="text" class="stat-label-input" data-field="label" placeholder="Average Rating" maxlength="40">
+                    </div>
+                    <div class="trust-stat-row" data-index="2">
+                        <select class="trust-stat-icon-select" data-field="icon">
+                            <option value="fas fa-utensils">🍴 Utensils</option>
+                            <option value="fas fa-star">⭐ Star</option>
+                            <option value="fas fa-eye" selected>👁 Eye</option>
+                            <option value="fas fa-handshake">🤝 Handshake</option>
+                            <option value="fas fa-chart-line">📈 Chart</option>
+                            <option value="fas fa-users">👥 Users</option>
+                            <option value="fas fa-trophy">🏆 Trophy</option>
+                            <option value="fas fa-heart">❤ Heart</option>
+                            <option value="fas fa-fire">🔥 Fire</option>
+                            <option value="fas fa-bolt">⚡ Bolt</option>
+                            <option value="fas fa-thumbs-up">👍 Thumbs Up</option>
+                            <option value="fas fa-crown">👑 Crown</option>
+                        </select>
+                        <input type="text" class="stat-number-input" data-field="number" placeholder="10M+" maxlength="15">
+                        <input type="text" class="stat-label-input" data-field="label" placeholder="Total Views" maxlength="40">
+                    </div>
+                    <div class="trust-stat-row" data-index="3">
+                        <select class="trust-stat-icon-select" data-field="icon">
+                            <option value="fas fa-utensils">🍴 Utensils</option>
+                            <option value="fas fa-star">⭐ Star</option>
+                            <option value="fas fa-eye">👁 Eye</option>
+                            <option value="fas fa-handshake" selected>🤝 Handshake</option>
+                            <option value="fas fa-chart-line">📈 Chart</option>
+                            <option value="fas fa-users">👥 Users</option>
+                            <option value="fas fa-trophy">🏆 Trophy</option>
+                            <option value="fas fa-heart">❤ Heart</option>
+                            <option value="fas fa-fire">🔥 Fire</option>
+                            <option value="fas fa-bolt">⚡ Bolt</option>
+                            <option value="fas fa-thumbs-up">👍 Thumbs Up</option>
+                            <option value="fas fa-crown">👑 Crown</option>
+                        </select>
+                        <input type="text" class="stat-number-input" data-field="number" placeholder="100%" maxlength="15">
+                        <input type="text" class="stat-label-input" data-field="label" placeholder="Satisfaction" maxlength="40">
+                    </div>
+                </div>
+                <div class="trust-stats-actions">
+                    <button class="btn-ttb btn-ttb-primary" onclick="saveTrustStats()" style="font-size:0.85rem;padding:0.55rem 1.2rem;">
+                        <i class="fas fa-save"></i> Save Trust Stats
+                    </button>
+                </div>
+            </div>
+
+            <!-- Testimonials Toolbar -->
+            <div class="admin-toolbar">
+                <div style="position:relative;flex:1;max-width:350px;">
+                    <i class="fas fa-search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);"></i>
+                    <input type="text" class="admin-search" id="testimonialSearch" placeholder="Search testimonials...">
+                </div>
+                <div style="display:flex;gap:0.5rem;">
+                    <button class="btn-ttb btn-ttb-primary" style="font-size:0.85rem;padding:0.55rem 1.2rem;" onclick="openAddTestimonialModal()"><i class="fas fa-plus"></i> Add Testimonial</button>
+                </div>
+            </div>
+
+            <!-- Testimonials Grid -->
+            <div class="testimonial-admin-grid" id="testimonialsGrid">
+                <div class="testimonial-admin-card" style="opacity:0.5;text-align:center;padding:3rem;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:var(--text-muted);"></i>
+                    <p style="color:var(--text-muted);margin-top:1rem;">Loading testimonials...</p>
+                </div>
+            </div>
+        </div><!-- /testimonialsTab -->
     </div>
 
-    <!-- ADD/EDIT MODAL -->
+    <!-- ADD/EDIT SPOT MODAL -->
     <div class="admin-modal-backdrop" id="spotModal">
         <div class="admin-modal">
             <div class="admin-modal-header">
@@ -229,6 +348,106 @@
                 <button class="btn-ttb btn-ttb-outline" onclick="closeImportModal()" style="font-size:0.9rem;">Cancel</button>
                 <button class="btn-ttb btn-ttb-primary" id="importAllBtn" onclick="importAllFetched()" style="font-size:0.9rem;">
                     <i class="fas fa-file-import"></i> <span>Import All to Form</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD/EDIT TESTIMONIAL MODAL -->
+    <div class="admin-modal-backdrop" id="testimonialModal">
+        <div class="admin-modal" style="max-width:650px;">
+            <div class="admin-modal-header">
+                <h2 id="testimonialModalTitle">Add Testimonial</h2>
+                <button class="admin-modal-close" onclick="closeTestimonialModal()">&times;</button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="testimonialForm" autocomplete="off">
+                    <input type="hidden" id="testimonialId">
+                    <div class="admin-form-group">
+                        <label><i class="fas fa-link" style="color:var(--header-color);margin-right:0.3rem;"></i> Link to Spot</label>
+                        <div class="spot-search-wrapper" id="spotSearchWrapper">
+                            <div class="spot-search-selected" id="spotSearchSelected" style="display:none;">
+                                <img id="spotSearchSelectedLogo" src="" alt="" class="spot-search-logo">
+                                <span id="spotSearchSelectedName"></span>
+                                <button type="button" class="spot-search-clear" onclick="clearSpotLink()" title="Remove link">&times;</button>
+                            </div>
+                            <input type="text" class="admin-input" id="spotSearchInput" placeholder="Search spots by name..." autocomplete="off">
+                            <div class="spot-search-dropdown" id="spotSearchDropdown"></div>
+                        </div>
+                        <input type="hidden" id="testimonialSpotId" value="">
+                        <p class="admin-form-help">Optional. Linking auto-fills restaurant name, location, and shows the spot's logo on the card.</p>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Quote <span class="required">*</span></label>
+                        <textarea class="admin-input" id="testimonialQuote" rows="4" placeholder="What did the restaurant owner say about working with TTB?" required maxlength="500" style="resize:vertical;"></textarea>
+                        <p class="admin-form-help"><span id="quoteCharCount">0</span>/500 characters</p>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Author Name <span class="required">*</span></label>
+                            <input type="text" class="admin-input" id="testimonialAuthor" placeholder="e.g. Restaurant Owner" required maxlength="100">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Restaurant Name</label>
+                            <input type="text" class="admin-input" id="testimonialRestaurant" placeholder="e.g. Joe's Pizza" maxlength="100">
+                        </div>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Location <span class="required">*</span></label>
+                            <input type="text" class="admin-input" id="testimonialLocation" placeholder="e.g. South Jersey, NJ" required maxlength="100">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Date</label>
+                            <input type="text" class="admin-input" id="testimonialDate" placeholder="e.g. January 2025" maxlength="50">
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Rating</label>
+                        <div class="star-rating-picker" id="starRatingPicker">
+                            <i class="fas fa-star" data-value="1"></i>
+                            <i class="fas fa-star" data-value="2"></i>
+                            <i class="fas fa-star" data-value="3"></i>
+                            <i class="fas fa-star" data-value="4"></i>
+                            <i class="fas fa-star" data-value="5"></i>
+                        </div>
+                        <input type="hidden" id="testimonialRating" value="5">
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Result Highlight</label>
+                            <input type="text" class="admin-input" id="testimonialResult" placeholder="e.g. Sold out the following weekend" maxlength="150">
+                            <p class="admin-form-help">Short result or impact statement</p>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Result Icon</label>
+                            <select class="admin-input" id="testimonialResultIcon">
+                                <option value="fas fa-chart-line">📈 Chart Line</option>
+                                <option value="fas fa-users">👥 Users</option>
+                                <option value="fas fa-eye">👁 Eye / Views</option>
+                                <option value="fas fa-door-open">🚪 Door Open</option>
+                                <option value="fas fa-shopping-bag">🛍 Shopping Bag</option>
+                                <option value="fas fa-map-marker-alt">📍 Map Marker</option>
+                                <option value="fas fa-fire">🔥 Fire</option>
+                                <option value="fas fa-trophy">🏆 Trophy</option>
+                                <option value="fas fa-thumbs-up">👍 Thumbs Up</option>
+                                <option value="fas fa-star">⭐ Star</option>
+                                <option value="fas fa-bolt">⚡ Bolt</option>
+                                <option value="fas fa-heart">❤ Heart</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label><i class="fab fa-tiktok" style="color:var(--header-color);margin-right:0.3rem;"></i> TikTok URL</label>
+                        <input type="text" class="admin-input" id="testimonialTiktokUrl" placeholder="https://www.tiktok.com/@..." maxlength="300">
+                        <p class="admin-form-help">Link to the TikTok video for this restaurant (optional)</p>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn-ttb btn-ttb-outline" onclick="closeTestimonialModal()" style="font-size:0.9rem;">Cancel</button>
+                <button class="btn-ttb btn-ttb-primary" id="saveTestimonialBtn" onclick="saveTestimonial()" style="font-size:0.9rem;">
+                    <i class="fas fa-save"></i> <span>Save Testimonial</span>
                 </button>
             </div>
         </div>

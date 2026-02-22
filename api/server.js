@@ -94,6 +94,44 @@ function buildSpotDocument(body) {
     };
 }
 
+// ── Testimonial Validation ────────────────────────
+
+function validateTestimonial(body) {
+    const errors = [];
+    if (!body.quote || typeof body.quote !== 'string' || !body.quote.trim()) {
+        errors.push('Quote is required');
+    }
+    if (!body.authorName || typeof body.authorName !== 'string' || !body.authorName.trim()) {
+        errors.push('Author name is required');
+    }
+    if (!body.location || typeof body.location !== 'string' || !body.location.trim()) {
+        errors.push('Location is required');
+    }
+    if (body.rating != null && (typeof body.rating !== 'number' || body.rating < 1 || body.rating > 5)) {
+        errors.push('Rating must be between 1 and 5');
+    }
+    if (body.tiktokUrl && typeof body.tiktokUrl === 'string' && body.tiktokUrl.trim() && !body.tiktokUrl.includes('tiktok.com')) {
+        errors.push('TikTok URL must be a valid TikTok link');
+    }
+    return errors;
+}
+
+function buildTestimonialDocument(body) {
+    return {
+        quote: sanitizeString(body.quote, 500),
+        authorName: sanitizeString(body.authorName, 100),
+        restaurantName: sanitizeString(body.restaurantName || '', 100),
+        location: sanitizeString(body.location, 100),
+        date: sanitizeString(body.date || '', 50),
+        rating: body.rating != null ? Math.min(5, Math.max(1, Math.round(Number(body.rating)))) : 5,
+        result: sanitizeString(body.result || '', 150),
+        resultIcon: sanitizeString(body.resultIcon || 'fas fa-chart-line', 50),
+        tiktokUrl: sanitizeString(body.tiktokUrl || '', 300),
+        featured: body.featured !== false,
+        spotId: body.spotId && ObjectId.isValid(body.spotId) ? String(body.spotId) : null
+    };
+}
+
 // ── MongoDB ────────────────────────────────────────
 
 let db;
@@ -107,6 +145,8 @@ async function connectDB() {
     // Create indexes
     await db.collection('spots').createIndex({ name: 1 });
     await db.collection('spots').createIndex({ tags: 1 });
+    await db.collection('testimonials').createIndex({ createdAt: -1 });
+    await db.collection('settings').createIndex({ key: 1 }, { unique: true });
 }
 
 // ── Middleware ──────────────────────────────────────
@@ -398,6 +438,160 @@ app.post('/api/tiktok/oembed/batch', requireAuth, async (req, res) => {
     } catch (err) {
         console.error('Batch oEmbed error:', err);
         res.status(500).json({ error: 'Batch fetch failed' });
+    }
+});
+
+// ── Testimonials CRUD Routes ──────────────────────
+
+// GET all testimonials (public) — joins linked spot data
+app.get('/api/testimonials', async (req, res) => {
+    try {
+        const testimonials = await db.collection('testimonials')
+            .find({})
+            .sort({ createdAt: -1 })
+            .toArray();
+
+        // Server-side join: fetch all spots for ID match + name fallback
+        const allSpots = await db.collection('spots')
+            .find({})
+            .project({ name: 1, logoImage: 1, logoBgColor: 1, location: 1, tiktokId: 1 })
+            .toArray();
+
+        const spotsById = {};
+        const spotsByName = {};
+        allSpots.forEach(s => {
+            spotsById[s._id.toString()] = s;
+            if (s.name) spotsByName[s.name.toLowerCase().trim()] = s;
+        });
+
+        const enriched = testimonials.map(t => {
+            if (t.spotId && spotsById[t.spotId]) {
+                t.spot = spotsById[t.spotId];
+            } else if (t.restaurantName && spotsByName[t.restaurantName.toLowerCase().trim()]) {
+                t.spot = spotsByName[t.restaurantName.toLowerCase().trim()];
+            } else {
+                t.spot = null;
+            }
+            return t;
+        });
+
+        res.json({ testimonials: enriched, count: enriched.length });
+    } catch (err) {
+        console.error('Error fetching testimonials:', err);
+        res.status(500).json({ error: 'Failed to load testimonials' });
+    }
+});
+
+// POST create testimonial (admin only)
+app.post('/api/testimonials', requireAuth, async (req, res) => {
+    try {
+        const errors = validateTestimonial(req.body);
+        if (errors.length > 0) {
+            return res.status(400).json({ error: errors.join('. ') });
+        }
+        const doc = buildTestimonialDocument(req.body);
+        doc.createdAt = new Date();
+        doc.updatedAt = new Date();
+        const result = await db.collection('testimonials').insertOne(doc);
+        const created = await db.collection('testimonials').findOne({ _id: result.insertedId });
+        res.status(201).json({ message: 'Testimonial created', testimonial: created });
+    } catch (err) {
+        console.error('Error creating testimonial:', err);
+        res.status(500).json({ error: 'Failed to create testimonial' });
+    }
+});
+
+// PUT update testimonial (admin only)
+app.put('/api/testimonials/:id', requireAuth, async (req, res) => {
+    try {
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: 'Invalid testimonial ID' });
+        }
+        const errors = validateTestimonial(req.body);
+        if (errors.length > 0) {
+            return res.status(400).json({ error: errors.join('. ') });
+        }
+        const doc = buildTestimonialDocument(req.body);
+        doc.updatedAt = new Date();
+        const result = await db.collection('testimonials').findOneAndUpdate(
+            { _id: new ObjectId(req.params.id) },
+            { $set: doc },
+            { returnDocument: 'after' }
+        );
+        if (!result) {
+            return res.status(404).json({ error: 'Testimonial not found' });
+        }
+        res.json({ message: 'Testimonial updated', testimonial: result });
+    } catch (err) {
+        console.error('Error updating testimonial:', err);
+        res.status(500).json({ error: 'Failed to update testimonial' });
+    }
+});
+
+// DELETE testimonial (admin only)
+app.delete('/api/testimonials/:id', requireAuth, async (req, res) => {
+    try {
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: 'Invalid testimonial ID' });
+        }
+        const result = await db.collection('testimonials').findOneAndDelete(
+            { _id: new ObjectId(req.params.id) }
+        );
+        if (!result) {
+            return res.status(404).json({ error: 'Testimonial not found' });
+        }
+        res.json({ message: 'Testimonial deleted' });
+    } catch (err) {
+        console.error('Error deleting testimonial:', err);
+        res.status(500).json({ error: 'Failed to delete testimonial' });
+    }
+});
+
+// ── Settings Routes ───────────────────────────────
+
+// GET trust stats (public)
+app.get('/api/settings/trustStats', async (req, res) => {
+    try {
+        const doc = await db.collection('settings').findOne({ key: 'trustStats' });
+        if (!doc) {
+            // Return defaults
+            return res.json({
+                stats: [
+                    { icon: 'fas fa-utensils', number: '50+', label: 'Restaurants Featured' },
+                    { icon: 'fas fa-star', number: '5.0', label: 'Average Rating' },
+                    { icon: 'fas fa-eye', number: '10M+', label: 'Total Views' },
+                    { icon: 'fas fa-handshake', number: '100%', label: 'Satisfaction' }
+                ]
+            });
+        }
+        res.json({ stats: doc.stats });
+    } catch (err) {
+        console.error('Error fetching trust stats:', err);
+        res.status(500).json({ error: 'Failed to load trust stats' });
+    }
+});
+
+// PUT update trust stats (admin only)
+app.put('/api/settings/trustStats', requireAuth, async (req, res) => {
+    try {
+        const { stats } = req.body;
+        if (!Array.isArray(stats) || stats.length === 0 || stats.length > 6) {
+            return res.status(400).json({ error: 'Provide a stats array (1-6 items)' });
+        }
+        const sanitized = stats.map(s => ({
+            icon: sanitizeString(s.icon || 'fas fa-star', 50),
+            number: sanitizeString(s.number || '0', 20),
+            label: sanitizeString(s.label || 'Stat', 50)
+        }));
+        await db.collection('settings').updateOne(
+            { key: 'trustStats' },
+            { $set: { key: 'trustStats', stats: sanitized, updatedAt: new Date() } },
+            { upsert: true }
+        );
+        res.json({ message: 'Trust stats updated', stats: sanitized });
+    } catch (err) {
+        console.error('Error updating trust stats:', err);
+        res.status(500).json({ error: 'Failed to update trust stats' });
     }
 });
 

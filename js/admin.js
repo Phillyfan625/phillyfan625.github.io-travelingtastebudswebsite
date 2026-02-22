@@ -3,10 +3,13 @@
 // ============================================
 
 let allSpots = [];
+let allTestimonials = [];
 let mapPicker = null;
 let mapPickerMarker = null;
 let currentTags = [];
 let pendingDeleteId = null;
+let currentTab = 'spots';
+let testimonialStarRating = 5;
 
 // ── Utilities ──────────────────────────────────
 
@@ -98,6 +101,8 @@ function showToast(message, type) {
         });
     }
 
+    initSpotSearch();
+
     var colorPicker = document.getElementById('spotLogoBgColorPicker');
     var colorText = document.getElementById('spotLogoBgColor');
     if (colorPicker && colorText) {
@@ -118,9 +123,54 @@ function showToast(message, type) {
         });
     }
 
+    // Testimonial search
+    var testimonialSearchInput = document.getElementById('testimonialSearch');
+    if (testimonialSearchInput) {
+        testimonialSearchInput.addEventListener('input', function () {
+            var q = this.value.toLowerCase();
+            var filtered = allTestimonials.filter(function (t) {
+                return (t.quote || '').toLowerCase().includes(q) ||
+                    (t.authorName || '').toLowerCase().includes(q) ||
+                    (t.restaurantName || '').toLowerCase().includes(q) ||
+                    (t.location || '').toLowerCase().includes(q);
+            });
+            renderTestimonialsGrid(filtered);
+        });
+    }
+
+    // Star rating picker
+    var starPicker = document.getElementById('starRatingPicker');
+    if (starPicker) {
+        starPicker.querySelectorAll('i').forEach(function (star) {
+            star.addEventListener('click', function () {
+                testimonialStarRating = parseInt(this.getAttribute('data-value'));
+                document.getElementById('testimonialRating').value = testimonialStarRating;
+                updateStarDisplay(testimonialStarRating);
+            });
+            star.addEventListener('mouseenter', function () {
+                var val = parseInt(this.getAttribute('data-value'));
+                highlightStars(val);
+            });
+        });
+        starPicker.addEventListener('mouseleave', function () {
+            highlightStars(testimonialStarRating);
+        });
+        // Initialize to 5 stars
+        updateStarDisplay(5);
+    }
+
+    // Quote character counter
+    var quoteField = document.getElementById('testimonialQuote');
+    if (quoteField) {
+        quoteField.addEventListener('input', function () {
+            var count = document.getElementById('quoteCharCount');
+            if (count) count.textContent = this.value.length;
+        });
+    }
+
     // Close modals on Escape
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { closeModal(); closeConfirm(); closeImportModal(); }
+        if (e.key === 'Escape') { closeModal(); closeConfirm(); closeImportModal(); closeTestimonialModal(); }
     });
 
     var spotModalEl = document.getElementById('spotModal');
@@ -129,6 +179,8 @@ function showToast(message, type) {
     if (confirmEl) confirmEl.addEventListener('click', function (e) { if (e.target === this) closeConfirm(); });
     var importEl = document.getElementById('importModal');
     if (importEl) importEl.addEventListener('click', function (e) { if (e.target === this) closeImportModal(); });
+    var testimonialModalEl = document.getElementById('testimonialModal');
+    if (testimonialModalEl) testimonialModalEl.addEventListener('click', function (e) { if (e.target === this) closeTestimonialModal(); });
 })();
 
 // ── Auth ───────────────────────────────────────
@@ -145,6 +197,8 @@ async function handleLogin(e) {
         showToast('Welcome back!', 'success');
         showDashboard();
         loadSpots();
+        loadTestimonials();
+        loadTrustStats();
     } catch (err) {
         showToast(err.message, 'error');
         document.getElementById('loginPassword').classList.add('error');
@@ -161,7 +215,7 @@ async function verifyAndShowDashboard() {
             method: 'POST',
             headers: { 'Authorization': 'Bearer ' + TTBData.getToken() }
         });
-        if (res.ok) { showDashboard(); loadSpots(); }
+        if (res.ok) { showDashboard(); loadSpots(); loadTestimonials(); loadTrustStats(); }
         else { TTBData.logout(); }
     } catch (_) { /* API down */ }
 }
@@ -192,6 +246,8 @@ async function loadSpots() {
 }
 
 function renderStats() {
+    var spotsCount = document.getElementById('tabSpotsCount');
+    if (spotsCount) spotsCount.textContent = allSpots.length;
     document.getElementById('statTotal').textContent = allSpots.length;
     document.getElementById('statDiscounts').textContent = allSpots.filter(function (s) { return s.discount; }).length;
     var avg = allSpots.length
@@ -749,6 +805,426 @@ function prefillFromImport(item) {
     // If batch mode, show progress
     if (batchImportQueue.length > 1) {
         showToast('Video ' + (batchImportIndex + 1) + ' of ' + batchImportQueue.length, 'info');
+    }
+}
+
+// ── Tab Switching ──────────────────────────────
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById('spotsTab').style.display = tab === 'spots' ? '' : 'none';
+    document.getElementById('testimonialsTab').style.display = tab === 'testimonials' ? '' : 'none';
+    document.getElementById('tabSpots').classList.toggle('active', tab === 'spots');
+    document.getElementById('tabTestimonials').classList.toggle('active', tab === 'testimonials');
+}
+
+// ── Spot Search Dropdown ───────────────────────
+
+function initSpotSearch() {
+    var input = document.getElementById('spotSearchInput');
+    if (!input) return;
+
+    input.addEventListener('input', function () {
+        showSpotSuggestions(this.value);
+    });
+    input.addEventListener('focus', function () {
+        showSpotSuggestions(this.value);
+    });
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.spot-search-wrapper')) {
+            hideSpotSuggestions();
+        }
+    });
+}
+
+function showSpotSuggestions(query) {
+    var dropdown = document.getElementById('spotSearchDropdown');
+    var q = (query || '').trim().toLowerCase();
+    var matches;
+
+    if (!q) {
+        matches = allSpots.slice(0, 10);
+    } else {
+        matches = allSpots.filter(function (s) {
+            return s.name.toLowerCase().includes(q) ||
+                (s.location || '').toLowerCase().includes(q);
+        }).slice(0, 10);
+    }
+
+    if (matches.length === 0) {
+        dropdown.innerHTML = '<div class="spot-suggestion-empty">No spots found</div>';
+        dropdown.style.display = 'block';
+        return;
+    }
+
+    dropdown.innerHTML = matches.map(function (spot) {
+        var logoHtml = spot.logoImage
+            ? '<img src="' + escapeHtml(spot.logoImage) + '" alt="" class="spot-suggestion-logo"' +
+              (spot.logoBgColor ? ' style="background:' + escapeHtml(spot.logoBgColor) + ';"' : '') + '>'
+            : '<div class="spot-suggestion-logo spot-suggestion-logo-placeholder"><i class="fas fa-store"></i></div>';
+        return '<div class="spot-suggestion-item" onclick="selectSpot(\'' + spot._id + '\')">' +
+            logoHtml +
+            '<div class="spot-suggestion-info">' +
+            '<div class="spot-suggestion-name">' + escapeHtml(spot.name) + '</div>' +
+            '<div class="spot-suggestion-location">' + escapeHtml(spot.location || '') + '</div>' +
+            '</div></div>';
+    }).join('');
+    dropdown.style.display = 'block';
+}
+
+function hideSpotSuggestions() {
+    var dropdown = document.getElementById('spotSearchDropdown');
+    if (dropdown) dropdown.style.display = 'none';
+}
+
+function selectSpot(spotId) {
+    var spot = allSpots.find(function (s) { return s._id === spotId; });
+    if (!spot) return;
+
+    document.getElementById('testimonialSpotId').value = spotId;
+
+    var selected = document.getElementById('spotSearchSelected');
+    var logo = document.getElementById('spotSearchSelectedLogo');
+    var nameEl = document.getElementById('spotSearchSelectedName');
+
+    if (spot.logoImage) {
+        logo.src = spot.logoImage;
+        logo.style.background = spot.logoBgColor || '#ffffff';
+        logo.style.display = '';
+    } else {
+        logo.style.display = 'none';
+    }
+    nameEl.textContent = spot.name;
+    selected.style.display = 'flex';
+    document.getElementById('spotSearchInput').style.display = 'none';
+    document.getElementById('spotSearchInput').value = '';
+    hideSpotSuggestions();
+
+    // Auto-fill fields
+    document.getElementById('testimonialRestaurant').value = spot.name;
+    if (!document.getElementById('testimonialLocation').value.trim()) {
+        document.getElementById('testimonialLocation').value = spot.location || '';
+    }
+    if (!document.getElementById('testimonialTiktokUrl').value.trim() && spot.tiktokId) {
+        document.getElementById('testimonialTiktokUrl').value = 'https://www.tiktok.com/@the.traveling.tastebuds/video/' + spot.tiktokId;
+    }
+}
+
+function clearSpotLink() {
+    document.getElementById('testimonialSpotId').value = '';
+    document.getElementById('spotSearchSelected').style.display = 'none';
+    document.getElementById('spotSearchInput').style.display = '';
+    document.getElementById('spotSearchInput').value = '';
+}
+
+function resetSpotSearch() {
+    document.getElementById('testimonialSpotId').value = '';
+    document.getElementById('spotSearchSelected').style.display = 'none';
+    document.getElementById('spotSearchInput').style.display = '';
+    document.getElementById('spotSearchInput').value = '';
+}
+
+function restoreSpotLink(spotId) {
+    if (!spotId) { resetSpotSearch(); return; }
+    var spot = allSpots.find(function (s) { return s._id === spotId; });
+    if (!spot) { resetSpotSearch(); return; }
+
+    document.getElementById('testimonialSpotId').value = spotId;
+    var selected = document.getElementById('spotSearchSelected');
+    var logo = document.getElementById('spotSearchSelectedLogo');
+    var nameEl = document.getElementById('spotSearchSelectedName');
+    if (spot.logoImage) {
+        logo.src = spot.logoImage;
+        logo.style.background = spot.logoBgColor || '#ffffff';
+        logo.style.display = '';
+    } else {
+        logo.style.display = 'none';
+    }
+    nameEl.textContent = spot.name;
+    selected.style.display = 'flex';
+    document.getElementById('spotSearchInput').style.display = 'none';
+}
+
+// ── Star Rating Helpers ────────────────────────
+
+function highlightStars(count) {
+    var stars = document.querySelectorAll('#starRatingPicker i');
+    stars.forEach(function (star, i) {
+        star.classList.toggle('active', i < count);
+    });
+}
+
+function updateStarDisplay(count) {
+    testimonialStarRating = count;
+    highlightStars(count);
+}
+
+// ── Testimonials: Load & Render ────────────────
+
+async function loadTestimonials() {
+    try {
+        var data = await TTBData.getTestimonials(true);
+        allTestimonials = data;
+        var countEl = document.getElementById('tabTestimonialsCount');
+        if (countEl) countEl.textContent = allTestimonials.length;
+        renderTestimonialsGrid(allTestimonials);
+    } catch (err) {
+        showToast('Failed to load testimonials: ' + err.message, 'error');
+        renderTestimonialsGrid([]);
+    }
+}
+
+function renderTestimonialsGrid(testimonials) {
+    var grid = document.getElementById('testimonialsGrid');
+    if (!grid) return;
+
+    if (testimonials.length === 0) {
+        grid.innerHTML =
+            '<div style="grid-column:1/-1;text-align:center;padding:3rem;">' +
+            '<div class="empty-state">' +
+            '<i class="fas fa-quote-left"></i>' +
+            '<h3>No testimonials yet</h3>' +
+            '<p>Click "Add Testimonial" to add your first one!</p>' +
+            '</div></div>';
+        return;
+    }
+
+    grid.innerHTML = testimonials.map(function (t) {
+        var id = t._id || '';
+        var hasSpot = t.spot && t.spot.name;
+        var restaurantName = hasSpot ? t.spot.name : (t.restaurantName || '');
+
+        var stars = '';
+        for (var i = 0; i < 5; i++) {
+            stars += '<i class="fas fa-star' + (i < (t.rating || 5) ? ' active' : '') + '"></i>';
+        }
+
+        // Header with logo + restaurant info
+        var headerHtml = '';
+        if (hasSpot && t.spot.logoImage) {
+            headerHtml = '<div class="testimonial-admin-header">' +
+                '<div class="testimonial-admin-logo-wrap"' +
+                (t.spot.logoBgColor ? ' style="background:' + escapeHtml(t.spot.logoBgColor) + ';"' : '') + '>' +
+                '<img src="' + escapeHtml(t.spot.logoImage) + '" alt="" class="testimonial-admin-spot-logo">' +
+                '</div>' +
+                '<div class="testimonial-admin-header-info">' +
+                '<div class="testimonial-admin-restaurant-name">' + escapeHtml(restaurantName) + '</div>' +
+                '<div class="testimonial-admin-location"><i class="fas fa-map-marker-alt"></i> ' + escapeHtml(t.location || '') + '</div>' +
+                '<div class="testimonial-admin-stars">' + stars + '</div>' +
+                '</div></div>';
+        } else if (restaurantName) {
+            headerHtml = '<div class="testimonial-admin-header">' +
+                '<div class="testimonial-admin-header-info">' +
+                '<div class="testimonial-admin-restaurant-name"><i class="fas fa-store" style="color:var(--header-color);margin-right:0.3rem;font-size:0.8rem;"></i>' + escapeHtml(restaurantName) + '</div>' +
+                '<div class="testimonial-admin-location"><i class="fas fa-map-marker-alt"></i> ' + escapeHtml(t.location || '') + '</div>' +
+                '<div class="testimonial-admin-stars">' + stars + '</div>' +
+                '</div></div>';
+        } else {
+            headerHtml = '<div class="testimonial-admin-header">' +
+                '<div class="testimonial-admin-header-info">' +
+                '<div class="testimonial-admin-location"><i class="fas fa-map-marker-alt"></i> ' + escapeHtml(t.location || '') + '</div>' +
+                '<div class="testimonial-admin-stars">' + stars + '</div>' +
+                '</div></div>';
+        }
+
+        var resultHtml = '';
+        if (t.result) {
+            resultHtml = '<div class="testimonial-admin-result"><i class="' + escapeHtml(t.resultIcon || 'fas fa-chart-line') + '"></i> ' + escapeHtml(t.result) + '</div>';
+        }
+
+        var tiktokHtml = '';
+        if (t.tiktokUrl) {
+            tiktokHtml = '<a href="' + escapeHtml(t.tiktokUrl) + '" target="_blank" rel="noopener" class="testimonial-admin-tiktok"><i class="fab fa-tiktok"></i> Video</a>';
+        }
+
+        return '<div class="testimonial-admin-card" data-id="' + id + '">' +
+            headerHtml +
+            '<div class="testimonial-admin-quote">"' + escapeHtml((t.quote || '').substring(0, 150)) + (t.quote && t.quote.length > 150 ? '...' : '') + '"</div>' +
+            resultHtml +
+            '<div class="testimonial-admin-footer">' +
+            '<div class="testimonial-admin-meta">' +
+            '<span class="testimonial-admin-author">' + escapeHtml(t.authorName || '') + '</span>' +
+            (t.date ? '<span class="testimonial-admin-date">' + escapeHtml(t.date) + '</span>' : '') +
+            '</div>' +
+            '<div class="testimonial-admin-actions-row">' +
+            tiktokHtml +
+            '<button class="table-action-btn" title="Edit" onclick="openEditTestimonialModal(\'' + id + '\')"><i class="fas fa-pen"></i></button>' +
+            '<button class="table-action-btn delete" title="Delete" onclick="confirmDeleteTestimonial(\'' + id + '\',\'' + escapeHtml(t.authorName || 'this testimonial').replace(/'/g, "\\'") + '\')"><i class="fas fa-trash-alt"></i></button>' +
+            '</div>' +
+            '</div></div>';
+    }).join('');
+}
+
+// ── Testimonial Modal ──────────────────────────
+
+function openAddTestimonialModal() {
+    document.getElementById('testimonialModalTitle').textContent = 'Add Testimonial';
+    document.getElementById('saveTestimonialBtn').querySelector('span').textContent = 'Save Testimonial';
+    document.getElementById('testimonialForm').reset();
+    document.getElementById('testimonialId').value = '';
+    document.getElementById('testimonialRating').value = 5;
+    document.getElementById('testimonialResultIcon').value = 'fas fa-chart-line';
+    updateStarDisplay(5);
+    resetSpotSearch();
+    var count = document.getElementById('quoteCharCount');
+    if (count) count.textContent = '0';
+    document.getElementById('testimonialModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function openEditTestimonialModal(id) {
+    var t = allTestimonials.find(function (item) { return item._id === id; });
+    if (!t) { showToast('Testimonial not found', 'error'); return; }
+
+    document.getElementById('testimonialModalTitle').textContent = 'Edit Testimonial';
+    document.getElementById('saveTestimonialBtn').querySelector('span').textContent = 'Update Testimonial';
+    document.getElementById('testimonialId').value = id;
+    document.getElementById('testimonialQuote').value = t.quote || '';
+    document.getElementById('testimonialAuthor').value = t.authorName || '';
+    document.getElementById('testimonialRestaurant').value = t.restaurantName || '';
+    document.getElementById('testimonialLocation').value = t.location || '';
+    document.getElementById('testimonialDate').value = t.date || '';
+    document.getElementById('testimonialRating').value = t.rating || 5;
+    document.getElementById('testimonialResult').value = t.result || '';
+    document.getElementById('testimonialResultIcon').value = t.resultIcon || 'fas fa-chart-line';
+    document.getElementById('testimonialTiktokUrl').value = t.tiktokUrl || '';
+    updateStarDisplay(t.rating || 5);
+    restoreSpotLink(t.spotId || '');
+    var count = document.getElementById('quoteCharCount');
+    if (count) count.textContent = (t.quote || '').length;
+    document.getElementById('testimonialModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeTestimonialModal() {
+    document.getElementById('testimonialModal').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+async function saveTestimonial() {
+    var btn = document.getElementById('saveTestimonialBtn');
+    var id = document.getElementById('testimonialId').value;
+    var isEdit = !!id;
+
+    var testimonialData = {
+        quote: document.getElementById('testimonialQuote').value.trim(),
+        authorName: document.getElementById('testimonialAuthor').value.trim(),
+        restaurantName: document.getElementById('testimonialRestaurant').value.trim(),
+        location: document.getElementById('testimonialLocation').value.trim(),
+        date: document.getElementById('testimonialDate').value.trim(),
+        rating: parseInt(document.getElementById('testimonialRating').value) || 5,
+        result: document.getElementById('testimonialResult').value.trim(),
+        resultIcon: document.getElementById('testimonialResultIcon').value,
+        tiktokUrl: document.getElementById('testimonialTiktokUrl').value.trim(),
+        spotId: document.getElementById('testimonialSpotId').value || null
+    };
+
+    var errors = [];
+    if (!testimonialData.quote) errors.push('Quote is required');
+    if (!testimonialData.authorName) errors.push('Author name is required');
+    if (!testimonialData.location) errors.push('Location is required');
+
+    if (errors.length) {
+        showToast(errors.join('. '), 'error');
+        if (!testimonialData.quote) document.getElementById('testimonialQuote').classList.add('error');
+        if (!testimonialData.authorName) document.getElementById('testimonialAuthor').classList.add('error');
+        if (!testimonialData.location) document.getElementById('testimonialLocation').classList.add('error');
+        setTimeout(function () { document.querySelectorAll('.admin-input.error').forEach(function (el) { el.classList.remove('error'); }); }, 3000);
+        return;
+    }
+
+    btn.disabled = true;
+    btn.querySelector('span').textContent = isEdit ? 'Updating...' : 'Saving...';
+
+    try {
+        if (isEdit) {
+            await TTBData.updateTestimonial(id, testimonialData);
+            showToast('Testimonial updated!', 'success');
+        } else {
+            await TTBData.createTestimonial(testimonialData);
+            showToast('Testimonial added!', 'success');
+        }
+        closeTestimonialModal();
+        loadTestimonials();
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.querySelector('span').textContent = isEdit ? 'Update Testimonial' : 'Save Testimonial';
+    }
+}
+
+// ── Delete Testimonial ─────────────────────────
+
+function confirmDeleteTestimonial(id, name) {
+    pendingDeleteId = id;
+    document.getElementById('confirmTitle').textContent = 'Delete testimonial from ' + name + '?';
+    document.getElementById('confirmMessage').textContent =
+        'This removes it from the public testimonials page. This cannot be undone.';
+    document.getElementById('confirmDialog').classList.add('show');
+
+    document.getElementById('confirmBtn').onclick = async function () {
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+        try {
+            await TTBData.deleteTestimonial(pendingDeleteId);
+            showToast('Testimonial deleted', 'success');
+            closeConfirm();
+            loadTestimonials();
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+        }
+    };
+}
+
+// ── Trust Stats ────────────────────────────────
+
+async function loadTrustStats() {
+    try {
+        var stats = await TTBData.getTrustStats();
+        if (stats && stats.length > 0) {
+            var rows = document.querySelectorAll('#trustStatsRows .trust-stat-row');
+            stats.forEach(function (stat, i) {
+                if (i >= rows.length) return;
+                var row = rows[i];
+                var iconSelect = row.querySelector('[data-field="icon"]');
+                var numberInput = row.querySelector('[data-field="number"]');
+                var labelInput = row.querySelector('[data-field="label"]');
+                if (iconSelect) iconSelect.value = stat.icon || 'fas fa-utensils';
+                if (numberInput) numberInput.value = stat.number || '';
+                if (labelInput) labelInput.value = stat.label || '';
+            });
+        }
+    } catch (err) {
+        console.warn('Could not load trust stats:', err.message);
+    }
+}
+
+async function saveTrustStats() {
+    var rows = document.querySelectorAll('#trustStatsRows .trust-stat-row');
+    var stats = [];
+    rows.forEach(function (row) {
+        var icon = row.querySelector('[data-field="icon"]').value;
+        var number = row.querySelector('[data-field="number"]').value.trim();
+        var label = row.querySelector('[data-field="label"]').value.trim();
+        if (number || label) {
+            stats.push({ icon: icon, number: number, label: label });
+        }
+    });
+
+    if (stats.length === 0) {
+        showToast('Add at least one stat', 'error');
+        return;
+    }
+
+    try {
+        await TTBData.updateTrustStats(stats);
+        showToast('Trust stats saved!', 'success');
+    } catch (err) {
+        showToast('Failed to save: ' + err.message, 'error');
     }
 }
 
