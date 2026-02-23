@@ -31,13 +31,23 @@
 6. Click **Create Web Service**
 7. Wait for it to deploy — you'll get a URL like `https://ttb-api.onrender.com`
 
-### Step 3: Connect the Website to the API
+### Step 3: Point the site at your API (one-time)
 
-1. Go to **https://travelingtastebuds.org/admin**
-2. Paste your Render URL (e.g. `https://ttb-api.onrender.com`) and click **Connect API**
-3. Log in with the password you set in Step 2
-4. Click **Seed DB** to import all current spots from the local JSON into MongoDB
-5. Done! You can now add/edit/delete spots from the admin panel
+The admin connects to the API automatically:
+
+- **Local dev:** Uses `http://localhost:3001` when you open the site on localhost.
+- **Same-origin:** If your site and API are served by the same server (one Node app serving both), it uses the current origin — no config needed.
+- **Separate API (e.g. Render Web Service):** Set the API URL once in **`js/ttb-config.js`**:
+  ```js
+  window.TTB_API_URL = 'https://your-api-service.onrender.com';
+  ```
+  Use the URL Render gives your API service (from Step 2). Then deploy your frontend (GitHub Pages, static Render, etc.) as usual.
+
+After that:
+
+1. Go to your live site’s **/admin** and log in with the password from Step 2.
+2. Click **Seed DB** to import spots from the local JSON into MongoDB (if the DB is empty).
+3. You can now add/edit/delete spots from the admin panel.
 
 ### Step 4: Manage Your Spots
 

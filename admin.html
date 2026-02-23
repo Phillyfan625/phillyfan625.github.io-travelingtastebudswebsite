@@ -31,6 +31,12 @@
                     <i class="fas fa-lock"></i> <span>Log In</span>
                 </button>
             </form>
+            <div class="wake-server-row" style="margin-top:1rem; text-align:center;">
+                <button type="button" class="btn-ttb btn-ttb-outline" id="wakeServerBtn" style="font-size:0.85rem; padding:0.5rem 1rem;" onclick="wakeServer()">
+                    <i class="fas fa-plug"></i> <span id="wakeServerBtnText">Wake up server</span>
+                </button>
+                <p id="wakeServerStatus" style="font-size:0.8rem; color:var(--text-muted); margin:0.5rem 0 0 0; min-height:1.2em;"></p>
+            </div>
             <p style="color:var(--text-muted);font-size:0.75rem;margin-top:1.5rem;margin-bottom:0;">
                 <a href="/" style="color:var(--header-color);text-decoration:none;">&larr; Back to site</a>
             </p>
@@ -453,6 +459,7 @@
         </div>
     </div>
 
+    <script src="/js/ttb-config.js"></script>
     <script src="/js/ttb-data.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

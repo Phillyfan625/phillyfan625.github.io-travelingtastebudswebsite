@@ -42,6 +42,9 @@ function showToast(message, type) {
 (function init() {
     if (TTBData.isLoggedIn()) {
         verifyAndShowDashboard();
+    } else if (TTBData.apiBase) {
+        // Wake up the server in the background so it may be ready by the time they log in
+        fetch(TTBData.apiBase + '/api/health', { cache: 'no-store', keepalive: true }).catch(function () {});
     }
 
     var loginForm = document.getElementById('loginForm');
@@ -210,6 +213,7 @@ async function handleLogin(e) {
 }
 
 async function verifyAndShowDashboard() {
+    if (!TTBData.apiBase) return;
     try {
         var res = await fetch(TTBData.apiBase + '/api/auth/verify', {
             method: 'POST',
@@ -229,6 +233,46 @@ function handleLogout() {
     TTBData.logout();
     showToast('Logged out', 'info');
     setTimeout(function () { window.location.reload(); }, 500);
+}
+
+// ── Wake up server (Render cold start) ─────────────────
+
+async function wakeServer() {
+    var btn = document.getElementById('wakeServerBtn');
+    var btnText = document.getElementById('wakeServerBtnText');
+    var status = document.getElementById('wakeServerStatus');
+    if (!TTBData.apiBase || !btn || !status) return;
+
+    btn.disabled = true;
+    if (btnText) btnText.textContent = 'Waking up…';
+    status.textContent = 'This may take up to a minute. Please wait.';
+    status.style.color = 'var(--text-muted)';
+
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function () { controller.abort(); }, 90000);
+
+    try {
+        var res = await fetch(TTBData.apiBase + '/api/health', {
+            signal: controller.signal,
+            cache: 'no-store'
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+            status.textContent = 'Server is ready — you can log in now.';
+            status.style.color = 'var(--header-color)';
+            showToast('Server is ready', 'success');
+        } else {
+            status.textContent = 'Server responded but had an issue. Try logging in.';
+            status.style.color = 'var(--text-muted)';
+        }
+    } catch (err) {
+        clearTimeout(timeoutId);
+        status.textContent = 'Still waking up — click "Wake up server" again in a moment.';
+        status.style.color = 'var(--text-muted)';
+    }
+
+    btn.disabled = false;
+    if (btnText) btnText.textContent = 'Wake up server';
 }
 
 // ── Load & Render ──────────────────────────────
@@ -662,6 +706,11 @@ async function fetchTikTokData() {
 
     // Check which video IDs already exist in the database
     var existingIds = new Set(allSpots.map(function(s) { return s.tiktokId; }));
+
+    if (!TTBData.apiBase) {
+        showToast('API URL not configured', 'error');
+        return;
+    }
 
     btn.disabled = true;
     btn.querySelector('span').textContent = 'Fetching...';
@@ -1231,6 +1280,10 @@ async function saveTrustStats() {
 // ── Seed DB (one-time import from local JSON) ──
 
 async function handleSeedDB() {
+    if (!TTBData.apiBase) {
+        showToast('API URL not configured', 'error');
+        return;
+    }
     if (!confirm('This will import all spots from the local JSON into the database. Only works if the DB is empty. Continue?')) return;
 
     try {

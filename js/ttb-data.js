@@ -15,7 +15,19 @@
 
 const TTBData = (function () {
     // ── Config ────────────────────────────────────────
-    const API_BASE = localStorage.getItem('ttb_api_url') || 'https://ttb-website-hior.onrender.com';
+    // Priority: localStorage override > window.TTB_API_URL (set in js/ttb-config.js) > automatic
+    // Automatic: localhost → http://localhost:3001; otherwise same origin (site must serve API at /api)
+    function getApiBase() {
+        if (typeof window === 'undefined') return '';
+        var override = localStorage.getItem('ttb_api_url');
+        if (override) return override.replace(/\/+$/, '');
+        if (window.TTB_API_URL) return String(window.TTB_API_URL).replace(/\/+$/, '');
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3001';
+        }
+        return window.location.origin;
+    }
+    const API_BASE = getApiBase();
 
     const FALLBACK_JSON = '/data/spots.json';
     const CACHE_KEY = 'ttb_spots_cache';
