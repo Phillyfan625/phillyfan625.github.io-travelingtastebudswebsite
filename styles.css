@@ -2198,8 +2198,8 @@ h6,
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
-	background: rgba(30, 64, 175, 0.08);
-	color: var(--header-color);
+	background: white;
+	color: black;
 	font-size: 0.7rem;
 	font-weight: 700;
 	text-transform: uppercase;
