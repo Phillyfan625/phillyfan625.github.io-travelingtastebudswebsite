@@ -629,6 +629,9 @@ app.post('/api/seed', requireAuth, async (req, res) => {
     }
 });
 
+// When mounted under root server: pass through non-API requests to static
+app.use((req, res, next) => next());
+
 // ── Error handling ─────────────────────────────────
 
 app.use((err, req, res, next) => {
@@ -642,7 +645,7 @@ process.on('unhandledRejection', (err) => {
     console.error('Unhandled rejection:', err);
 });
 
-// ── Start server ───────────────────────────────────
+// ── Start server (when run directly: node server.js) ──
 
 async function start() {
     try {
@@ -656,4 +659,5 @@ async function start() {
     }
 }
 
-start();
+module.exports = { app, connectDB, start };
+if (require.main === module) start();

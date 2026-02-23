@@ -12,38 +12,36 @@
    - It looks like: `mongodb+srv://USERNAME:PASSWORD@cluster0.xxxxx.mongodb.net/`
    - Add `ttb` at the end: `mongodb+srv://USERNAME:PASSWORD@cluster0.xxxxx.mongodb.net/ttb?retryWrites=true&w=majority`
 
-### Step 2: Deploy the API on Render.com (Free)
+### Step 2: Deploy on Render.com (Free)
 
-1. Go to **https://render.com** and sign up with your GitHub account
-2. Click **New** > **Web Service**
-3. Connect your GitHub repo
-4. Set these options:
-   - **Name:** `ttb-api`
-   - **Root Directory:** `api`
-   - **Runtime:** Node
-   - **Build Command:** `npm install`
+**Option A — One URL (recommended): site and API at the same address**
+
+1. Go to **https://render.com** and sign up with your GitHub account.
+2. Click **New** > **Web Service** and connect your GitHub repo.
+3. Use the **repo root** (leave Root Directory blank):
+   - **Build Command:** `npm install && cd api && npm install`
    - **Start Command:** `npm start`
-5. Under **Environment Variables**, add:
+4. Under **Environment Variables**, add:
    - `MONGODB_URI` = your MongoDB connection string from Step 1
    - `ADMIN_PASSWORD` = pick a strong password (this is your admin login)
    - `JWT_SECRET` = a random string (run `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` to generate one)
-   - `ALLOWED_ORIGIN` = `https://travelingtastebuds.org`
-6. Click **Create Web Service**
-7. Wait for it to deploy — you'll get a URL like `https://ttb-api.onrender.com`
+   - `ALLOWED_ORIGIN` = your Render URL, e.g. `https://ttb-website-hior.onrender.com`
+5. Click **Create Web Service**. Your one URL will serve both the site and the API at `/api/*`. No need to set anything in `js/ttb-config.js`.
 
-### Step 3: Point the site at your API (one-time)
+**Option B — Two services (static site + separate API)**
 
-The admin connects to the API automatically:
+1. Create a **Web Service** with **Root Directory:** `api`.
+2. **Build Command:** `npm install`  
+   **Start Command:** `npm start`
+3. Add the same environment variables as above. You’ll get a URL like `https://ttb-api.onrender.com`.
+4. Set that URL in **`js/ttb-config.js`** as `window.TTB_API_URL = 'https://ttb-api.onrender.com';` and deploy your static site (e.g. GitHub Pages or static Render) as usual.
 
-- **Local dev:** Uses `http://localhost:3001` when you open the site on localhost.
-- **Same-origin:** If your site and API are served by the same server (one Node app serving both), it uses the current origin — no config needed.
-- **Separate API (e.g. Render Web Service):** Set the API URL once in **`js/ttb-config.js`**:
-  ```js
-  window.TTB_API_URL = 'https://your-api-service.onrender.com';
-  ```
-  Use the URL Render gives your API service (from Step 2). Then deploy your frontend (GitHub Pages, static Render, etc.) as usual.
+### Step 3: Connect and log in
 
-After that:
+- **If you used Option A (one URL):** The site and API are at the same address. `js/ttb-config.js` can stay as-is (or use the same URL). No extra config.
+- **If you used Option B (two services):** Set your API URL in **`js/ttb-config.js`**: `window.TTB_API_URL = 'https://your-api.onrender.com';`
+
+Then:
 
 1. Go to your live site’s **/admin** and log in with the password from Step 2.
 2. Click **Seed DB** to import spots from the local JSON into MongoDB (if the DB is empty).
