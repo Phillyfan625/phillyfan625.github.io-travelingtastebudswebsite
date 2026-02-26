@@ -59,6 +59,7 @@
         <div class="admin-tabs">
             <button class="admin-tab active" id="tabSpots" onclick="switchTab('spots')"><i class="fas fa-utensils"></i> Spots <span class="tab-count" id="tabSpotsCount">0</span></button>
             <button class="admin-tab" id="tabTestimonials" onclick="switchTab('testimonials')"><i class="fas fa-quote-left"></i> Testimonials <span class="tab-count" id="tabTestimonialsCount">0</span></button>
+            <button class="admin-tab" id="tabPricing" onclick="switchTab('pricing')"><i class="fas fa-tag"></i> Pricing <span class="tab-count" id="tabPricingCount">0</span></button>
         </div>
 
         <!-- ═══ SPOTS TAB ═══ -->
@@ -203,6 +204,36 @@
                 </div>
             </div>
         </div><!-- /testimonialsTab -->
+
+        <!-- ═══ PRICING TAB ═══ -->
+        <div id="pricingTab" style="display:none;">
+
+            <!-- Pricing Stats -->
+            <div class="admin-stats" id="pricingStats">
+                <div class="admin-stat-card"><div class="stat-number" id="statPackages">-</div><div class="stat-label">Packages</div></div>
+                <div class="admin-stat-card"><div class="stat-number" id="statActivePackages">-</div><div class="stat-label">Active</div></div>
+                <div class="admin-stat-card"><div class="stat-number" id="statHighlighted">-</div><div class="stat-label">Highlighted</div></div>
+            </div>
+
+            <!-- Pricing Toolbar -->
+            <div class="admin-toolbar">
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <h3 style="margin:0;font-size:1rem;color:var(--text-white);font-weight:600;"><i class="fas fa-tag" style="color:var(--header-color);margin-right:0.4rem;"></i> Service Packages</h3>
+                    <span style="font-size:0.8rem;color:var(--text-muted);">Manage your pricing cards on the Services page</span>
+                </div>
+                <div style="display:flex;gap:0.5rem;">
+                    <button class="btn-ttb btn-ttb-primary" style="font-size:0.85rem;padding:0.55rem 1.2rem;" onclick="openAddPackageModal()"><i class="fas fa-plus"></i> Add Package</button>
+                </div>
+            </div>
+
+            <!-- Pricing Cards Grid (admin preview) -->
+            <div class="pricing-admin-grid" id="pricingGrid">
+                <div style="text-align:center;padding:3rem;opacity:0.5;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:var(--text-muted);"></i>
+                    <p style="color:var(--text-muted);margin-top:1rem;">Loading packages...</p>
+                </div>
+            </div>
+        </div><!-- /pricingTab -->
     </div>
 
     <!-- ADD/EDIT SPOT MODAL -->
@@ -454,6 +485,97 @@
                 <button class="btn-ttb btn-ttb-outline" onclick="closeTestimonialModal()" style="font-size:0.9rem;">Cancel</button>
                 <button class="btn-ttb btn-ttb-primary" id="saveTestimonialBtn" onclick="saveTestimonial()" style="font-size:0.9rem;">
                     <i class="fas fa-save"></i> <span>Save Testimonial</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD/EDIT PACKAGE MODAL -->
+    <div class="admin-modal-backdrop" id="packageModal">
+        <div class="admin-modal" style="max-width:700px;">
+            <div class="admin-modal-header">
+                <h2 id="packageModalTitle">Add Package</h2>
+                <button class="admin-modal-close" onclick="closePackageModal()">&times;</button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="packageForm" autocomplete="off">
+                    <input type="hidden" id="packageId">
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Package Name <span class="required">*</span></label>
+                            <input type="text" class="admin-input" id="packageName" placeholder="e.g. Main Course" required maxlength="100">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Price <span class="required">*</span></label>
+                            <input type="text" class="admin-input" id="packagePrice" placeholder="e.g. $1,500" required maxlength="50">
+                        </div>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Price Note</label>
+                            <input type="text" class="admin-input" id="packagePriceNote" placeholder="e.g. *  or  +" maxlength="10">
+                            <p class="admin-form-help">Symbol after price (e.g. * for footnote, + for starting at)</p>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Sort Order</label>
+                            <input type="number" class="admin-input" id="packageSortOrder" placeholder="0" value="0" min="0" max="100">
+                            <p class="admin-form-help">Lower numbers appear first</p>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Header Emojis</label>
+                        <input type="text" class="admin-input" id="packageHeaderEmojis" placeholder="e.g. 🍔🍟 ... 🌮🍕" maxlength="50">
+                        <p class="admin-form-help">Emojis displayed around the package name in the header. Leave blank for none.</p>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Description</label>
+                        <input type="text" class="admin-input" id="packageDescription" placeholder="Short description of the package" maxlength="300">
+                    </div>
+                    <div class="admin-form-group">
+                        <label><i class="fas fa-list" style="color:var(--header-color);margin-right:0.3rem;"></i> Features <span class="required">*</span></label>
+                        <div id="packageFeaturesContainer">
+                            <!-- Feature rows added dynamically -->
+                        </div>
+                        <button type="button" class="btn-ttb btn-ttb-outline" style="font-size:0.8rem;padding:0.4rem 0.8rem;margin-top:0.5rem;" onclick="addFeatureRow()">
+                            <i class="fas fa-plus"></i> Add Feature
+                        </button>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Button Text</label>
+                            <input type="text" class="admin-input" id="packageButtonText" placeholder="Get Started" maxlength="50" value="Get Started">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Button Link</label>
+                            <input type="text" class="admin-input" id="packageButtonLink" placeholder="/contact?package=PackageName" maxlength="300">
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Footnote</label>
+                        <input type="text" class="admin-input" id="packageFootnote" placeholder="e.g. *Food to be provided at no cost" maxlength="200">
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label style="display:flex;align-items:center;gap:0.5rem;">
+                                <input type="checkbox" id="packageHighlighted" style="width:auto;margin:0;">
+                                Highlighted (Accent Style)
+                            </label>
+                            <p class="admin-form-help">Highlighted packages get the orange accent border and styling</p>
+                        </div>
+                        <div class="admin-form-group">
+                            <label style="display:flex;align-items:center;gap:0.5rem;">
+                                <input type="checkbox" id="packageActive" checked style="width:auto;margin:0;">
+                                Active (Visible on Site)
+                            </label>
+                            <p class="admin-form-help">Inactive packages are hidden from the services page</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn-ttb btn-ttb-outline" onclick="closePackageModal()" style="font-size:0.9rem;">Cancel</button>
+                <button class="btn-ttb btn-ttb-primary" id="savePackageBtn" onclick="savePackage()" style="font-size:0.9rem;">
+                    <i class="fas fa-save"></i> <span>Save Package</span>
                 </button>
             </div>
         </div>

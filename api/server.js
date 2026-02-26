@@ -94,6 +94,47 @@ function buildSpotDocument(body) {
     };
 }
 
+// ── Package Validation ───────────────────────────
+
+function validatePackage(body) {
+    const errors = [];
+    if (!body.name || typeof body.name !== 'string' || !body.name.trim()) {
+        errors.push('Package name is required');
+    }
+    if (!body.price || typeof body.price !== 'string' || !body.price.trim()) {
+        errors.push('Price is required');
+    }
+    if (!Array.isArray(body.features) || body.features.length === 0) {
+        errors.push('At least one feature is required');
+    }
+    if (body.sortOrder != null && typeof body.sortOrder !== 'number') {
+        errors.push('Sort order must be a number');
+    }
+    return errors;
+}
+
+function buildPackageDocument(body) {
+    return {
+        name: sanitizeString(body.name, 100),
+        price: sanitizeString(body.price, 50),
+        priceNote: sanitizeString(body.priceNote || '', 10),
+        description: sanitizeString(body.description || '', 300),
+        features: Array.isArray(body.features)
+            ? body.features.map(f => ({
+                icon: sanitizeString(f.icon || 'fas fa-check', 60),
+                text: sanitizeString(f.text || '', 200)
+            })).filter(f => f.text).slice(0, 15)
+            : [],
+        buttonText: sanitizeString(body.buttonText || 'Get Started', 50),
+        buttonLink: sanitizeString(body.buttonLink || '/contact', 300),
+        highlighted: !!body.highlighted,
+        headerEmojis: sanitizeString(body.headerEmojis || '', 50),
+        footnote: sanitizeString(body.footnote || '', 200),
+        sortOrder: typeof body.sortOrder === 'number' ? Math.round(body.sortOrder) : 0,
+        active: body.active !== false
+    };
+}
+
 // ── Testimonial Validation ────────────────────────
 
 function validateTestimonial(body) {
@@ -147,6 +188,7 @@ async function connectDB() {
     await db.collection('spots').createIndex({ tags: 1 });
     await db.collection('testimonials').createIndex({ createdAt: -1 });
     await db.collection('settings').createIndex({ key: 1 }, { unique: true });
+    await db.collection('packages').createIndex({ sortOrder: 1 });
 }
 
 // ── Middleware ──────────────────────────────────────
@@ -544,6 +586,87 @@ app.delete('/api/testimonials/:id', requireAuth, async (req, res) => {
     } catch (err) {
         console.error('Error deleting testimonial:', err);
         res.status(500).json({ error: 'Failed to delete testimonial' });
+    }
+});
+
+// ── Packages CRUD Routes ─────────────────────────
+
+// GET all packages (public)
+app.get('/api/packages', async (req, res) => {
+    try {
+        const packages = await db.collection('packages')
+            .find({})
+            .sort({ sortOrder: 1, createdAt: 1 })
+            .toArray();
+        res.json({ packages, count: packages.length });
+    } catch (err) {
+        console.error('Error fetching packages:', err);
+        res.status(500).json({ error: 'Failed to load packages' });
+    }
+});
+
+// POST create package (admin only)
+app.post('/api/packages', requireAuth, async (req, res) => {
+    try {
+        const errors = validatePackage(req.body);
+        if (errors.length > 0) {
+            return res.status(400).json({ error: errors.join('. ') });
+        }
+        const doc = buildPackageDocument(req.body);
+        doc.createdAt = new Date();
+        doc.updatedAt = new Date();
+        const result = await db.collection('packages').insertOne(doc);
+        const created = await db.collection('packages').findOne({ _id: result.insertedId });
+        res.status(201).json({ message: 'Package created', package: created });
+    } catch (err) {
+        console.error('Error creating package:', err);
+        res.status(500).json({ error: 'Failed to create package' });
+    }
+});
+
+// PUT update package (admin only)
+app.put('/api/packages/:id', requireAuth, async (req, res) => {
+    try {
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: 'Invalid package ID' });
+        }
+        const errors = validatePackage(req.body);
+        if (errors.length > 0) {
+            return res.status(400).json({ error: errors.join('. ') });
+        }
+        const doc = buildPackageDocument(req.body);
+        doc.updatedAt = new Date();
+        const result = await db.collection('packages').findOneAndUpdate(
+            { _id: new ObjectId(req.params.id) },
+            { $set: doc },
+            { returnDocument: 'after' }
+        );
+        if (!result) {
+            return res.status(404).json({ error: 'Package not found' });
+        }
+        res.json({ message: 'Package updated', package: result });
+    } catch (err) {
+        console.error('Error updating package:', err);
+        res.status(500).json({ error: 'Failed to update package' });
+    }
+});
+
+// DELETE package (admin only)
+app.delete('/api/packages/:id', requireAuth, async (req, res) => {
+    try {
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: 'Invalid package ID' });
+        }
+        const result = await db.collection('packages').findOneAndDelete(
+            { _id: new ObjectId(req.params.id) }
+        );
+        if (!result) {
+            return res.status(404).json({ error: 'Package not found' });
+        }
+        res.json({ message: 'Package deleted' });
+    } catch (err) {
+        console.error('Error deleting package:', err);
+        res.status(500).json({ error: 'Failed to delete package' });
     }
 });
 

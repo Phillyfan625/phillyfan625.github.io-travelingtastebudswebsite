@@ -4,12 +4,14 @@
 
 let allSpots = [];
 let allTestimonials = [];
+let allPackages = [];
 let mapPicker = null;
 let mapPickerMarker = null;
 let currentTags = [];
 let pendingDeleteId = null;
 let currentTab = 'spots';
 let testimonialStarRating = 5;
+let packageFeatureCount = 0;
 
 // ── Utilities ──────────────────────────────────
 
@@ -173,7 +175,7 @@ function showToast(message, type) {
 
     // Close modals on Escape
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { closeModal(); closeConfirm(); closeImportModal(); closeTestimonialModal(); }
+        if (e.key === 'Escape') { closeModal(); closeConfirm(); closeImportModal(); closeTestimonialModal(); closePackageModal(); }
     });
 
     var spotModalEl = document.getElementById('spotModal');
@@ -184,6 +186,8 @@ function showToast(message, type) {
     if (importEl) importEl.addEventListener('click', function (e) { if (e.target === this) closeImportModal(); });
     var testimonialModalEl = document.getElementById('testimonialModal');
     if (testimonialModalEl) testimonialModalEl.addEventListener('click', function (e) { if (e.target === this) closeTestimonialModal(); });
+    var packageModalEl = document.getElementById('packageModal');
+    if (packageModalEl) packageModalEl.addEventListener('click', function (e) { if (e.target === this) closePackageModal(); });
 })();
 
 // ── Auth ───────────────────────────────────────
@@ -202,6 +206,7 @@ async function handleLogin(e) {
         loadSpots();
         loadTestimonials();
         loadTrustStats();
+        loadPackages();
     } catch (err) {
         showToast(err.message, 'error');
         document.getElementById('loginPassword').classList.add('error');
@@ -219,7 +224,7 @@ async function verifyAndShowDashboard() {
             method: 'POST',
             headers: { 'Authorization': 'Bearer ' + TTBData.getToken() }
         });
-        if (res.ok) { showDashboard(); loadSpots(); loadTestimonials(); loadTrustStats(); }
+        if (res.ok) { showDashboard(); loadSpots(); loadTestimonials(); loadTrustStats(); loadPackages(); }
         else { TTBData.logout(); }
     } catch (_) { /* API down */ }
 }
@@ -863,8 +868,10 @@ function switchTab(tab) {
     currentTab = tab;
     document.getElementById('spotsTab').style.display = tab === 'spots' ? '' : 'none';
     document.getElementById('testimonialsTab').style.display = tab === 'testimonials' ? '' : 'none';
+    document.getElementById('pricingTab').style.display = tab === 'pricing' ? '' : 'none';
     document.getElementById('tabSpots').classList.toggle('active', tab === 'spots');
     document.getElementById('tabTestimonials').classList.toggle('active', tab === 'testimonials');
+    document.getElementById('tabPricing').classList.toggle('active', tab === 'pricing');
 }
 
 // ── Spot Search Dropdown ───────────────────────
@@ -1275,6 +1282,294 @@ async function saveTrustStats() {
     } catch (err) {
         showToast('Failed to save: ' + err.message, 'error');
     }
+}
+
+// ── Packages: Load & Render ────────────────────
+
+async function loadPackages() {
+    try {
+        var data = await TTBData.getPackages(true);
+        allPackages = data;
+        var countEl = document.getElementById('tabPricingCount');
+        if (countEl) countEl.textContent = allPackages.length;
+        renderPricingStats();
+        renderPricingGrid(allPackages);
+    } catch (err) {
+        showToast('Failed to load packages: ' + err.message, 'error');
+        renderPricingGrid([]);
+    }
+}
+
+function renderPricingStats() {
+    var total = document.getElementById('statPackages');
+    var active = document.getElementById('statActivePackages');
+    var highlighted = document.getElementById('statHighlighted');
+    if (total) total.textContent = allPackages.length;
+    if (active) active.textContent = allPackages.filter(function (p) { return p.active !== false; }).length;
+    if (highlighted) highlighted.textContent = allPackages.filter(function (p) { return p.highlighted; }).length;
+}
+
+function renderPricingGrid(packages) {
+    var grid = document.getElementById('pricingGrid');
+    if (!grid) return;
+
+    if (packages.length === 0) {
+        grid.innerHTML =
+            '<div style="grid-column:1/-1;text-align:center;padding:3rem;">' +
+            '<div class="empty-state">' +
+            '<i class="fas fa-tag"></i>' +
+            '<h3>No packages yet</h3>' +
+            '<p>Click "Add Package" to create your first service package!</p>' +
+            '</div></div>';
+        return;
+    }
+
+    grid.innerHTML = packages.map(function (pkg) {
+        var id = pkg._id || '';
+        var isHighlighted = pkg.highlighted;
+        var isActive = pkg.active !== false;
+
+        var featuresHtml = (pkg.features || []).map(function (f) {
+            return '<li><i class="' + escapeHtml(f.icon) + '" style="color:' + (isHighlighted ? 'var(--accent)' : 'var(--header-color)') + ';margin-right:0.5rem;width:16px;text-align:center;"></i> ' + escapeHtml(f.text) + '</li>';
+        }).join('');
+
+        var headerName = escapeHtml(pkg.name);
+        if (pkg.headerEmojis) {
+            var parts = pkg.headerEmojis.split('...');
+            if (parts.length === 2) {
+                headerName = escapeHtml(parts[0].trim()) + ' ' + headerName + ' ' + escapeHtml(parts[1].trim());
+            } else {
+                headerName = escapeHtml(pkg.headerEmojis) + ' ' + headerName;
+            }
+        }
+
+        return '<div class="pricing-admin-card' + (isHighlighted ? ' highlighted' : '') + (!isActive ? ' inactive' : '') + '" data-id="' + id + '">' +
+            '<div class="pricing-admin-card-header' + (isHighlighted ? ' highlighted' : '') + '">' +
+            headerName +
+            '</div>' +
+            '<div class="pricing-admin-card-body">' +
+            '<div class="pricing-admin-price">' + escapeHtml(pkg.price) + (pkg.priceNote ? '<span class="pricing-admin-price-note">' + escapeHtml(pkg.priceNote) + '</span>' : '') + '</div>' +
+            (pkg.description ? '<p class="pricing-admin-desc">' + escapeHtml(pkg.description) + '</p>' : '') +
+            '<ul class="pricing-admin-features">' + featuresHtml + '</ul>' +
+            (pkg.footnote ? '<p class="pricing-admin-footnote">' + escapeHtml(pkg.footnote) + '</p>' : '') +
+            '</div>' +
+            '<div class="pricing-admin-card-footer">' +
+            '<div class="pricing-admin-badges">' +
+            (isActive ? '<span class="pricing-badge active"><i class="fas fa-check-circle"></i> Active</span>' : '<span class="pricing-badge inactive"><i class="fas fa-eye-slash"></i> Inactive</span>') +
+            (isHighlighted ? '<span class="pricing-badge highlighted"><i class="fas fa-star"></i> Highlighted</span>' : '') +
+            '<span class="pricing-badge order"><i class="fas fa-sort"></i> Order: ' + (pkg.sortOrder || 0) + '</span>' +
+            '</div>' +
+            '<div class="pricing-admin-actions">' +
+            '<button class="table-action-btn" title="Edit" onclick="openEditPackageModal(\'' + id + '\')"><i class="fas fa-pen"></i></button>' +
+            '<button class="table-action-btn delete" title="Delete" onclick="confirmDeletePackage(\'' + id + '\',\'' + escapeHtml(pkg.name).replace(/'/g, "\\'") + '\')"><i class="fas fa-trash-alt"></i></button>' +
+            '</div>' +
+            '</div></div>';
+    }).join('');
+}
+
+// ── Package Feature Rows ───────────────────────
+
+var featureIconOptions = [
+    { value: 'fab fa-tiktok', label: 'TikTok' },
+    { value: 'fab fa-instagram', label: 'Instagram' },
+    { value: 'fab fa-youtube', label: 'YouTube' },
+    { value: 'fab fa-facebook', label: 'Facebook' },
+    { value: 'fas fa-camera', label: 'Camera' },
+    { value: 'fas fa-video', label: 'Video' },
+    { value: 'fas fa-image', label: 'Image' },
+    { value: 'fas fa-images', label: 'Images' },
+    { value: 'fas fa-check', label: 'Check' },
+    { value: 'fas fa-star', label: 'Star' },
+    { value: 'fas fa-bolt', label: 'Bolt' },
+    { value: 'fas fa-fire', label: 'Fire' },
+    { value: 'fas fa-bullhorn', label: 'Bullhorn' },
+    { value: 'fas fa-chart-line', label: 'Analytics' },
+    { value: 'fas fa-share-alt', label: 'Share' },
+    { value: 'fas fa-hashtag', label: 'Hashtag' },
+    { value: 'fas fa-pen', label: 'Pen' },
+    { value: 'fas fa-gift', label: 'Gift' },
+    { value: 'fas fa-crown', label: 'Crown' },
+    { value: 'fas fa-utensils', label: 'Utensils' }
+];
+
+function addFeatureRow(icon, text) {
+    var container = document.getElementById('packageFeaturesContainer');
+    var index = packageFeatureCount++;
+    var row = document.createElement('div');
+    row.className = 'package-feature-row';
+    row.setAttribute('data-index', index);
+
+    var iconOptionsHtml = featureIconOptions.map(function (opt) {
+        return '<option value="' + opt.value + '"' + (icon === opt.value ? ' selected' : '') + '>' + opt.label + '</option>';
+    }).join('');
+
+    row.innerHTML =
+        '<select class="package-feature-icon" data-field="icon">' + iconOptionsHtml + '</select>' +
+        '<input type="text" class="admin-input" data-field="text" placeholder="e.g. 1 Instagram Reel syndicated for TikTok" value="' + escapeHtml(text || '') + '" maxlength="200" style="flex:1;">' +
+        '<button type="button" class="package-feature-remove" onclick="removeFeatureRow(this)" title="Remove feature"><i class="fas fa-times"></i></button>';
+
+    container.appendChild(row);
+}
+
+function removeFeatureRow(btn) {
+    var row = btn.closest('.package-feature-row');
+    if (row) row.remove();
+}
+
+function getFeatures() {
+    var rows = document.querySelectorAll('#packageFeaturesContainer .package-feature-row');
+    var features = [];
+    rows.forEach(function (row) {
+        var icon = row.querySelector('[data-field="icon"]').value;
+        var text = row.querySelector('[data-field="text"]').value.trim();
+        if (text) {
+            features.push({ icon: icon, text: text });
+        }
+    });
+    return features;
+}
+
+// ── Package Modal ──────────────────────────────
+
+function openAddPackageModal() {
+    document.getElementById('packageModalTitle').textContent = 'Add Package';
+    document.getElementById('savePackageBtn').querySelector('span').textContent = 'Save Package';
+    document.getElementById('packageForm').reset();
+    document.getElementById('packageId').value = '';
+    document.getElementById('packageActive').checked = true;
+    document.getElementById('packageHighlighted').checked = false;
+    document.getElementById('packageButtonText').value = 'Get Started';
+    document.getElementById('packageSortOrder').value = allPackages.length;
+
+    // Reset features and add one empty row
+    var container = document.getElementById('packageFeaturesContainer');
+    container.innerHTML = '';
+    packageFeatureCount = 0;
+    addFeatureRow('fab fa-tiktok', '');
+
+    document.getElementById('packageModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function openEditPackageModal(id) {
+    var pkg = allPackages.find(function (p) { return p._id === id; });
+    if (!pkg) { showToast('Package not found', 'error'); return; }
+
+    document.getElementById('packageModalTitle').textContent = 'Edit: ' + pkg.name;
+    document.getElementById('savePackageBtn').querySelector('span').textContent = 'Update Package';
+    document.getElementById('packageId').value = id;
+    document.getElementById('packageName').value = pkg.name || '';
+    document.getElementById('packagePrice').value = pkg.price || '';
+    document.getElementById('packagePriceNote').value = pkg.priceNote || '';
+    document.getElementById('packageSortOrder').value = pkg.sortOrder || 0;
+    document.getElementById('packageHeaderEmojis').value = pkg.headerEmojis || '';
+    document.getElementById('packageDescription').value = pkg.description || '';
+    document.getElementById('packageButtonText').value = pkg.buttonText || 'Get Started';
+    document.getElementById('packageButtonLink').value = pkg.buttonLink || '';
+    document.getElementById('packageFootnote').value = pkg.footnote || '';
+    document.getElementById('packageHighlighted').checked = !!pkg.highlighted;
+    document.getElementById('packageActive').checked = pkg.active !== false;
+
+    // Populate features
+    var container = document.getElementById('packageFeaturesContainer');
+    container.innerHTML = '';
+    packageFeatureCount = 0;
+    (pkg.features || []).forEach(function (f) {
+        addFeatureRow(f.icon, f.text);
+    });
+    if ((pkg.features || []).length === 0) {
+        addFeatureRow('fab fa-tiktok', '');
+    }
+
+    document.getElementById('packageModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePackageModal() {
+    document.getElementById('packageModal').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+async function savePackage() {
+    var btn = document.getElementById('savePackageBtn');
+    var id = document.getElementById('packageId').value;
+    var isEdit = !!id;
+
+    var features = getFeatures();
+
+    var packageData = {
+        name: document.getElementById('packageName').value.trim(),
+        price: document.getElementById('packagePrice').value.trim(),
+        priceNote: document.getElementById('packagePriceNote').value.trim(),
+        sortOrder: parseInt(document.getElementById('packageSortOrder').value) || 0,
+        headerEmojis: document.getElementById('packageHeaderEmojis').value.trim(),
+        description: document.getElementById('packageDescription').value.trim(),
+        features: features,
+        buttonText: document.getElementById('packageButtonText').value.trim() || 'Get Started',
+        buttonLink: document.getElementById('packageButtonLink').value.trim(),
+        footnote: document.getElementById('packageFootnote').value.trim(),
+        highlighted: document.getElementById('packageHighlighted').checked,
+        active: document.getElementById('packageActive').checked
+    };
+
+    var errors = [];
+    if (!packageData.name) errors.push('Package name is required');
+    if (!packageData.price) errors.push('Price is required');
+    if (features.length === 0) errors.push('At least one feature is required');
+
+    if (errors.length) {
+        showToast(errors.join('. '), 'error');
+        if (!packageData.name) document.getElementById('packageName').classList.add('error');
+        if (!packageData.price) document.getElementById('packagePrice').classList.add('error');
+        setTimeout(function () { document.querySelectorAll('.admin-input.error').forEach(function (el) { el.classList.remove('error'); }); }, 3000);
+        return;
+    }
+
+    btn.disabled = true;
+    btn.querySelector('span').textContent = isEdit ? 'Updating...' : 'Saving...';
+
+    try {
+        if (isEdit) {
+            await TTBData.updatePackage(id, packageData);
+            showToast(packageData.name + ' updated!', 'success');
+        } else {
+            await TTBData.createPackage(packageData);
+            showToast(packageData.name + ' added!', 'success');
+        }
+        closePackageModal();
+        loadPackages();
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.querySelector('span').textContent = isEdit ? 'Update Package' : 'Save Package';
+    }
+}
+
+// ── Delete Package ──────────────────────────────
+
+function confirmDeletePackage(id, name) {
+    pendingDeleteId = id;
+    document.getElementById('confirmTitle').textContent = 'Delete ' + name + '?';
+    document.getElementById('confirmMessage').textContent =
+        'This removes the package from the services page. This cannot be undone.';
+    document.getElementById('confirmDialog').classList.add('show');
+
+    document.getElementById('confirmBtn').onclick = async function () {
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+        try {
+            await TTBData.deletePackage(pendingDeleteId);
+            showToast(name + ' deleted', 'success');
+            closeConfirm();
+            loadPackages();
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+        }
+    };
 }
 
 // ── Seed DB (one-time import from local JSON) ──
