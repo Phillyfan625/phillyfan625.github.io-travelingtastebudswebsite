@@ -591,13 +591,69 @@ app.delete('/api/testimonials/:id', requireAuth, async (req, res) => {
 
 // ── Packages CRUD Routes ─────────────────────────
 
-// GET all packages (public)
+// Default seed packages (matches hardcoded services.html)
+const DEFAULT_PACKAGES = [
+    {
+        name: 'Main Course',
+        price: '$1,500',
+        priceNote: '*',
+        description: '',
+        features: [
+            { icon: 'fab fa-tiktok', text: '1 Instagram Reel syndicated for TikTok' },
+            { icon: 'fas fa-camera', text: '10 High Resolution Photos for business use' }
+        ],
+        buttonText: 'Get Started',
+        buttonLink: '/contact?package=MainCourse',
+        highlighted: false,
+        headerEmojis: '',
+        footnote: '*Food to be provided at no cost',
+        sortOrder: 0,
+        active: true
+    },
+    {
+        name: 'All The Fixins',
+        price: '$2,500+',
+        priceNote: '*',
+        description: '',
+        features: [
+            { icon: 'fab fa-tiktok', text: '2 Videos syndicated across all platforms (YouTube, Facebook, Instagram, TikTok)' },
+            { icon: 'fab fa-instagram', text: '2 Instagram Stories' },
+            { icon: 'fas fa-camera', text: '10 High Resolution Photos for business use' }
+        ],
+        buttonText: 'Get Started',
+        buttonLink: '/contact?package=AllTheFixins',
+        highlighted: true,
+        headerEmojis: '🍔🍟 ... 🌮🍕',
+        footnote: '*Food to be provided at no cost',
+        sortOrder: 1,
+        active: true
+    }
+];
+
+// GET all packages (public) — auto-seeds defaults if collection is empty
 app.get('/api/packages', async (req, res) => {
     try {
-        const packages = await db.collection('packages')
+        let packages = await db.collection('packages')
             .find({})
             .sort({ sortOrder: 1, createdAt: 1 })
             .toArray();
+
+        // Auto-seed: if collection is empty, insert the two default packages
+        if (packages.length === 0) {
+            const now = new Date();
+            const docs = DEFAULT_PACKAGES.map(pkg => ({
+                ...pkg,
+                createdAt: now,
+                updatedAt: now
+            }));
+            await db.collection('packages').insertMany(docs);
+            packages = await db.collection('packages')
+                .find({})
+                .sort({ sortOrder: 1, createdAt: 1 })
+                .toArray();
+            console.log('Auto-seeded ' + packages.length + ' default packages');
+        }
+
         res.json({ packages, count: packages.length });
     } catch (err) {
         console.error('Error fetching packages:', err);
