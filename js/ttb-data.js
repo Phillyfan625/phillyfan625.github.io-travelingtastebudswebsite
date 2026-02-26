@@ -261,6 +261,85 @@ const TTBData = (function () {
         return data;
     }
 
+    // ── Packages ──────────────────────────────────────
+
+    const PACKAGES_CACHE_KEY = 'ttb_packages_cache';
+    let _packagesPromise = null;
+
+    function getPackages(forceRefresh) {
+        if (_packagesPromise && !forceRefresh) return _packagesPromise;
+        _packagesPromise = _fetchPackages(forceRefresh);
+        return _packagesPromise;
+    }
+
+    async function _fetchPackages(forceRefresh) {
+        if (!forceRefresh) {
+            try {
+                var raw = sessionStorage.getItem(PACKAGES_CACHE_KEY);
+                if (raw) {
+                    var parsed = JSON.parse(raw);
+                    if (Date.now() - parsed.ts < CACHE_TTL) return parsed.data;
+                }
+            } catch {}
+        }
+
+        if (API_BASE) {
+            try {
+                var res = await fetch(API_BASE + '/api/packages', {
+                    signal: AbortSignal.timeout(5000)
+                });
+                if (!res.ok) throw new Error('API returned ' + res.status);
+                var data = await res.json();
+                var packages = data.packages || data;
+                try {
+                    sessionStorage.setItem(PACKAGES_CACHE_KEY, JSON.stringify({ data: packages, ts: Date.now() }));
+                } catch {}
+                return packages;
+            } catch (err) {
+                console.warn('TTBData: Could not load packages from API.', err.message);
+            }
+        }
+        return [];
+    }
+
+    async function createPackage(pkg) {
+        var res = await fetch(API_BASE + '/api/packages', {
+            method: 'POST',
+            headers: _authHeaders(),
+            body: JSON.stringify(pkg)
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to create package');
+        sessionStorage.removeItem(PACKAGES_CACHE_KEY);
+        _packagesPromise = null;
+        return data;
+    }
+
+    async function updatePackage(id, updates) {
+        var res = await fetch(API_BASE + '/api/packages/' + id, {
+            method: 'PUT',
+            headers: _authHeaders(),
+            body: JSON.stringify(updates)
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to update package');
+        sessionStorage.removeItem(PACKAGES_CACHE_KEY);
+        _packagesPromise = null;
+        return data;
+    }
+
+    async function deletePackage(id) {
+        var res = await fetch(API_BASE + '/api/packages/' + id, {
+            method: 'DELETE',
+            headers: _authHeaders()
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to delete package');
+        sessionStorage.removeItem(PACKAGES_CACHE_KEY);
+        _packagesPromise = null;
+        return data;
+    }
+
     // ── Trust Stats (Settings) ───────────────────────
 
     async function getTrustStats() {
@@ -323,6 +402,11 @@ const TTBData = (function () {
         createTestimonial,
         updateTestimonial,
         deleteTestimonial,
+        // Packages
+        getPackages,
+        createPackage,
+        updatePackage,
+        deletePackage,
         // Settings
         getTrustStats,
         updateTrustStats,
