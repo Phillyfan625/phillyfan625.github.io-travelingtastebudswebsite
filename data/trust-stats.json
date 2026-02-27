@@ -1,0 +1,22 @@
+[
+    {
+        "icon": "fas fa-utensils",
+        "number": "50+",
+        "label": "Restaurants Featured"
+    },
+    {
+        "icon": "fas fa-star",
+        "number": "5.0",
+        "label": "Average Rating"
+    },
+    {
+        "icon": "fas fa-eye",
+        "number": "10M+",
+        "label": "Total Views"
+    },
+    {
+        "icon": "fas fa-handshake",
+        "number": "100%",
+        "label": "Satisfaction"
+    }
+]

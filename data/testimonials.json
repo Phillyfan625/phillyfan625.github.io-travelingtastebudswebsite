@@ -1,0 +1,74 @@
+[
+    {
+        "_id": "t1",
+        "quote": "PJ came in and filmed a video for us and we were completely sold out the next weekend. People were coming in saying they saw us on TikTok.",
+        "authorName": "Restaurant Owner",
+        "restaurantName": "",
+        "location": "South Jersey",
+        "date": "2024",
+        "rating": 5,
+        "result": "Sold out weekend",
+        "resultIcon": "fas fa-chart-line",
+        "tiktokUrl": ""
+    },
+    {
+        "_id": "t2",
+        "quote": "We've tried other food influencers before but nobody delivered like Traveling Tastebuds. The video quality was top-notch and our social media following doubled within a month.",
+        "authorName": "Restaurant Owner",
+        "restaurantName": "",
+        "location": "Philadelphia, PA",
+        "date": "2024",
+        "rating": 5,
+        "result": "2x social media following",
+        "resultIcon": "fas fa-users",
+        "tiktokUrl": ""
+    },
+    {
+        "_id": "t3",
+        "quote": "PJ is the real deal. The video he made for us got over 500K views and brought in customers from all over the area. Best investment we've made in marketing.",
+        "authorName": "Restaurant Owner",
+        "restaurantName": "",
+        "location": "Camden County, NJ",
+        "date": "2024",
+        "rating": 5,
+        "result": "500K+ views",
+        "resultIcon": "fas fa-eye",
+        "tiktokUrl": ""
+    },
+    {
+        "_id": "t4",
+        "quote": "After PJ's video dropped, we had a line out the door for three straight days. He doesn't just make content — he drives real foot traffic to your business.",
+        "authorName": "Restaurant Owner",
+        "restaurantName": "",
+        "location": "Gloucester County, NJ",
+        "date": "2024",
+        "rating": 5,
+        "result": "3 days of lines out the door",
+        "resultIcon": "fas fa-chart-line",
+        "tiktokUrl": ""
+    },
+    {
+        "_id": "t5",
+        "quote": "What sets PJ apart is that he actually sits down, eats the food, and gives an honest review. Since his feature, we've become a destination spot for people exploring local food.",
+        "authorName": "Restaurant Owner",
+        "restaurantName": "",
+        "location": "South Jersey",
+        "date": "2024",
+        "rating": 5,
+        "result": "Became a destination spot",
+        "resultIcon": "fas fa-map-marker-alt",
+        "tiktokUrl": ""
+    },
+    {
+        "_id": "t6",
+        "quote": "PJ featured our spot and within 48 hours we had more online orders than we'd ever seen. He knows how to tell a story that makes people want to come try your food.",
+        "authorName": "Restaurant Owner",
+        "restaurantName": "",
+        "location": "Philadelphia, PA",
+        "date": "2024",
+        "rating": 5,
+        "result": "Record online orders in 48hrs",
+        "resultIcon": "fas fa-shopping-cart",
+        "tiktokUrl": ""
+    }
+]

@@ -280,7 +280,7 @@ function handleLogout() {
 
 async function loadSpots() {
     try {
-        var data = await TTBData.getSpots(true);
+        var data = await TTBData.getAdminSpots();
         allSpots = data;
         renderStats();
         renderTable(allSpots);
@@ -1015,7 +1015,7 @@ function updateStarDisplay(count) {
 
 async function loadTestimonials() {
     try {
-        var data = await TTBData.getTestimonials(true);
+        var data = await TTBData.getAdminTestimonials();
         allTestimonials = data;
         var countEl = document.getElementById('tabTestimonialsCount');
         if (countEl) countEl.textContent = allTestimonials.length;
@@ -1236,7 +1236,7 @@ function confirmDeleteTestimonial(id, name) {
 
 async function loadTrustStats() {
     try {
-        var stats = await TTBData.getTrustStats();
+        var stats = await TTBData.getAdminTrustStats();
         if (stats && stats.length > 0) {
             var rows = document.querySelectorAll('#trustStatsRows .trust-stat-row');
             stats.forEach(function (stat, i) {
@@ -1284,7 +1284,7 @@ async function saveTrustStats() {
 
 async function loadPackages() {
     try {
-        var data = await TTBData.getPackages(true);
+        var data = await TTBData.getAdminPackages();
         allPackages = data;
         var countEl = document.getElementById('tabPricingCount');
         if (countEl) countEl.textContent = allPackages.length;
@@ -1598,5 +1598,56 @@ async function handleSeedDB() {
         loadSpots();
     } catch (err) {
         showToast(err.message, 'error');
+    }
+}
+
+// ── Export Data (download all API data as JSON files) ──
+
+async function handleExportData() {
+    if (!TTBData.apiBase) {
+        showToast('API URL not configured', 'error');
+        return;
+    }
+
+    showToast('Fetching all data from API...', 'info');
+
+    try {
+        var result = await TTBData.exportAllData();
+
+        if (result.errors.length > 0) {
+            showToast('Some data could not be exported: ' + result.errors.join(', '), 'error');
+        }
+
+        var fileMap = {
+            'spots.json': result.data.spots,
+            'testimonials.json': result.data.testimonials,
+            'packages.json': result.data.packages,
+            'trust-stats.json': result.data.trustStats
+        };
+
+        var count = 0;
+        for (var filename in fileMap) {
+            var data = fileMap[filename];
+            if (!data) continue;
+
+            // Clean MongoDB _id fields for cleaner local JSON
+            var cleaned = JSON.stringify(data, function (key, val) {
+                if (key === '__v') return undefined;
+                return val;
+            }, 4);
+
+            var blob = new Blob([cleaned + '\n'], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            count++;
+        }
+
+        showToast('Exported ' + count + ' files! Move them to /data/ in your repo and commit.', 'success');
+    } catch (err) {
+        showToast('Export failed: ' + err.message, 'error');
     }
 }

@@ -1,0 +1,54 @@
+[
+    {
+        "_id": "p1",
+        "name": "Main Course",
+        "price": "$1,500",
+        "priceNote": "*",
+        "description": "",
+        "features": [
+            {
+                "icon": "fab fa-tiktok",
+                "text": "1 Instagram Reel syndicated for TikTok"
+            },
+            {
+                "icon": "fas fa-camera",
+                "text": "10 High Resolution Photos for business use"
+            }
+        ],
+        "buttonText": "Get Started",
+        "buttonLink": "/contact?package=MainCourse",
+        "highlighted": false,
+        "headerEmojis": "",
+        "footnote": "*Food to be provided at no cost",
+        "sortOrder": 1,
+        "active": true
+    },
+    {
+        "_id": "p2",
+        "name": "All The Fixins",
+        "price": "$2,500+",
+        "priceNote": "*",
+        "description": "",
+        "features": [
+            {
+                "icon": "fab fa-tiktok",
+                "text": "2 Videos syndicated across all platforms (YouTube, Facebook, Instagram, TikTok)"
+            },
+            {
+                "icon": "fab fa-instagram",
+                "text": "2 Instagram Stories"
+            },
+            {
+                "icon": "fas fa-camera",
+                "text": "10 High Resolution Photos for business use"
+            }
+        ],
+        "buttonText": "Get Started",
+        "buttonLink": "/contact?package=AllTheFixins",
+        "highlighted": true,
+        "headerEmojis": "\ud83c\udf54\ud83c\udf5f...\ud83c\udf2e\ud83c\udf55",
+        "footnote": "*Food to be provided at no cost",
+        "sortOrder": 2,
+        "active": true
+    }
+]
