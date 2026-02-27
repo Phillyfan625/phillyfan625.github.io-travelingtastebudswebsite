@@ -284,20 +284,16 @@ const TTBData = (function () {
         }
 
         if (API_BASE) {
+            var res = await fetch(API_BASE + '/api/packages', {
+                signal: AbortSignal.timeout(15000)
+            });
+            if (!res.ok) throw new Error('API returned ' + res.status);
+            var data = await res.json();
+            var packages = data.packages || data;
             try {
-                var res = await fetch(API_BASE + '/api/packages', {
-                    signal: AbortSignal.timeout(5000)
-                });
-                if (!res.ok) throw new Error('API returned ' + res.status);
-                var data = await res.json();
-                var packages = data.packages || data;
-                try {
-                    sessionStorage.setItem(PACKAGES_CACHE_KEY, JSON.stringify({ data: packages, ts: Date.now() }));
-                } catch {}
-                return packages;
-            } catch (err) {
-                console.warn('TTBData: Could not load packages from API.', err.message);
-            }
+                sessionStorage.setItem(PACKAGES_CACHE_KEY, JSON.stringify({ data: packages, ts: Date.now() }));
+            } catch {}
+            return packages;
         }
         return [];
     }
