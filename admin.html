@@ -28,15 +28,10 @@
             <form id="loginForm" autocomplete="off">
                 <input type="password" class="form-control mb-3" id="loginPassword" placeholder="Password" required autocomplete="current-password">
                 <button type="submit" class="btn-ttb btn-ttb-primary" id="loginBtn" style="width:100%;justify-content:center;border:none;font-size:1rem;">
-                    <i class="fas fa-lock"></i> <span>Log In</span>
+                    <i class="fas fa-plug"></i> <span>Wake Up Server & Log In</span>
                 </button>
+                <p id="loginStatus" style="font-size:0.8rem; color:var(--text-muted); margin:0.75rem 0 0 0; min-height:1.2em; text-align:center;"></p>
             </form>
-            <div class="wake-server-row" style="margin-top:1rem; text-align:center;">
-                <button type="button" class="btn-ttb btn-ttb-outline" id="wakeServerBtn" style="font-size:0.85rem; padding:0.5rem 1rem;" onclick="wakeServer()">
-                    <i class="fas fa-plug"></i> <span id="wakeServerBtnText">Wake up server</span>
-                </button>
-                <p id="wakeServerStatus" style="font-size:0.8rem; color:var(--text-muted); margin:0.5rem 0 0 0; min-height:1.2em;"></p>
-            </div>
             <p style="color:var(--text-muted);font-size:0.75rem;margin-top:1.5rem;margin-bottom:0;">
                 <a href="/" style="color:var(--header-color);text-decoration:none;">&larr; Back to site</a>
             </p>
