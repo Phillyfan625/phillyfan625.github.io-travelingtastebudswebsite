@@ -196,11 +196,40 @@ async function handleLogin(e) {
     e.preventDefault();
     var btn = document.getElementById('loginBtn');
     var pw = document.getElementById('loginPassword').value;
+    var status = document.getElementById('loginStatus');
     btn.disabled = true;
-    btn.querySelector('span').textContent = 'Logging in...';
+
+    // Step 1: Wake up the server
+    btn.querySelector('i').className = 'fas fa-spinner fa-spin';
+    btn.querySelector('span').textContent = 'Waking up server…';
+    if (status) {
+        status.textContent = 'Render servers sleep after inactivity — this may take up to 60 seconds.';
+        status.style.color = 'var(--text-muted)';
+    }
+
+    try {
+        var controller = new AbortController();
+        var timeoutId = setTimeout(function () { controller.abort(); }, 90000);
+        await fetch(TTBData.apiBase + '/api/health', {
+            signal: controller.signal,
+            cache: 'no-store'
+        });
+        clearTimeout(timeoutId);
+    } catch (err) {
+        // Server might still be waking — try login anyway, it might work
+    }
+
+    // Step 2: Log in
+    btn.querySelector('i').className = 'fas fa-lock';
+    btn.querySelector('span').textContent = 'Logging in…';
+    if (status) {
+        status.textContent = 'Server is up — logging in now…';
+        status.style.color = 'var(--header-color)';
+    }
 
     try {
         await TTBData.login(pw);
+        if (status) status.textContent = '';
         showToast('Welcome back!', 'success');
         showDashboard();
         loadSpots();
@@ -209,11 +238,18 @@ async function handleLogin(e) {
         loadPackages();
     } catch (err) {
         showToast(err.message, 'error');
+        if (status) {
+            status.textContent = err.message.includes('Failed to fetch') || err.message.includes('NetworkError')
+                ? 'Server may still be starting — try again in a moment.'
+                : '';
+            status.style.color = 'var(--text-muted)';
+        }
         document.getElementById('loginPassword').classList.add('error');
         setTimeout(function () { document.getElementById('loginPassword').classList.remove('error'); }, 2000);
     } finally {
         btn.disabled = false;
-        btn.querySelector('span').textContent = 'Log In';
+        btn.querySelector('i').className = 'fas fa-plug';
+        btn.querySelector('span').textContent = 'Wake Up Server & Log In';
     }
 }
 
@@ -238,46 +274,6 @@ function handleLogout() {
     TTBData.logout();
     showToast('Logged out', 'info');
     setTimeout(function () { window.location.reload(); }, 500);
-}
-
-// ── Wake up server (Render cold start) ─────────────────
-
-async function wakeServer() {
-    var btn = document.getElementById('wakeServerBtn');
-    var btnText = document.getElementById('wakeServerBtnText');
-    var status = document.getElementById('wakeServerStatus');
-    if (!TTBData.apiBase || !btn || !status) return;
-
-    btn.disabled = true;
-    if (btnText) btnText.textContent = 'Waking up…';
-    status.textContent = 'This may take up to a minute. Please wait.';
-    status.style.color = 'var(--text-muted)';
-
-    var controller = new AbortController();
-    var timeoutId = setTimeout(function () { controller.abort(); }, 90000);
-
-    try {
-        var res = await fetch(TTBData.apiBase + '/api/health', {
-            signal: controller.signal,
-            cache: 'no-store'
-        });
-        clearTimeout(timeoutId);
-        if (res.ok) {
-            status.textContent = 'Server is ready — you can log in now.';
-            status.style.color = 'var(--header-color)';
-            showToast('Server is ready', 'success');
-        } else {
-            status.textContent = 'Server responded but had an issue. Try logging in.';
-            status.style.color = 'var(--text-muted)';
-        }
-    } catch (err) {
-        clearTimeout(timeoutId);
-        status.textContent = 'Still waking up — click "Wake up server" again in a moment.';
-        status.style.color = 'var(--text-muted)';
-    }
-
-    btn.disabled = false;
-    if (btnText) btnText.textContent = 'Wake up server';
 }
 
 // ── Load & Render ──────────────────────────────
