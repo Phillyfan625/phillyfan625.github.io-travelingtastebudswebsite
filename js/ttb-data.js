@@ -4,7 +4,12 @@
  * ============================================
  *
  *  Shared data layer used by every page.
- *  Tries the API first, falls back to the local JSON.
+ *
+ *  PUBLIC pages: loads all data from local JSON files in /data/
+ *  (instant, no server dependency, works on GitHub Pages).
+ *
+ *  ADMIN pages: CRUD operations still call the API on Render
+ *  (only used by admin.html when the server is awake).
  *
  *  Usage:
  *    <script src="/js/ttb-data.js"></script>
@@ -15,8 +20,7 @@
 
 const TTBData = (function () {
     // ── Config ────────────────────────────────────────
-    // Priority: localStorage override > window.TTB_API_URL (set in js/ttb-config.js) > automatic
-    // Automatic: localhost → http://localhost:3001; otherwise same origin (site must serve API at /api)
+    // API is only needed for admin CRUD operations
     function getApiBase() {
         if (typeof window === 'undefined') return '';
         var override = localStorage.getItem('ttb_api_url');
@@ -25,87 +29,77 @@ const TTBData = (function () {
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             return 'http://localhost:3001';
         }
-        return window.location.origin;
+        return '';
     }
     const API_BASE = getApiBase();
 
-    const FALLBACK_JSON = '/data/spots.json';
-    const CACHE_KEY = 'ttb_spots_cache';
-    const CACHE_TTL = 5 * 60 * 1000; // 5 minute cache
+    // ── Local JSON paths ─────────────────────────────
+    const LOCAL_SPOTS = '/data/spots.json';
+    const LOCAL_TESTIMONIALS = '/data/testimonials.json';
+    const LOCAL_PACKAGES = '/data/packages.json';
+    const LOCAL_TRUST_STATS = '/data/trust-stats.json';
 
+    // ── In-memory caches (avoid re-fetching the same JSON) ─
     let _spotsPromise = null;
+    let _testimonialsPromise = null;
+    let _packagesPromise = null;
+    let _trustStatsPromise = null;
+
+    // ── Generic local JSON loader ────────────────────
+    async function _loadJSON(path) {
+        var res = await fetch(path);
+        if (!res.ok) throw new Error('Failed to load ' + path + ' (' + res.status + ')');
+        return res.json();
+    }
 
     // ── Public: Get all spots ─────────────────────────
     function getSpots(forceRefresh) {
         if (_spotsPromise && !forceRefresh) return _spotsPromise;
-
-        _spotsPromise = _fetchSpots(forceRefresh);
+        _spotsPromise = _loadJSON(LOCAL_SPOTS).catch(function (err) {
+            console.error('TTBData: Could not load spots.', err);
+            return [];
+        });
         return _spotsPromise;
     }
 
-    // ── Internal: Fetch with cache + fallback ─────────
-    async function _fetchSpots(forceRefresh) {
-        // Check in-memory/session cache first
-        if (!forceRefresh) {
-            const cached = _getCache();
-            if (cached) return cached;
-        }
-
-        // Try API first
-        if (API_BASE) {
-            try {
-                const res = await fetch(API_BASE + '/api/spots', {
-                    signal: AbortSignal.timeout(5000)
-                });
-                if (!res.ok) throw new Error('API returned ' + res.status);
-                const data = await res.json();
-                const spots = data.spots || data;
-                _setCache(spots);
-                return spots;
-            } catch (err) {
-                console.warn('TTBData: API unavailable, falling back to local JSON.', err.message);
-            }
-        }
-
-        // Fallback to local JSON
-        try {
-            const res = await fetch(FALLBACK_JSON);
-            if (!res.ok) throw new Error('JSON fetch returned ' + res.status);
-            const spots = await res.json();
-            _setCache(spots);
-            return spots;
-        } catch (err) {
-            console.error('TTBData: Could not load spots data.', err);
-            // Last resort: return empty array so pages don't break
+    // ── Public: Get testimonials ──────────────────────
+    function getTestimonials(forceRefresh) {
+        if (_testimonialsPromise && !forceRefresh) return _testimonialsPromise;
+        _testimonialsPromise = _loadJSON(LOCAL_TESTIMONIALS).catch(function (err) {
+            console.error('TTBData: Could not load testimonials.', err);
             return [];
-        }
+        });
+        return _testimonialsPromise;
     }
 
-    // ── Cache helpers ─────────────────────────────────
-    function _getCache() {
-        try {
-            const raw = sessionStorage.getItem(CACHE_KEY);
-            if (!raw) return null;
-            const { data, ts } = JSON.parse(raw);
-            if (Date.now() - ts > CACHE_TTL) return null;
-            return data;
-        } catch {
-            return null;
-        }
+    // ── Public: Get packages ──────────────────────────
+    function getPackages(forceRefresh) {
+        if (_packagesPromise && !forceRefresh) return _packagesPromise;
+        _packagesPromise = _loadJSON(LOCAL_PACKAGES).catch(function (err) {
+            console.error('TTBData: Could not load packages.', err);
+            return [];
+        });
+        return _packagesPromise;
     }
 
-    function _setCache(data) {
-        try {
-            sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() }));
-        } catch { /* quota exceeded — ignore */ }
+    // ── Public: Get trust stats ───────────────────────
+    function getTrustStats(forceRefresh) {
+        if (_trustStatsPromise && !forceRefresh) return _trustStatsPromise;
+        _trustStatsPromise = _loadJSON(LOCAL_TRUST_STATS).catch(function (err) {
+            console.error('TTBData: Could not load trust stats.', err);
+            return [];
+        });
+        return _trustStatsPromise;
     }
 
     function clearCache() {
-        sessionStorage.removeItem(CACHE_KEY);
         _spotsPromise = null;
+        _testimonialsPromise = null;
+        _packagesPromise = null;
+        _trustStatsPromise = null;
     }
 
-    // ── Admin helpers (used by admin.html) ────────────
+    // ── Admin helpers (used by admin.html only) ──────
 
     function getToken() {
         return localStorage.getItem('ttb_admin_token') || '';
@@ -124,12 +118,12 @@ const TTBData = (function () {
     }
 
     async function login(password) {
-        const res = await fetch(API_BASE + '/api/auth/login', {
+        var res = await fetch(API_BASE + '/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ password })
         });
-        const data = await res.json();
+        var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Login failed');
         setToken(data.token);
         return data;
@@ -147,155 +141,102 @@ const TTBData = (function () {
         };
     }
 
+    // ── Admin: Spots CRUD ─────────────────────────────
+    // These fetch from the API (used by admin panel only)
+
+    async function getAdminSpots() {
+        var res = await fetch(API_BASE + '/api/spots', {
+            signal: AbortSignal.timeout(15000)
+        });
+        if (!res.ok) throw new Error('API returned ' + res.status);
+        var data = await res.json();
+        return data.spots || data;
+    }
+
     async function createSpot(spot) {
-        const res = await fetch(API_BASE + '/api/spots', {
+        var res = await fetch(API_BASE + '/api/spots', {
             method: 'POST',
             headers: _authHeaders(),
             body: JSON.stringify(spot)
         });
-        const data = await res.json();
+        var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to create spot');
-        clearCache();
         return data;
     }
 
     async function updateSpot(id, updates) {
-        const res = await fetch(API_BASE + '/api/spots/' + id, {
+        var res = await fetch(API_BASE + '/api/spots/' + id, {
             method: 'PUT',
             headers: _authHeaders(),
             body: JSON.stringify(updates)
         });
-        const data = await res.json();
+        var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to update spot');
-        clearCache();
         return data;
     }
 
     async function deleteSpot(id) {
-        const res = await fetch(API_BASE + '/api/spots/' + id, {
+        var res = await fetch(API_BASE + '/api/spots/' + id, {
             method: 'DELETE',
             headers: _authHeaders()
         });
-        const data = await res.json();
+        var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to delete spot');
-        clearCache();
         return data;
     }
 
-    // ── Testimonials ──────────────────────────────────
+    // ── Admin: Testimonials CRUD ──────────────────────
 
-    const TESTIMONIALS_CACHE_KEY = 'ttb_testimonials_cache';
-    let _testimonialsPromise = null;
-
-    function getTestimonials(forceRefresh) {
-        if (_testimonialsPromise && !forceRefresh) return _testimonialsPromise;
-        _testimonialsPromise = _fetchTestimonials(forceRefresh);
-        return _testimonialsPromise;
-    }
-
-    async function _fetchTestimonials(forceRefresh) {
-        if (!forceRefresh) {
-            try {
-                const raw = sessionStorage.getItem(TESTIMONIALS_CACHE_KEY);
-                if (raw) {
-                    const { data, ts } = JSON.parse(raw);
-                    if (Date.now() - ts < CACHE_TTL) return data;
-                }
-            } catch {}
-        }
-
-        if (API_BASE) {
-            try {
-                const res = await fetch(API_BASE + '/api/testimonials', {
-                    signal: AbortSignal.timeout(5000)
-                });
-                if (!res.ok) throw new Error('API returned ' + res.status);
-                const data = await res.json();
-                const testimonials = data.testimonials || data;
-                try {
-                    sessionStorage.setItem(TESTIMONIALS_CACHE_KEY, JSON.stringify({ data: testimonials, ts: Date.now() }));
-                } catch {}
-                return testimonials;
-            } catch (err) {
-                console.warn('TTBData: Could not load testimonials from API.', err.message);
-            }
-        }
-        return [];
+    async function getAdminTestimonials() {
+        var res = await fetch(API_BASE + '/api/testimonials', {
+            signal: AbortSignal.timeout(15000)
+        });
+        if (!res.ok) throw new Error('API returned ' + res.status);
+        var data = await res.json();
+        return data.testimonials || data;
     }
 
     async function createTestimonial(testimonial) {
-        const res = await fetch(API_BASE + '/api/testimonials', {
+        var res = await fetch(API_BASE + '/api/testimonials', {
             method: 'POST',
             headers: _authHeaders(),
             body: JSON.stringify(testimonial)
         });
-        const data = await res.json();
+        var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to create testimonial');
-        sessionStorage.removeItem(TESTIMONIALS_CACHE_KEY);
-        _testimonialsPromise = null;
         return data;
     }
 
     async function updateTestimonial(id, updates) {
-        const res = await fetch(API_BASE + '/api/testimonials/' + id, {
+        var res = await fetch(API_BASE + '/api/testimonials/' + id, {
             method: 'PUT',
             headers: _authHeaders(),
             body: JSON.stringify(updates)
         });
-        const data = await res.json();
+        var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to update testimonial');
-        sessionStorage.removeItem(TESTIMONIALS_CACHE_KEY);
-        _testimonialsPromise = null;
         return data;
     }
 
     async function deleteTestimonial(id) {
-        const res = await fetch(API_BASE + '/api/testimonials/' + id, {
+        var res = await fetch(API_BASE + '/api/testimonials/' + id, {
             method: 'DELETE',
             headers: _authHeaders()
         });
-        const data = await res.json();
+        var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to delete testimonial');
-        sessionStorage.removeItem(TESTIMONIALS_CACHE_KEY);
-        _testimonialsPromise = null;
         return data;
     }
 
-    // ── Packages ──────────────────────────────────────
+    // ── Admin: Packages CRUD ──────────────────────────
 
-    const PACKAGES_CACHE_KEY = 'ttb_packages_cache';
-    let _packagesPromise = null;
-
-    function getPackages(forceRefresh) {
-        if (_packagesPromise && !forceRefresh) return _packagesPromise;
-        _packagesPromise = _fetchPackages(forceRefresh);
-        return _packagesPromise;
-    }
-
-    async function _fetchPackages(forceRefresh) {
-        if (!forceRefresh) {
-            try {
-                var raw = sessionStorage.getItem(PACKAGES_CACHE_KEY);
-                if (raw) {
-                    var parsed = JSON.parse(raw);
-                    if (Date.now() - parsed.ts < CACHE_TTL) return parsed.data;
-                }
-            } catch {}
-        }
-
-        if (API_BASE) {
-            var res = await fetch(API_BASE + '/api/packages', {
-                signal: AbortSignal.timeout(15000)
-            });
-            if (!res.ok) throw new Error('API returned ' + res.status);
-            var data = await res.json();
-            var packages = data.packages || data;
-            try {
-                sessionStorage.setItem(PACKAGES_CACHE_KEY, JSON.stringify({ data: packages, ts: Date.now() }));
-            } catch {}
-            return packages;
-        }
-        return [];
+    async function getAdminPackages() {
+        var res = await fetch(API_BASE + '/api/packages', {
+            signal: AbortSignal.timeout(15000)
+        });
+        if (!res.ok) throw new Error('API returned ' + res.status);
+        var data = await res.json();
+        return data.packages || data;
     }
 
     async function createPackage(pkg) {
@@ -306,8 +247,6 @@ const TTBData = (function () {
         });
         var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to create package');
-        sessionStorage.removeItem(PACKAGES_CACHE_KEY);
-        _packagesPromise = null;
         return data;
     }
 
@@ -319,8 +258,6 @@ const TTBData = (function () {
         });
         var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to update package');
-        sessionStorage.removeItem(PACKAGES_CACHE_KEY);
-        _packagesPromise = null;
         return data;
     }
 
@@ -331,38 +268,70 @@ const TTBData = (function () {
         });
         var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to delete package');
-        sessionStorage.removeItem(PACKAGES_CACHE_KEY);
-        _packagesPromise = null;
         return data;
     }
 
-    // ── Trust Stats (Settings) ───────────────────────
+    // ── Admin: Trust Stats ────────────────────────────
 
-    async function getTrustStats() {
-        if (API_BASE) {
-            try {
-                const res = await fetch(API_BASE + '/api/settings/trustStats', {
-                    signal: AbortSignal.timeout(5000)
-                });
-                if (!res.ok) throw new Error('API returned ' + res.status);
-                const data = await res.json();
-                return data.stats || [];
-            } catch (err) {
-                console.warn('TTBData: Could not load trust stats.', err.message);
-            }
-        }
-        return [];
+    async function getAdminTrustStats() {
+        var res = await fetch(API_BASE + '/api/settings/trustStats', {
+            signal: AbortSignal.timeout(15000)
+        });
+        if (!res.ok) throw new Error('API returned ' + res.status);
+        var data = await res.json();
+        return data.stats || [];
     }
 
     async function updateTrustStats(stats) {
-        const res = await fetch(API_BASE + '/api/settings/trustStats', {
+        var res = await fetch(API_BASE + '/api/settings/trustStats', {
             method: 'PUT',
             headers: _authHeaders(),
             body: JSON.stringify({ stats })
         });
-        const data = await res.json();
+        var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to update trust stats');
         return data;
+    }
+
+    // ── Export: Download all data from API as JSON files ──
+    // Used by admin panel to export current DB data for committing to repo
+    async function exportAllData() {
+        var results = {};
+        var errors = [];
+
+        try {
+            var spotsRes = await fetch(API_BASE + '/api/spots', { signal: AbortSignal.timeout(15000) });
+            if (spotsRes.ok) {
+                var spotsData = await spotsRes.json();
+                results.spots = spotsData.spots || spotsData;
+            } else { errors.push('spots'); }
+        } catch (e) { errors.push('spots: ' + e.message); }
+
+        try {
+            var testimonialsRes = await fetch(API_BASE + '/api/testimonials', { signal: AbortSignal.timeout(15000) });
+            if (testimonialsRes.ok) {
+                var testimonialsData = await testimonialsRes.json();
+                results.testimonials = testimonialsData.testimonials || testimonialsData;
+            } else { errors.push('testimonials'); }
+        } catch (e) { errors.push('testimonials: ' + e.message); }
+
+        try {
+            var packagesRes = await fetch(API_BASE + '/api/packages', { signal: AbortSignal.timeout(15000) });
+            if (packagesRes.ok) {
+                var packagesData = await packagesRes.json();
+                results.packages = packagesData.packages || packagesData;
+            } else { errors.push('packages'); }
+        } catch (e) { errors.push('packages: ' + e.message); }
+
+        try {
+            var statsRes = await fetch(API_BASE + '/api/settings/trustStats', { signal: AbortSignal.timeout(15000) });
+            if (statsRes.ok) {
+                var statsData = await statsRes.json();
+                results.trustStats = statsData.stats || [];
+            } else { errors.push('trustStats'); }
+        } catch (e) { errors.push('trustStats: ' + e.message); }
+
+        return { data: results, errors: errors };
     }
 
     // ── Shared utilities ────────────────────────────────
@@ -381,31 +350,37 @@ const TTBData = (function () {
 
     // ── Public API ────────────────────────────────────
     return {
+        // Public data (loads from local JSON — instant, no server needed)
         getSpots,
+        getTestimonials,
+        getPackages,
+        getTrustStats,
         clearCache,
+        // Utilities
         escapeHtml,
         sanitizeTikTokId,
-        // Admin
+        // Admin auth
         login,
         logout,
         isLoggedIn,
         getToken,
+        // Admin CRUD (requires API server)
+        getAdminSpots,
         createSpot,
         updateSpot,
         deleteSpot,
-        // Testimonials
-        getTestimonials,
+        getAdminTestimonials,
         createTestimonial,
         updateTestimonial,
         deleteTestimonial,
-        // Packages
-        getPackages,
+        getAdminPackages,
         createPackage,
         updatePackage,
         deletePackage,
-        // Settings
-        getTrustStats,
+        getAdminTrustStats,
         updateTrustStats,
+        // Export
+        exportAllData,
         // Config
         get apiBase() { return API_BASE; }
     };
