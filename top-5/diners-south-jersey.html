@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 5 Diners in South Jersey | Traveling Tastebuds</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="description" content="Top 5 Diners in South Jersey, ranked by PJ of Traveling Tastebuds: Angelo&#x27;s Glassboro Diner, Silver Coin Diner, Jersey Diner, Swedesboro Diner, Lamp Post Diner.">
+    <link rel="canonical" href="https://travelingtastebuds.org/top-5/diners-south-jersey">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="author" content="Traveling Tastebuds">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Top 5 Diners in South Jersey | Traveling Tastebuds">
+    <meta property="og:description" content="Top 5 Diners in South Jersey, ranked by PJ of Traveling Tastebuds: Angelo&#x27;s Glassboro Diner, Silver Coin Diner, Jersey Diner, Swedesboro Diner, Lamp Post Diner.">
+    <meta property="og:image" content="https://travelingtastebuds.org/ttb-og-image.png">
+    <meta property="og:url" content="https://travelingtastebuds.org/top-5/diners-south-jersey">
+    <meta property="og:site_name" content="Traveling Tastebuds">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+[
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://travelingtastebuds.org/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Top 5 Lists",
+                "item": "https://travelingtastebuds.org/best-food/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Top 5 Diners in South Jersey",
+                "item": "https://travelingtastebuds.org/top-5/diners-south-jersey"
+            }
+        ]
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Top 5 Diners in South Jersey | Traveling Tastebuds",
+        "numberOfItems": 5,
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Angelo's Glassboro Diner",
+                "url": "https://travelingtastebuds.org/food-map?spot=angelos-glassboro-diner"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Silver Coin Diner",
+                "url": "https://travelingtastebuds.org/food-map?spot=silver-coin-diner"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Jersey Diner",
+                "url": "https://travelingtastebuds.org/food-map?spot=jersey-diner"
+            },
+            {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Swedesboro Diner",
+                "url": "https://travelingtastebuds.org/food-map?spot=swedesboro-diner"
+            },
+            {
+                "@type": "ListItem",
+                "position": 5,
+                "name": "Lamp Post Diner",
+                "url": "https://travelingtastebuds.org/food-map?spot=lamp-post-diner"
+            }
+        ]
+    }
+]
+    </script>
+    <style>
+        .town-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+        .town-card { background: #fff; border: 1px solid var(--glass-border, #e5e7eb); border-radius: 16px; padding: 1.25rem; display: flex; flex-direction: column; }
+        .town-card-top { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.6rem; }
+        .town-card-top img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; flex: none; }
+        .town-card h2, .town-card h3 { font-size: 1.1rem; margin: 0; font-family: 'Poppins', sans-serif; font-weight: 600; }
+        .town-card .rank { font-family: 'Chewy', cursive; font-size: 1.6rem; color: var(--accent, #f7a94b); flex: none; }
+        .town-card p { font-size: 0.9rem; color: var(--text-muted, #6b7280); margin: 0 0 0.6rem; }
+        .town-links { margin-top: auto; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.85rem; font-weight: 600; }
+        .town-links a { color: var(--header-color, #1e40af); text-decoration: none; }
+        .town-links a:hover { text-decoration: underline; }
+        .town-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+        .town-chips a { padding: 0.45rem 1rem; border-radius: 50px; border: 1px solid var(--glass-border, #e5e7eb); background: #fff; color: var(--header-color, #1e40af); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .town-chips a:hover { background: var(--header-color, #1e40af); color: #fff; }
+    </style>
+</head>
+
+<body>
+    <script src="/navbar-loader.js"></script>
+    <section class="services-hero">
+        <div class="hero-content">
+            <h1 class="section-title" style="font-size: 2.5rem;">Top 5 Diners in South Jersey</h1>
+            <p class="section-subtitle">PJ&#x27;s five favorite diners in South Jersey, plus three honorable mentions.</p>
+            <hr class="section-divider">
+        </div>
+    </section>
+    <section class="container" style="padding: 2rem 1rem 4rem; max-width: 760px;">
+        <div class="town-grid" style="grid-template-columns: 1fr;">
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#1</span><img src="/Images/ttbLogo.png" alt="Angelo&#x27;s Glassboro Diner logo" loading="lazy" width="56" height="56"><h2>Angelo&#x27;s Glassboro Diner</h2></div>
+                <p>Classic diner vibe</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Glassboro, NJ</p>
+                <div class="town-links"><a href="https://www.instagram.com/reel/Cavmqhelpim/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram reel</a> <a href="/food-map?spot=angelos-glassboro-diner"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#2</span><h2>Silver Coin Diner</h2></div>
+                <p>Classic roadside vibe</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Hammonton, NJ</p>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#3</span><img src="/Images/ttbLogo.png" alt="Jersey Diner logo" loading="lazy" width="56" height="56"><h2>Jersey Diner</h2></div>
+                <p>Hometown classic</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Malaga, NJ</p>
+                <div class="town-links"><a href="https://www.tiktok.com/@travelingtastebuds/video/7691469798303141133" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> Watch the review</a> <a href="/food-map?spot=jersey-diner"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#4</span><img src="/Images/ttbLogo.png" alt="Swedesboro Diner logo" loading="lazy" width="56" height="56"><h2>Swedesboro Diner</h2></div>
+                <p>Family diner vibe</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Swedesboro, NJ</p>
+                <div class="town-links"><a href="https://www.tiktok.com/@travelingtastebuds/video/7617517055746510094" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> Watch the review</a> <a href="/food-map?spot=swedesboro-diner"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#5</span><img src="/Images/spotLogos/lamp-post-diner.jpg" alt="Lamp Post Diner logo" loading="lazy" width="56" height="56"><h2>Lamp Post Diner</h2></div>
+                <p>Neighborhood favorite</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Clementon, NJ</p>
+                <div class="town-links"><a href="https://www.tiktok.com/@travelingtastebuds/video/7098867125535771950" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> Watch the review</a> <a href="https://www.instagram.com/reel/Cdo1ri4DCYR/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram reel</a> <a href="/food-map?spot=lamp-post-diner"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+        </div>
+        <h2 class="section-title" style="font-size:1.5rem;text-align:center;margin:2rem 0 1rem;">Honorable mentions</h2>
+        <div class="town-grid" style="grid-template-columns: 1fr;">
+            <article class="town-card">
+                <div class="town-card-top"><img src="/Images/ttbLogo.png" alt="Harrison House Diner logo" loading="lazy" width="56" height="56"><h2>Harrison House Diner</h2></div>
+                <p>Homestyle comfort</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Mullica Hill, NJ</p>
+                <div class="town-links"><a href="https://www.tiktok.com/@travelingtastebuds/video/7680324726400535822" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> Watch the review</a> <a href="/food-map?spot=harrison-house-diner"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><img src="/Images/ttbLogo.png" alt="Phily Diner &amp; Sport Bar logo" loading="lazy" width="56" height="56"><h2>Phily Diner &amp; Sport Bar</h2></div>
+                <p>Sports bar energy</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Runnemede, NJ</p>
+                <div class="town-links"><a href="https://www.instagram.com/reel/CFpV-JyHHTI/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram reel</a> <a href="/food-map?spot=phily-diner-and-sports-bar"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><h2>Olga&#x27;s Diner</h2></div>
+                <p>Modern diner vibe</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Marlton, NJ</p>
+            </article>
+        </div>
+        <p style="text-align:center;margin-top:1.5rem;"><a href="https://www.instagram.com/p/DfIt2n-GuHv/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> See the original Top 5 post on Instagram</a></p>
+        <p style="text-align:center;margin-top:1rem;"><a href="/best-food/">More Top 5 lists and towns</a></p>
+    </section>
+
+    <div id="footer-container"></div>
+    <script>
+        fetch('/footer.html').then(function (r) { return r.text(); })
+            .then(function (html) { document.getElementById('footer-container').innerHTML = html; })
+            .catch(function () {});
+    </script>
+</body>
+
+</html>

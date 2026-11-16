@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 5 Wildwood Eats | Traveling Tastebuds</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="description" content="Top 5 Wildwood Eats, ranked by PJ of Traveling Tastebuds: Sam&#x27;s Pizza Palace, Douglass Creamery, Urie&#x27;s, Boathouse, Johnny Longhots.">
+    <link rel="canonical" href="https://travelingtastebuds.org/top-5/wildwood-eats">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="author" content="Traveling Tastebuds">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Top 5 Wildwood Eats | Traveling Tastebuds">
+    <meta property="og:description" content="Top 5 Wildwood Eats, ranked by PJ of Traveling Tastebuds: Sam&#x27;s Pizza Palace, Douglass Creamery, Urie&#x27;s, Boathouse, Johnny Longhots.">
+    <meta property="og:image" content="https://travelingtastebuds.org/ttb-og-image.png">
+    <meta property="og:url" content="https://travelingtastebuds.org/top-5/wildwood-eats">
+    <meta property="og:site_name" content="Traveling Tastebuds">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+[
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://travelingtastebuds.org/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Top 5 Lists",
+                "item": "https://travelingtastebuds.org/best-food/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Top 5 Wildwood Eats",
+                "item": "https://travelingtastebuds.org/top-5/wildwood-eats"
+            }
+        ]
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Top 5 Wildwood Eats | Traveling Tastebuds",
+        "numberOfItems": 5,
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Sam's Pizza Palace",
+                "url": "https://travelingtastebuds.org/food-map?spot=sams-pizza-palace"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Douglass Creamery",
+                "url": "https://travelingtastebuds.org/food-map?spot=douglass-creamery"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Uries Waterfront",
+                "url": "https://travelingtastebuds.org/food-map?spot=uries-waterfront"
+            },
+            {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Boathouse",
+                "url": "https://travelingtastebuds.org/food-map?spot=boathouse"
+            },
+            {
+                "@type": "ListItem",
+                "position": 5,
+                "name": "Johnny Longhots",
+                "url": "https://travelingtastebuds.org/food-map?spot=johnny-longhots"
+            }
+        ]
+    }
+]
+    </script>
+    <style>
+        .town-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+        .town-card { background: #fff; border: 1px solid var(--glass-border, #e5e7eb); border-radius: 16px; padding: 1.25rem; display: flex; flex-direction: column; }
+        .town-card-top { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.6rem; }
+        .town-card-top img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; flex: none; }
+        .town-card h2, .town-card h3 { font-size: 1.1rem; margin: 0; font-family: 'Poppins', sans-serif; font-weight: 600; }
+        .town-card .rank { font-family: 'Chewy', cursive; font-size: 1.6rem; color: var(--accent, #f7a94b); flex: none; }
+        .town-card p { font-size: 0.9rem; color: var(--text-muted, #6b7280); margin: 0 0 0.6rem; }
+        .town-links { margin-top: auto; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.85rem; font-weight: 600; }
+        .town-links a { color: var(--header-color, #1e40af); text-decoration: none; }
+        .town-links a:hover { text-decoration: underline; }
+        .town-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+        .town-chips a { padding: 0.45rem 1rem; border-radius: 50px; border: 1px solid var(--glass-border, #e5e7eb); background: #fff; color: var(--header-color, #1e40af); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .town-chips a:hover { background: var(--header-color, #1e40af); color: #fff; }
+    </style>
+</head>
+
+<body>
+    <script src="/navbar-loader.js"></script>
+    <section class="services-hero">
+        <div class="hero-content">
+            <h1 class="section-title" style="font-size: 2.5rem;">Top 5 Wildwood Eats</h1>
+            <p class="section-subtitle">PJ&#x27;s five favorite places to eat in Wildwood, plus four honorable mentions.</p>
+            <hr class="section-divider">
+        </div>
+    </section>
+    <section class="container" style="padding: 2rem 1rem 4rem; max-width: 760px;">
+        <div class="town-grid" style="grid-template-columns: 1fr;">
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#1</span><img src="/Images/spotLogos/sams-pizza-palace.jpg" alt="Sam&#x27;s Pizza Palace logo" loading="lazy" width="56" height="56"><h2>Sam&#x27;s Pizza Palace</h2></div>
+                <p>Iconic pizza spot</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Wildwood, NJ</p>
+                <div class="town-links"><a href="https://www.instagram.com/reel/CoyPXzBDyCj/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram reel</a> <a href="/food-map?spot=sams-pizza-palace"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#2</span><h2>Douglass Creamery</h2></div>
+                <p>Must try: chocolate peanut butter</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Wildwood, NJ</p>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#3</span><img src="/Images/spotLogos/uries-waterfront.jpg" alt="Urie&#x27;s logo" loading="lazy" width="56" height="56"><h2>Urie&#x27;s</h2></div>
+                <p>Must try: all you can eat crabs</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Wildwood, NJ</p>
+                <div class="town-links"><a href="https://www.tiktok.com/@travelingtastebuds/video/7675889363808521485" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> Watch the review</a> <a href="/food-map?spot=uries-waterfront"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#4</span><img src="/Images/spotLogos/boathouse.jpg" alt="Boathouse logo" loading="lazy" width="56" height="56"><h2>Boathouse</h2></div>
+                <p>Waterfront dining</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Wildwood, NJ</p>
+                <div class="town-links"><a href="https://www.tiktok.com/@travelingtastebuds/video/7647695471896448269" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> Watch the review</a> <a href="/food-map?spot=boathouse"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><span class="rank">#5</span><img src="/Images/spotLogos/johnny-longhots.jpg" alt="Johnny Longhots logo" loading="lazy" width="56" height="56"><h2>Johnny Longhots</h2></div>
+                <p>Must try: The Don</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Wildwood, NJ</p>
+                <div class="town-links"><a href="https://www.tiktok.com/@travelingtastebuds/video/7644353805965954317" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> Watch the review</a> <a href="/food-map?spot=johnny-longhots"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+        </div>
+        <h2 class="section-title" style="font-size:1.5rem;text-align:center;margin:2rem 0 1rem;">Honorable mentions</h2>
+        <div class="town-grid" style="grid-template-columns: 1fr;">
+            <article class="town-card">
+                <div class="town-card-top"><h2>Alfe&#x27;s</h2></div>
+                <p>Must try: sunset menu</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Wildwood, NJ</p>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><img src="/Images/ttbLogo.png" alt="The Wharf logo" loading="lazy" width="56" height="56"><h2>The Wharf</h2></div>
+                <p>Waterfront dining</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Wildwood, NJ</p>
+                <div class="town-links"><a href="https://www.tiktok.com/@travelingtastebuds/video/7683313333801405709" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> Watch the review</a> <a href="https://www.instagram.com/reel/DdC0MEBNy-t/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram reel</a> <a href="/food-map?spot=the-wharf"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><img src="/Images/ttbLogo.png" alt="Skinny Joey&#x27;s Cheesesteaks logo" loading="lazy" width="56" height="56"><h2>Skinny Joey&#x27;s Cheesesteaks</h2></div>
+                <p>New kid on the block</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> Wildwood, NJ</p>
+                <div class="town-links"><a href="https://www.tiktok.com/@travelingtastebuds/video/7648315300500229390" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> Watch the review</a> <a href="/food-map?spot=skinny-joeys-cheesesteaks"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+            <article class="town-card">
+                <div class="town-card-top"><img src="/Images/ttbLogo.png" alt="Anglesea Pub logo" loading="lazy" width="56" height="56"><h2>Anglesea Pub</h2></div>
+                <p>Pub dining</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> North Wildwood, NJ</p>
+                <div class="town-links"><a href="https://www.instagram.com/reel/DKNsfZXNdQB/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram reel</a> <a href="/food-map?spot=anglesea-pub"><i class="fas fa-map-location-dot"></i> See it on the map</a></div>
+            </article>
+        </div>
+        <p style="text-align:center;margin-top:1.5rem;"><a href="https://www.instagram.com/p/DdckZMcmvld/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> See the original Top 5 post on Instagram</a></p>
+        <p style="text-align:center;margin-top:1rem;"><a href="/best-food/">More Top 5 lists and towns</a></p>
+    </section>
+
+    <div id="footer-container"></div>
+    <script>
+        fetch('/footer.html').then(function (r) { return r.text(); })
+            .then(function (html) { document.getElementById('footer-container').innerHTML = html; })
+            .catch(function () {});
+    </script>
+</body>
+
+</html>
