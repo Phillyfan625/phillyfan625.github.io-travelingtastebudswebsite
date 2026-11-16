@@ -2,12 +2,17 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ObjectId } = require('mongodb');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 
+const crypto = require('crypto');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Render (and most hosts) sit behind one proxy hop. Without this, every visitor
+// shares the proxy's IP, so the login rate limit is effectively global.
+app.set('trust proxy', 1);
 
 // ── Startup validation ────────────────────────────
 
@@ -178,7 +183,7 @@ function buildTestimonialDocument(body) {
 let db;
 
 async function connectDB() {
-    const client = new MongoClient(process.env.MONGODB_URI);
+    const client = new MongoClient(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 15000 });
     await client.connect();
     db = client.db('ttb');
     console.log('Connected to MongoDB Atlas');
@@ -258,26 +263,24 @@ app.get('/api/health', (req, res) => {
 
 // ── Auth Routes ────────────────────────────────────
 
-// Hash the admin password on first startup if not already hashed
-let hashedPassword = null;
-
-async function getHashedPassword() {
-    if (hashedPassword) return hashedPassword;
-    hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 12);
-    return hashedPassword;
+// ADMIN_PASSWORD lives in plain text in the environment, so bcrypt-hashing it at
+// runtime adds no security — it only burned seconds of CPU per login on
+// Render's throttled free tier (pure-JS bcryptjs at cost 12, twice on the
+// first login). Compare SHA-256 digests in constant time instead: instant.
+function passwordMatches(candidate) {
+    const a = crypto.createHash('sha256').update(String(candidate)).digest();
+    const b = crypto.createHash('sha256').update(process.env.ADMIN_PASSWORD).digest();
+    return crypto.timingSafeEqual(a, b);
 }
 
 app.post('/api/auth/login', async (req, res) => {
     try {
-        const { password } = req.body;
+        const { password } = req.body || {};
         if (!password) {
             return res.status(400).json({ error: 'Password is required' });
         }
 
-        const hash = await getHashedPassword();
-        const match = await bcrypt.compare(password, hash);
-
-        if (!match) {
+        if (!passwordMatches(password)) {
             return res.status(401).json({ error: 'Incorrect password' });
         }
 

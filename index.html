@@ -478,8 +478,8 @@
                 attributionControl: false
             }).setView([39.83, -75.10], 10);
 
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OpenStreetMap &copy; CARTO'
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
             }).addTo(teaserMap);
 
             var teaserIcon = L.divIcon({

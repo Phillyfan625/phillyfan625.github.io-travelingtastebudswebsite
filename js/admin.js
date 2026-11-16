@@ -207,14 +207,16 @@ async function handleLogin(e) {
         status.style.color = 'var(--text-muted)';
     }
 
+    var serverUp = false;
     try {
         var controller = new AbortController();
         var timeoutId = setTimeout(function () { controller.abort(); }, 90000);
-        await fetch(TTBData.apiBase + '/api/health', {
+        var healthRes = await fetch(TTBData.apiBase + '/api/health', {
             signal: controller.signal,
             cache: 'no-store'
         });
         clearTimeout(timeoutId);
+        serverUp = healthRes.ok;
     } catch (err) {
         // Server might still be waking — try login anyway, it might work
     }
@@ -223,7 +225,9 @@ async function handleLogin(e) {
     btn.querySelector('i').className = 'fas fa-lock';
     btn.querySelector('span').textContent = 'Logging in…';
     if (status) {
-        status.textContent = 'Server is up — logging in now…';
+        status.textContent = serverUp
+            ? 'Server is up — logging in now…'
+            : 'Server did not answer the wake-up check — trying to log in anyway…';
         status.style.color = 'var(--header-color)';
     }
 
@@ -239,7 +243,7 @@ async function handleLogin(e) {
     } catch (err) {
         showToast(err.message, 'error');
         if (status) {
-            status.textContent = err.message.includes('Failed to fetch') || err.message.includes('NetworkError')
+            status.textContent = err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('timed out')
                 ? 'Server may still be starting — try again in a moment.'
                 : '';
             status.style.color = 'var(--text-muted)';
@@ -388,8 +392,8 @@ function openModal() {
     setTimeout(function () {
         if (!mapPicker) {
             mapPicker = L.map('mapPicker').setView([39.83, -75.08], 10);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OSM &copy; CARTO'
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
             }).addTo(mapPicker);
             mapPicker.on('click', function (e) {
                 document.getElementById('spotLat').value = e.latlng.lat.toFixed(4);
