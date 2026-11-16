@@ -140,20 +140,6 @@
         "snippet": "Neighborhood pub with great burgers and a welcoming crowd"
     },
     {
-        "name": "Peter and Sons",
-        "tiktokId": "7262868213384400171",
-        "lat": 39.7020,
-        "lng": -75.1119,
-        "location": "Glassboro, NJ",
-        "discount": "",
-        "logoImage": "/Images/qotdImages/peterAndSons.jpeg",
-        "foodImage": "",
-        "logoBgColor": "",
-        "tags": ["italian", "family", "glassboro"],
-        "rating": 8.5,
-        "snippet": "Family-owned Italian spot beloved by the Glassboro community"
-    },
-    {
         "name": "Grilliant Greek Gyro",
         "tiktokId": "7696289122276658445",
         "lat": 40.1794,

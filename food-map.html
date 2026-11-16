@@ -32,7 +32,9 @@
         .map-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
         .map-near-note { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem; min-height: 1em; }
         .food-map-item-dist { color: var(--header-color); font-weight: 600; margin-left: 0.25rem; }
-        .popup-directions { display: inline-block; margin: 0.5rem 0 0 0.75rem; font-size: 0.8rem; font-weight: 600; color: var(--header-color); text-decoration: none; }
+        .ttb-map-popup .popup-btn { margin: 0.2rem 0.15rem 0; }
+        .ttb-map-popup .popup-btn-ig { background: #c13584; }
+        .popup-directions { display: block; margin: 0.5rem 0 0; font-size: 0.8rem; font-weight: 600; color: var(--header-color); text-decoration: none; }
         @media (min-width: 992px) { .food-map-sidebar-header { position: static; } }
         .popup-directions:hover { text-decoration: underline; }
         .marker-cluster-small, .marker-cluster-medium, .marker-cluster-large { background-color: rgba(30, 64, 175, 0.25); }
@@ -429,6 +431,7 @@
 
                 var marker = L.marker([spot.lat, spot.lng], { icon: createMarkerIcon(false) });
                 var videoId = safeTikTok(spot.tiktokId);
+                var igCode = /^[A-Za-z0-9_-]{5,40}$/.test(spot.instagramCode || '') ? spot.instagramCode : '';
 
                 marker.bindPopup(
                     '<div class="ttb-map-popup">' +
@@ -437,14 +440,16 @@
                     '<div class="popup-tags">' + (spot.tags || []).map(function (t) { return '<span class="popup-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
                     (spot.discount ? '<div class="popup-discount"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</div>' : '') +
                     '<p style="font-size:0.8rem;color:#888;margin:0.3rem 0;">' + esc(spot.snippet || '') + '</p>' +
-                    '<button class="popup-btn" data-video="' + videoId + '" data-name="' + esc(spot.name) + '"><i class="fab fa-tiktok"></i> Watch Review</button>' +
+                    (videoId ? '<button class="popup-btn" data-kind="tiktok" data-video="' + videoId + '" data-name="' + esc(spot.name) + '"><i class="fab fa-tiktok"></i> Watch Review</button>' : '') +
+                    (igCode ? '<button class="popup-btn popup-btn-ig" data-kind="instagram" data-video="' + igCode + '" data-name="' + esc(spot.name) + '"><i class="fab fa-instagram"></i> Watch Instagram Reel</button>' : '') +
                     '<a class="popup-directions" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(spot.name + ', ' + spot.location) + '"><i class="fas fa-diamond-turn-right"></i> Directions</a></div>',
                     { maxWidth: 280, className: 'ttb-popup' }
                 );
 
                 marker.on('popupopen', function () {
-                    var btn = document.querySelector('.ttb-map-popup .popup-btn[data-video="' + videoId + '"]');
-                    if (btn) btn.addEventListener('click', function () { openTikTokModal(this.dataset.video, this.dataset.name); });
+                    document.querySelectorAll('.ttb-map-popup .popup-btn').forEach(function (btn) {
+                        btn.addEventListener('click', function () { openVideoModal(this.dataset.kind, this.dataset.video, this.dataset.name); });
+                    });
                 });
 
                 markers[index] = marker;
@@ -548,9 +553,12 @@
             }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
         });
 
-        function openTikTokModal(videoId, name) {
-            document.getElementById('tiktokModalLabel').textContent = name + ' - TikTok Review';
-            document.getElementById('tiktokIframe').src = 'https://www.tiktok.com/embed/' + TTBData.sanitizeTikTokId(videoId);
+        function openVideoModal(kind, videoId, name) {
+            var isIg = kind === 'instagram';
+            document.getElementById('tiktokModalLabel').textContent = name + (isIg ? ' - Instagram Reel' : ' - TikTok Review');
+            document.getElementById('tiktokIframe').src = isIg
+                ? 'https://www.instagram.com/p/' + String(videoId).replace(/[^A-Za-z0-9_-]/g, '') + '/embed'
+                : 'https://www.tiktok.com/embed/' + TTBData.sanitizeTikTokId(videoId);
             new bootstrap.Modal(document.getElementById('tiktokModal')).show();
         }
 

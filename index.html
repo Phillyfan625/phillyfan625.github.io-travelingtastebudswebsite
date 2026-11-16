@@ -462,11 +462,14 @@
                 return;
             }
 
+            // Spot count stat (every spot on the map)
+            document.getElementById('spotCount').textContent = spots.length + '+';
+
+            // The carousel and review player below use TikTok videos only
+            spots = spots.filter(function (s) { return s.tiktokId; });
+
             // Build the featured carousel
             buildFeaturedCarousel(spots);
-
-            // Spot count stat
-            document.getElementById('spotCount').textContent = spots.length + '+';
 
             // Map teaser
             var teaserMap = L.map('mapTeaserPreview', {
