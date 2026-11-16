@@ -12,8 +12,12 @@ every restaurant name without running JavaScript.
 data/top5.json (optional) is a list of:
     {"slug": "wings-south-jersey", "title": "Top 5 Wings in South Jersey",
      "intro": "...", "instagramCode": "DbwbA7NGpLY",
-     "picks": [{"spot": "Exact Spot Name", "note": "why it made the list"}, ...]}
-Picks are listed first place first. "spot" must match a name in spots.json.
+     "picks": [{"name": "Name as PJ wrote it", "location": "Town, NJ",
+                "spot": "Exact name in spots.json", "note": "why it made the list"}, ...],
+     "honorableMentions": [same shape as picks]}
+Picks are listed first place first. "spot" is optional: with it the card shows
+the logo and links to the review and map pin; without it the card shows the
+name and town only.
 """
 import html, json, os, re, collections, datetime
 
@@ -100,6 +104,11 @@ def hero(h1, sub):
             '            <p class="section-subtitle">%s</p>\n            <hr class="section-divider">\n'
             '        </div>\n    </section>\n') % (e(h1), sub)
 
+def plain_card(p, rank=None):
+    return ('            <article class="town-card">\n                <div class="town-card-top">%s<h2>%s</h2></div>\n'
+            '                <p>%s</p>\n                <p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> %s</p>\n            </article>\n') % (
+        '<span class="rank">#%d</span>' % rank if rank else '', e(p['name']), e(p.get('note') or ''), e(p.get('location') or ''))
+
 def card(s, rank=None, note=None, heading='h2'):
     links = []
     if s.get('tiktokId'):
@@ -164,22 +173,37 @@ def main():
     p5 = os.path.join(ROOT, 'data', 'top5.json')
     if os.path.exists(p5):
         for L in json.load(open(p5, encoding='utf-8')):
-            picks = [(by_name[p['spot']], p.get('note')) for p in L['picks']]   # KeyError = name not in spots.json
+            def cards(arr, ranked):
+                out = ''
+                for i, p in enumerate(arr):
+                    r = i + 1 if ranked else None
+                    if p.get('spot'):
+                        sp = dict(by_name[p['spot']], name=p.get('name') or p['spot'], location=p.get('location') or by_name[p['spot']]['location'])  # KeyError = not in spots.json
+                        c = card(sp, rank=r, note=p.get('note') or sp.get('snippet'))
+                        out += c.replace('/food-map?spot=' + slug(sp['name']), '/food-map?spot=' + slug(p['spot']))
+                    else:
+                        out += plain_card(p, rank=r)
+                return out
+            picks = L['picks']
             body = hero(L['title'], e(L.get('intro') or "PJ's ranking for Traveling Tastebuds."))
             body += '    <section class="container" style="padding: 2rem 1rem 4rem; max-width: 760px;">\n        <div class="town-grid" style="grid-template-columns: 1fr;">\n'
-            body += ''.join(card(s, rank=i + 1, note=n) for i, (s, n) in enumerate(picks)) + '        </div>\n'
+            body += cards(picks, True) + '        </div>\n'
+            if L.get('honorableMentions'):
+                body += '        <h2 class="section-title" style="font-size:1.5rem;text-align:center;margin:2rem 0 1rem;">Honorable mentions</h2>\n        <div class="town-grid" style="grid-template-columns: 1fr;">\n' + cards(L['honorableMentions'], False) + '        </div>\n'
             if L.get('instagramCode'):
-                body += '        <p style="text-align:center;margin-top:1.5rem;"><a href="https://www.instagram.com/reel/%s/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Watch the full Top 5 video</a></p>\n' % e(L['instagramCode'])
+                body += '        <p style="text-align:center;margin-top:1.5rem;"><a href="https://www.instagram.com/p/%s/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> See the original Top 5 post on Instagram</a></p>\n' % e(L['instagramCode'])
+            body += '        <p style="text-align:center;margin-top:1rem;"><a href="/best-food/">More Top 5 lists and towns</a></p>\n'
             body += '    </section>\n'
             title = L['title'] + ' | Traveling Tastebuds'
-            desc = "%s, ranked by PJ of Traveling Tastebuds: %s." % (L['title'], ', '.join(s['name'] for s, _ in picks))
-            urls.append(page('top-5/' + L['slug'], title, desc, [('Home', '/'), ('Top 5 Lists', '/best-food/'), (L['title'], '/top-5/' + L['slug'])], body, [s for s, _ in picks]))
+            desc = "%s, ranked by PJ of Traveling Tastebuds: %s." % (L['title'], ', '.join(p['name'] for p in picks))
+            urls.append(page('top-5/' + L['slug'], title, desc, [('Home', '/'), ('Top 5 Lists', '/best-food/'), (L['title'], '/top-5/' + L['slug'])], body,
+                             [{'name': p['name']} if not p.get('spot') else {'name': p['spot']} for p in picks]))
             lists.append(L)
 
     body = hero('Best Food by Town', 'Pick a town to see every spot PJ has reviewed there. %d restaurants across South Jersey, Philadelphia and the Shore are on the <a href="/food-map">food map</a>.' % len(spots))
     body += '    <section class="container" style="padding: 2rem 1rem 3rem;">\n' + chips + '    </section>\n'
     if lists:
-        body += '    <section class="container" style="padding: 0 1rem 4rem;">\n        <h2 class="section-title" style="font-size:1.6rem;text-align:center;">Top 5 lists</h2>\n        <div class="town-chips">\n' + ''.join(
+        body += '    <section class="container" style="padding: 0 1rem 4rem;">\n        <h2 class="section-title" style="font-size:1.6rem;text-align:center;">PJ\'s Top 5 lists</h2>\n        <div class="town-chips">\n' + ''.join(
             '            <a href="/top-5/%s">%s</a>\n' % (L['slug'], e(L['title'])) for L in lists) + '        </div>\n    </section>\n'
     urls.insert(0, page('best-food/', 'Best Food by Town in South Jersey & Philly | Traveling Tastebuds',
                         'Browse Traveling Tastebuds food reviews by town: Philadelphia, Wildwood, Cherry Hill, Glassboro, Cape May, Ocean City and more.',

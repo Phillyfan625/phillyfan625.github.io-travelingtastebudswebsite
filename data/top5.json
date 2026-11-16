@@ -1,0 +1,559 @@
+[
+    {
+        "slug": "wings-south-jersey",
+        "title": "Top 5 Wings in South Jersey",
+        "intro": "PJ's five favorite wing spots in South Jersey, plus three honorable mentions.",
+        "instagramCode": "DbwbA7NGpLY",
+        "picks": [
+            {
+                "name": "Pic-A-Lilli Inn",
+                "location": "Shamong, NJ",
+                "spot": "Pic-a-Lilli"
+            },
+            {
+                "name": "Bryson's Pub",
+                "location": "Pennsauken, NJ",
+                "spot": "Bryson's Pub"
+            },
+            {
+                "name": "Holy City Publick House",
+                "location": "Gloucester City, NJ",
+                "note": "Must try: Chiodi sauce",
+                "spot": "Holy City"
+            },
+            {
+                "name": "Dominic's Tavern",
+                "location": "Bellmawr, NJ",
+                "spot": "Dominic's Tavern"
+            },
+            {
+                "name": "Mulligans",
+                "location": "Oaklyn, NJ",
+                "note": "Sports bar energy",
+                "spot": "Mulligan's Bar and Grill"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Dolsot House",
+                "location": "Cherry Hill, NJ",
+                "note": "Master of the crunch",
+                "spot": "Dolsot House"
+            },
+            {
+                "name": "Golden Nugget Tavern",
+                "location": "Berlin, NJ",
+                "note": "Wing night staple",
+                "spot": "Golden Nugget Tavern"
+            },
+            {
+                "name": "Jug Handle Inn",
+                "location": "Cinnaminson, NJ",
+                "spot": "The Jug Handle Inn"
+            }
+        ]
+    },
+    {
+        "slug": "cheesesteaks-philly",
+        "title": "Top 5 Cheesesteaks in Philly",
+        "intro": "PJ's five favorite cheesesteaks in Philadelphia, plus three honorable mentions.",
+        "instagramCode": "DcUeJA5mlWL",
+        "picks": [
+            {
+                "name": "Angelo's Pizzeria",
+                "location": "Philadelphia, PA",
+                "note": "Italian Market, South Philly",
+                "spot": "Angelo's Pizzeria"
+            },
+            {
+                "name": "Skinny Joey's Cheesesteaks",
+                "location": "Philadelphia, PA",
+                "note": "Stadium area, South Philly"
+            },
+            {
+                "name": "John's Roast Pork",
+                "location": "Philadelphia, PA",
+                "note": "Old school classic on Snyder Ave",
+                "spot": "John's Roast Pork"
+            },
+            {
+                "name": "Del Rossi's Cheesesteak & Pizza Co.",
+                "location": "Philadelphia, PA",
+                "note": "Northern Liberties"
+            },
+            {
+                "name": "Café Carmela",
+                "location": "Philadelphia, PA",
+                "note": "Neighborhood favorite on Holme Ave, Northeast Philly"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Jim's South St.",
+                "location": "Philadelphia, PA",
+                "note": "South Street"
+            },
+            {
+                "name": "Steve's Prince of Steaks",
+                "location": "Philadelphia, PA",
+                "note": "Old school, Northeast Philly"
+            },
+            {
+                "name": "Ishkabibble's",
+                "location": "Philadelphia, PA",
+                "note": "Must try: Gremlin juice"
+            }
+        ]
+    },
+    {
+        "slug": "burgers-south-jersey",
+        "title": "Top 5 Burgers in South Jersey",
+        "intro": "PJ's five favorite burgers in South Jersey, plus three honorable mentions.",
+        "instagramCode": "DdKjkjIGudf",
+        "picks": [
+            {
+                "name": "Burger Barr",
+                "location": "Sewell, NJ",
+                "note": "Must try: TTB Burger",
+                "spot": "Burger Barr"
+            },
+            {
+                "name": "Blue Monkey Tavern",
+                "location": "Merchantville, NJ",
+                "note": "Must try: The GOAT Burger",
+                "spot": "Blue Monkey Tavern"
+            },
+            {
+                "name": "Kid Rip's Tap & Tavern",
+                "location": "Runnemede, NJ",
+                "note": "Must try: Elk burger",
+                "spot": "Kid Rips"
+            },
+            {
+                "name": "John & Molly's",
+                "location": "Eastampton, NJ",
+                "spot": "John & Molly's"
+            },
+            {
+                "name": "Bryson's Pub",
+                "location": "Pennsauken, NJ",
+                "note": "Local pub",
+                "spot": "Bryson's Pub"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Stewart's Drive-In",
+                "location": "Vineland, NJ",
+                "note": "Drive-in classic",
+                "spot": "Stewart's Drive-In"
+            },
+            {
+                "name": "Elsie's Burgers and Shakes",
+                "location": "Gloucester City, NJ",
+                "note": "Must try: smash burgers",
+                "spot": "Elsie's Burgers & Shakes"
+            },
+            {
+                "name": "Martini's on Broadway",
+                "location": "Pitman, NJ",
+                "spot": "Martini's On Broadway"
+            }
+        ]
+    },
+    {
+        "slug": "wildwood-eats",
+        "title": "Top 5 Wildwood Eats",
+        "intro": "PJ's five favorite places to eat in Wildwood, plus four honorable mentions.",
+        "instagramCode": "DdckZMcmvld",
+        "picks": [
+            {
+                "name": "Sam's Pizza Palace",
+                "location": "Wildwood, NJ",
+                "note": "Iconic pizza spot",
+                "spot": "Sam's Pizza Palace"
+            },
+            {
+                "name": "Douglass Creamery",
+                "location": "Wildwood, NJ",
+                "note": "Must try: chocolate peanut butter"
+            },
+            {
+                "name": "Urie's",
+                "location": "Wildwood, NJ",
+                "note": "Must try: all you can eat crabs",
+                "spot": "Uries Waterfront"
+            },
+            {
+                "name": "Boathouse",
+                "location": "Wildwood, NJ",
+                "note": "Waterfront dining",
+                "spot": "Boathouse"
+            },
+            {
+                "name": "Johnny Longhots",
+                "location": "Wildwood, NJ",
+                "note": "Must try: The Don",
+                "spot": "Johnny Longhots"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Alfe's",
+                "location": "Wildwood, NJ",
+                "note": "Must try: sunset menu"
+            },
+            {
+                "name": "The Wharf",
+                "location": "Wildwood, NJ",
+                "note": "Waterfront dining",
+                "spot": "The Wharf"
+            },
+            {
+                "name": "Skinny Joey's Cheesesteaks",
+                "location": "Wildwood, NJ",
+                "note": "New kid on the block",
+                "spot": "Skinny Joey's Cheesesteaks"
+            },
+            {
+                "name": "Anglesea Pub",
+                "location": "North Wildwood, NJ",
+                "note": "Pub dining",
+                "spot": "Anglesea Pub"
+            }
+        ]
+    },
+    {
+        "slug": "bars-wildwood",
+        "title": "Top 5 Bar Spots in the Wildwoods",
+        "intro": "PJ's five favorite bars in the Wildwoods, plus three honorable mentions.",
+        "instagramCode": "Ddul9DlGvXX",
+        "picks": [
+            {
+                "name": "Keenan's",
+                "location": "North Wildwood, NJ",
+                "note": "Live music and nightlife"
+            },
+            {
+                "name": "The Inlet",
+                "location": "North Wildwood, NJ",
+                "note": "Ocean views and music"
+            },
+            {
+                "name": "Seaport Pier",
+                "location": "North Wildwood, NJ",
+                "note": "Boardwalk drinks"
+            },
+            {
+                "name": "Tacos & Tequila",
+                "location": "North Wildwood, NJ",
+                "note": "Fun outside area"
+            },
+            {
+                "name": "Exit 6",
+                "location": "North Wildwood, NJ",
+                "note": "Shore nightlife"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Westside Saloon",
+                "location": "West Wildwood, NJ",
+                "note": "Local hangout",
+                "spot": "Westside Saloon"
+            },
+            {
+                "name": "Anglesea Pub",
+                "location": "North Wildwood, NJ",
+                "note": "Irish pub atmosphere",
+                "spot": "Anglesea Pub"
+            },
+            {
+                "name": "#1 Tavern",
+                "location": "North Wildwood, NJ",
+                "note": "Must try: Super Tully Nut"
+            }
+        ]
+    },
+    {
+        "slug": "cheesesteaks-south-jersey",
+        "title": "Top 5 Cheesesteaks in South Jersey",
+        "intro": "PJ's five favorite cheesesteaks in South Jersey, plus three honorable mentions.",
+        "instagramCode": "DeAoTaSmjAY",
+        "picks": [
+            {
+                "name": "Lillo's Tomato Pies",
+                "location": "Hainesport, NJ",
+                "note": "Must visit",
+                "spot": "Lillos Tomato Pies"
+            },
+            {
+                "name": "Donkey's Place",
+                "location": "Camden, NJ",
+                "note": "South Jersey classic",
+                "spot": "Donkey's Place"
+            },
+            {
+                "name": "Cheessteaks",
+                "location": "Merchantville, NJ",
+                "note": "New school",
+                "spot": "Cheessteaks"
+            },
+            {
+                "name": "Cockadoodle Dan's",
+                "location": "Moorestown, NJ",
+                "note": "Local favorite",
+                "spot": "Cockadoodle Dan's"
+            },
+            {
+                "name": "Louie G's",
+                "location": "Sewell, NJ",
+                "note": "Hidden gem",
+                "spot": "Louie G's"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Palmisano's",
+                "location": "Washington Township, NJ",
+                "note": "Must try: filet mignon cheesesteak",
+                "spot": "Palmisano's"
+            },
+            {
+                "name": "Brynn Bradley Cheesesteaks",
+                "location": "Woodbury Heights, NJ",
+                "note": "Under the radar",
+                "spot": "Brynn Bradley Cheesesteaks"
+            },
+            {
+                "name": "Peppino's",
+                "location": "Marlton, NJ",
+                "note": "Family tradition",
+                "spot": "Peppino's Pizza"
+            }
+        ]
+    },
+    {
+        "slug": "ice-cream-south-jersey",
+        "title": "Top 5 Ice Cream Spots in South Jersey",
+        "intro": "PJ's five favorite ice cream spots in South Jersey, plus three honorable mentions.",
+        "instagramCode": "DeSpskPGk2S",
+        "picks": [
+            {
+                "name": "Leo's Yum Yum",
+                "location": "Medford, NJ",
+                "note": "Nostalgic frozen treats",
+                "spot": "Leo's Famous Yum Yum"
+            },
+            {
+                "name": "Douglass Creamery",
+                "location": "Wildwood, NJ",
+                "note": "Boardwalk scoops"
+            },
+            {
+                "name": "Primo Water Ice",
+                "location": "Westmont, NJ",
+                "note": "Water ice and soft serve"
+            },
+            {
+                "name": "Hilltop Creamery",
+                "location": "Blackwood, NJ",
+                "note": "Classic creamery"
+            },
+            {
+                "name": "Latteria",
+                "location": "Swedesboro, NJ",
+                "note": "Small-batch flavors"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Dot's",
+                "location": "Woodbury Heights, NJ",
+                "note": "Must try: scoops and water ice"
+            },
+            {
+                "name": "Hershey Shake Shop",
+                "location": "Bellmawr, NJ",
+                "note": "Over-the-top shakes",
+                "spot": "Hershey Shake Shop Creamery"
+            },
+            {
+                "name": "Springer's",
+                "location": "Stone Harbor, NJ",
+                "note": "Homemade classics",
+                "spot": "Springer's Homemade Ice Cream"
+            }
+        ]
+    },
+    {
+        "slug": "pizza-south-jersey",
+        "title": "Top 5 Pizza Spots in South Jersey",
+        "intro": "PJ's five favorite pizza spots in South Jersey, plus three honorable mentions.",
+        "instagramCode": "Dekr5iHGjK0",
+        "picks": [
+            {
+                "name": "Tacconelli's",
+                "location": "Maple Shade, NJ",
+                "note": "South Jersey staple, in Maple Shade and Haddon Township"
+            },
+            {
+                "name": "Lillo's Tomato Pies",
+                "location": "Hainesport, NJ",
+                "note": "Must try: Trenton tomato pie",
+                "spot": "Lillos Tomato Pies"
+            },
+            {
+                "name": "Brooklyn Pizza",
+                "location": "Haddon Heights, NJ",
+                "note": "Brooklyn-style pies",
+                "spot": "Brooklyn Original Pizzeria"
+            },
+            {
+                "name": "Marino's Pizza",
+                "location": "Mullica Hill, NJ",
+                "note": "South Jersey classic",
+                "spot": "Marino's of Mullica Hill"
+            },
+            {
+                "name": "Polizzi's Brick Oven",
+                "location": "Sewell, NJ",
+                "note": "Must try: Detroit-style pizza",
+                "spot": "Polizzi's Brick Oven"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Bricco",
+                "location": "Cherry Hill, NJ",
+                "note": "Coal-fired pies",
+                "spot": "Bricco Coal Fired Pizza"
+            },
+            {
+                "name": "Pizza Villa",
+                "location": "Swedesboro, NJ",
+                "note": "Neighborhood pizzeria"
+            },
+            {
+                "name": "Peppino's Pizza",
+                "location": "Marlton, NJ",
+                "note": "Local pizza favorite, in Marlton and Runnemede",
+                "spot": "Peppino's Pizza"
+            }
+        ]
+    },
+    {
+        "slug": "diners-south-jersey",
+        "title": "Top 5 Diners in South Jersey",
+        "intro": "PJ's five favorite diners in South Jersey, plus three honorable mentions.",
+        "instagramCode": "DfIt2n-GuHv",
+        "picks": [
+            {
+                "name": "Angelo's Glassboro Diner",
+                "location": "Glassboro, NJ",
+                "note": "Classic diner vibe",
+                "spot": "Angelo's Glassboro Diner"
+            },
+            {
+                "name": "Silver Coin Diner",
+                "location": "Hammonton, NJ",
+                "note": "Classic roadside vibe"
+            },
+            {
+                "name": "Jersey Diner",
+                "location": "Malaga, NJ",
+                "note": "Hometown classic",
+                "spot": "Jersey Diner"
+            },
+            {
+                "name": "Swedesboro Diner",
+                "location": "Swedesboro, NJ",
+                "note": "Family diner vibe",
+                "spot": "Swedesboro Diner"
+            },
+            {
+                "name": "Lamp Post Diner",
+                "location": "Clementon, NJ",
+                "note": "Neighborhood favorite",
+                "spot": "Lamp Post Diner"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Harrison House Diner",
+                "location": "Mullica Hill, NJ",
+                "note": "Homestyle comfort",
+                "spot": "Harrison House Diner"
+            },
+            {
+                "name": "Phily Diner & Sport Bar",
+                "location": "Runnemede, NJ",
+                "note": "Sports bar energy",
+                "spot": "Phily Diner & Sports Bar"
+            },
+            {
+                "name": "Olga's Diner",
+                "location": "Marlton, NJ",
+                "note": "Modern diner vibe"
+            }
+        ]
+    },
+    {
+        "slug": "sandwich-shops-south-jersey",
+        "title": "Top 5 Sandwich Shops in South Jersey",
+        "intro": "PJ's five favorite sandwich shops in South Jersey, plus three honorable mentions.",
+        "instagramCode": "Dfa6CmLl6G-",
+        "picks": [
+            {
+                "name": "Louie G's Roast Beef",
+                "location": "Sewell, NJ",
+                "note": "Must try: roast beef and roast pork",
+                "spot": "Louie G's"
+            },
+            {
+                "name": "The Bite: Fuel for Fans",
+                "location": "Vineland, NJ",
+                "note": "Must try: The Rage",
+                "spot": "The Bite"
+            },
+            {
+                "name": "Il Viaggio",
+                "location": "Pitman, NJ",
+                "note": "Must try: The Etna",
+                "spot": "Il Viaggio 1935"
+            },
+            {
+                "name": "Palmisano's Sandwich Shop",
+                "location": "Sewell, NJ",
+                "note": "Must try: chicken hot honey",
+                "spot": "Palmisano's"
+            },
+            {
+                "name": "Cafe Merlino",
+                "location": "Blackwood, NJ",
+                "note": "Must try: The Boss",
+                "spot": "Cafe Merlino"
+            }
+        ],
+        "honorableMentions": [
+            {
+                "name": "Marino's",
+                "location": "Mullica Hill, NJ",
+                "note": "Must try: flank steak panini",
+                "spot": "Marino's of Mullica Hill"
+            },
+            {
+                "name": "High Street Delicatessen",
+                "location": "Mullica Hill, NJ",
+                "note": "Must try: Green Beret",
+                "spot": "High Street Deli"
+            },
+            {
+                "name": "Croce's on Delsea",
+                "location": "Glassboro, NJ",
+                "note": "Must try: The Cugine",
+                "spot": "Croce's on Delsea"
+            }
+        ]
+    }
+]
