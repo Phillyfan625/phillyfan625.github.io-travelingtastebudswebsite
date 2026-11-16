@@ -68,7 +68,8 @@
             {
                 "name": "Skinny Joey's Cheesesteaks",
                 "location": "Philadelphia, PA",
-                "note": "Stadium area, South Philly"
+                "note": "Stadium area, South Philly",
+                "spot": "Skinny Joey's Cheesesteaks South Philly"
             },
             {
                 "name": "John's Roast Pork",
@@ -79,29 +80,34 @@
             {
                 "name": "Del Rossi's Cheesesteak & Pizza Co.",
                 "location": "Philadelphia, PA",
-                "note": "Northern Liberties"
+                "note": "Northern Liberties",
+                "spot": "Del Rossi's Cheesesteak & Pizza Co."
             },
             {
                 "name": "Café Carmela",
                 "location": "Philadelphia, PA",
-                "note": "Neighborhood favorite on Holme Ave, Northeast Philly"
+                "note": "Neighborhood favorite on Holme Ave, Northeast Philly",
+                "spot": "Café Carmela"
             }
         ],
         "honorableMentions": [
             {
                 "name": "Jim's South St.",
                 "location": "Philadelphia, PA",
-                "note": "South Street"
+                "note": "South Street",
+                "spot": "Jim's South St."
             },
             {
                 "name": "Steve's Prince of Steaks",
                 "location": "Philadelphia, PA",
-                "note": "Old school, Northeast Philly"
+                "note": "Old school, Northeast Philly",
+                "spot": "Steve's Prince of Steaks Northeast Philly"
             },
             {
                 "name": "Ishkabibble's",
                 "location": "Philadelphia, PA",
-                "note": "Must try: Gremlin juice"
+                "note": "Must try: Gremlin juice",
+                "spot": "Ishkabibble's"
             }
         ]
     },
@@ -176,7 +182,8 @@
             {
                 "name": "Douglass Creamery",
                 "location": "Wildwood, NJ",
-                "note": "Must try: chocolate peanut butter"
+                "note": "Must try: chocolate peanut butter",
+                "spot": "Douglass Candies"
             },
             {
                 "name": "Urie's",
@@ -201,7 +208,8 @@
             {
                 "name": "Alfe's",
                 "location": "Wildwood, NJ",
-                "note": "Must try: sunset menu"
+                "note": "Must try: sunset menu",
+                "spot": "Alfe's"
             },
             {
                 "name": "The Wharf",
@@ -232,27 +240,32 @@
             {
                 "name": "Keenan's",
                 "location": "North Wildwood, NJ",
-                "note": "Live music and nightlife"
+                "note": "Live music and nightlife",
+                "spot": "Keenan's Irish Pub"
             },
             {
                 "name": "The Inlet",
                 "location": "North Wildwood, NJ",
-                "note": "Ocean views and music"
+                "note": "Ocean views and music",
+                "spot": "The Inlet"
             },
             {
                 "name": "Seaport Pier",
                 "location": "North Wildwood, NJ",
-                "note": "Boardwalk drinks"
+                "note": "Boardwalk drinks",
+                "spot": "Seaport Pier"
             },
             {
                 "name": "Tacos & Tequila",
                 "location": "North Wildwood, NJ",
-                "note": "Fun outside area"
+                "note": "Fun outside area",
+                "spot": "Tacos & Tequila"
             },
             {
                 "name": "Exit 6",
                 "location": "North Wildwood, NJ",
-                "note": "Shore nightlife"
+                "note": "Shore nightlife",
+                "spot": "Exit 6"
             }
         ],
         "honorableMentions": [
@@ -271,7 +284,8 @@
             {
                 "name": "#1 Tavern",
                 "location": "North Wildwood, NJ",
-                "note": "Must try: Super Tully Nut"
+                "note": "Must try: Super Tully Nut",
+                "spot": "#1 Tavern"
             }
         ]
     },
@@ -348,29 +362,34 @@
             {
                 "name": "Douglass Creamery",
                 "location": "Wildwood, NJ",
-                "note": "Boardwalk scoops"
+                "note": "Boardwalk scoops",
+                "spot": "Douglass Candies"
             },
             {
                 "name": "Primo Water Ice",
                 "location": "Westmont, NJ",
-                "note": "Water ice and soft serve"
+                "note": "Water ice and soft serve",
+                "spot": "Primo Water Ice"
             },
             {
                 "name": "Hilltop Creamery",
                 "location": "Blackwood, NJ",
-                "note": "Classic creamery"
+                "note": "Classic creamery",
+                "spot": "Hilltop Creamery"
             },
             {
                 "name": "Latteria",
                 "location": "Swedesboro, NJ",
-                "note": "Small-batch flavors"
+                "note": "Small-batch flavors",
+                "spot": "Latteria"
             }
         ],
         "honorableMentions": [
             {
                 "name": "Dot's",
                 "location": "Woodbury Heights, NJ",
-                "note": "Must try: scoops and water ice"
+                "note": "Must try: scoops and water ice",
+                "spot": "Dot's Homemade Ice Cream & Water Ice"
             },
             {
                 "name": "Hershey Shake Shop",
@@ -395,7 +414,8 @@
             {
                 "name": "Tacconelli's",
                 "location": "Maple Shade, NJ",
-                "note": "South Jersey staple, in Maple Shade and Haddon Township"
+                "note": "South Jersey staple, in Maple Shade and Haddon Township",
+                "spot": "Tacconelli's Pizzeria"
             },
             {
                 "name": "Lillo's Tomato Pies",
@@ -432,7 +452,8 @@
             {
                 "name": "Pizza Villa",
                 "location": "Swedesboro, NJ",
-                "note": "Neighborhood pizzeria"
+                "note": "Neighborhood pizzeria",
+                "spot": "Pizza Villa Swedesboro"
             },
             {
                 "name": "Peppino's Pizza",
@@ -457,7 +478,8 @@
             {
                 "name": "Silver Coin Diner",
                 "location": "Hammonton, NJ",
-                "note": "Classic roadside vibe"
+                "note": "Classic roadside vibe",
+                "spot": "Silver Coin Diner"
             },
             {
                 "name": "Jersey Diner",
@@ -494,7 +516,8 @@
             {
                 "name": "Olga's Diner",
                 "location": "Marlton, NJ",
-                "note": "Modern diner vibe"
+                "note": "Modern diner vibe",
+                "spot": "Olga's Diner"
             }
         ]
     },
@@ -555,5 +578,74 @@
                 "spot": "Croce's on Delsea"
             }
         ]
+    },
+    {
+        "slug": "dive-bars-south-jersey",
+        "title": "Top 10 Dive Bars in South Jersey",
+        "intro": "PJ's ten favorite dive bars in South Jersey, ranked.",
+        "instagramCode": "Dfs3uONmlr1",
+        "picks": [
+            {
+                "name": "Golden Nugget Tavern",
+                "location": "Berlin, NJ",
+                "note": "Country bar energy",
+                "spot": "Golden Nugget Tavern"
+            },
+            {
+                "name": "Bryson's Pub",
+                "location": "Pennsauken, NJ",
+                "note": "Neighborhood hangout",
+                "spot": "Bryson's Pub"
+            },
+            {
+                "name": "Warwick Tavern",
+                "location": "Somerdale, NJ",
+                "note": "Old-school local",
+                "spot": "The Warwick Tavern"
+            },
+            {
+                "name": "Brewer's Towne Tavern",
+                "location": "Westmont, NJ",
+                "note": "Where friends meet",
+                "spot": "Brewer's Towne Tavern"
+            },
+            {
+                "name": "Jay's Elbow Room",
+                "location": "Maple Shade, NJ",
+                "note": "Late-night local",
+                "spot": "Jay's Elbow Room"
+            },
+            {
+                "name": "Dominic's Tavern",
+                "location": "Bellmawr, NJ",
+                "note": "Wings and game days",
+                "spot": "Dominic's Tavern"
+            },
+            {
+                "name": "Mt. Royal Inn",
+                "location": "Mount Royal, NJ",
+                "note": "Historic neighborhood bar",
+                "spot": "Mount Royal Inn"
+            },
+            {
+                "name": "Jug Handle Inn",
+                "location": "Cinnaminson, NJ",
+                "note": "Wings and cold beer",
+                "spot": "The Jug Handle Inn"
+            },
+            {
+                "name": "Old Rail Tavern",
+                "location": "Barrington, NJ",
+                "note": "Small-town tavern",
+                "spot": "Old Rail Tavern"
+            },
+            {
+                "name": "Highland Tavern",
+                "location": "Gloucester City, NJ",
+                "note": "Best-kept secret",
+                "spot": "Highland Tavern"
+            }
+        ],
+        "honorableMentions": []
     }
 ]

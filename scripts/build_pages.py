@@ -191,8 +191,8 @@ def main():
             if L.get('honorableMentions'):
                 body += '        <h2 class="section-title" style="font-size:1.5rem;text-align:center;margin:2rem 0 1rem;">Honorable mentions</h2>\n        <div class="town-grid" style="grid-template-columns: 1fr;">\n' + cards(L['honorableMentions'], False) + '        </div>\n'
             if L.get('instagramCode'):
-                body += '        <p style="text-align:center;margin-top:1.5rem;"><a href="https://www.instagram.com/p/%s/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> See the original Top 5 post on Instagram</a></p>\n' % e(L['instagramCode'])
-            body += '        <p style="text-align:center;margin-top:1rem;"><a href="/best-food/">More Top 5 lists and towns</a></p>\n'
+                body += '        <p style="text-align:center;margin-top:1.5rem;"><a href="https://www.instagram.com/p/%s/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> See the original post on Instagram</a></p>\n' % e(L['instagramCode'])
+            body += '        <p style="text-align:center;margin-top:1rem;"><a href="/best-food/">More lists and towns</a></p>\n'
             body += '    </section>\n'
             title = L['title'] + ' | Traveling Tastebuds'
             desc = "%s, ranked by PJ of Traveling Tastebuds: %s." % (L['title'], ', '.join(p['name'] for p in picks))
