@@ -212,7 +212,7 @@
         function areaOf(spot) {
             var loc = spot.location || '';
             var st = (loc.split(',').pop() || '').trim().slice(0, 2).toUpperCase();
-            if (st === 'PA') return /philadelphia/i.test(loc) ? 'philly' : 'pa';
+            if (st === 'PA') return /philadelphia/i.test(loc) ? 'philly' : (spot.lng < -76.2 ? 'trips' : 'pa');
             if (st === 'NJ') {
                 var tags = spot.tags || [];
                 if (tags.indexOf('shore') !== -1) return 'shore';
