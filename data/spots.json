@@ -14,11 +14,11 @@
         "snippet": "A South Jersey classic with great pub grub and vibes"
     },
     {
-        "name": "Lillos Tomato Pies",
+        "name": "Lillo's Tomato Pies",
         "tiktokId": "7231695429392682286",
-        "lat": 39.7937,
-        "lng": -75.2251,
-        "location": "Runnemede, NJ",
+        "lat": 39.9813,
+        "lng": -74.8477,
+        "location": "Hainesport, NJ",
         "discount": "20% Off",
         "logoImage": "/Images/lillosLogo.png",
         "foodImage": "",
@@ -70,11 +70,11 @@
         "snippet": "A cool Philly bar scene with great drinks and atmosphere"
     },
     {
-        "name": "Holy City",
+        "name": "Holy City Publick House",
         "tiktokId": "7330419649441516843",
-        "lat": 39.9497,
-        "lng": -75.1495,
-        "location": "Philadelphia, PA",
+        "lat": 39.8936,
+        "lng": -75.1268,
+        "location": "Gloucester City, NJ",
         "discount": "10% Off",
         "logoImage": "/Images/holyCityLogo.png",
         "foodImage": "",
@@ -98,11 +98,11 @@
         "snippet": "Upscale gastropub with killer craft beer selection"
     },
     {
-        "name": "Kid Rips",
+        "name": "Kid Rip's Tap & Tavern",
         "tiktokId": "7302216662042955050",
-        "lat": 39.8649,
-        "lng": -75.0571,
-        "location": "Haddon Heights, NJ",
+        "lat": 39.8462,
+        "lng": -75.0722,
+        "location": "Runnemede, NJ",
         "discount": "10% Off",
         "logoImage": "/Images/kidRipsLogo.png",
         "foodImage": "",
