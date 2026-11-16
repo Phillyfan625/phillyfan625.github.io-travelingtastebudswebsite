@@ -60,13 +60,19 @@
     <section class="services-hero">
         <div class="hero-content">
             <h1 class="section-title" style="font-size: 2.5rem;">All Reviews</h1>
-            <p class="section-subtitle">Every spot we've tried, rated, and reviewed. Watch the TikTok reviews and discover your next favorite meal.</p>
+            <p class="section-subtitle">Every spot we've tried, rated, and reviewed. Watch the reviews and discover your next favorite meal.</p>
             <hr class="section-divider">
         </div>
     </section>
 
     <!-- Filter Bar -->
     <section class="container" style="padding-top: 2rem;">
+        <div style="max-width:520px;margin:0 auto 1rem;position:relative;">
+            <i class="fas fa-search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);"></i>
+            <input type="search" id="reviewSearch" placeholder="Search a spot, town or food..." aria-label="Search reviews" autocomplete="off"
+                style="width:100%;padding:0.8rem 1rem 0.8rem 2.6rem;border-radius:50px;border:1px solid var(--glass-border);font-size:1rem;font-family:inherit;">
+        </div>
+        <p id="reviewCount" style="text-align:center;color:var(--text-muted);font-size:0.9rem;margin:0 0 1rem;"></p>
         <div class="reviews-filter-bar" id="filterBar">
             <button class="filter-btn active" data-filter="all">All</button>
         </div>
@@ -129,7 +135,7 @@
 
         (async function loadReviews() {
             try {
-                allSpots = (await TTBData.getSpots()).filter(function (s) { return s.tiktokId; });
+                allSpots = (await TTBData.getSpots()).filter(function (s) { return s.tiktokId || igCodeOf(s); });
             } catch (err) {
                 console.error('Failed to load reviews:', err);
                 grid.innerHTML = '<div style="text-align:center;padding:4rem 2rem;color:var(--text-muted);grid-column:1/-1;"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--accent);display:block;margin-bottom:1rem;"></i><h3>Could not load reviews</h3><p>Please refresh the page to try again.</p></div>';
@@ -142,9 +148,10 @@
             }
 
             // Build filter buttons
-            var tagSet = new Set();
-            allSpots.forEach(function (s) { (s.tags || []).forEach(function (t) { tagSet.add(t); }); });
-            Array.from(tagSet).sort().forEach(function (tag) {
+            // Only tags used by several spots get a button, so the bar stays short.
+            var tagCounts = {};
+            allSpots.forEach(function (s) { (s.tags || []).forEach(function (t) { tagCounts[t] = (tagCounts[t] || 0) + 1; }); });
+            Object.keys(tagCounts).filter(function (t) { return tagCounts[t] >= 8; }).sort().forEach(function (tag) {
                 var btn = document.createElement('button');
                 btn.className = 'filter-btn';
                 btn.setAttribute('data-filter', tag);
@@ -158,17 +165,39 @@
         var esc = TTBData.escapeHtml;
         var safeTikTok = TTBData.sanitizeTikTokId;
         var filteredSpots = [];
+        var PAGE = 24, shown = 0, currentFilter = 'all', searchText = '';
+
+        function igCodeOf(s) { return /^[A-Za-z0-9_-]{5,40}$/.test(s.instagramCode || '') ? s.instagramCode : ''; }
+        function slugOf(name) {
+            return String(name || '').toLowerCase().replace(/&/g, ' and ').replace(/['\u2019]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        }
 
         function renderReviews(filter) {
+            currentFilter = filter;
             grid.innerHTML = '';
-            filteredSpots = filter === 'all' ? allSpots.slice() : allSpots.filter(function (s) { return (s.tags || []).includes(filter); });
+            shown = 0;
+            filteredSpots = allSpots.filter(function (s) {
+                if (filter !== 'all' && !(s.tags || []).includes(filter)) return false;
+                if (!searchText) return true;
+                return [s.name, s.location, s.snippet, (s.tags || []).join(' ')].join(' ').toLowerCase().indexOf(searchText) !== -1;
+            });
+            document.getElementById('reviewCount').textContent = filteredSpots.length + (filteredSpots.length === 1 ? ' review' : ' reviews');
+            var oldMore = document.getElementById('reviewsMore');
+            if (oldMore) oldMore.remove();
 
             if (!filteredSpots.length) {
                 grid.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);grid-column:1/-1;">No spots match this filter.</div>';
                 return;
             }
 
-            filteredSpots.forEach(function (spot, index) {
+            renderMore();
+        }
+
+        function renderMore() {
+            var oldMore = document.getElementById('reviewsMore');
+            if (oldMore) oldMore.remove();
+            filteredSpots.slice(shown, shown + PAGE).forEach(function (spot, i) {
+                var index = shown + i;
                 var card = document.createElement('div');
                 card.className = 'review-card';
                 var rating = parseFloat(spot.rating) || 0;
@@ -192,6 +221,7 @@
                     (spot.discount ? '<span class="rating-badge" style="background:rgba(30,64,175,0.1);color:var(--header-color);"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</span>' : '') +
                     '</div>' +
                     '<div class="review-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
+                    '<a href="/food-map?spot=' + slugOf(spot.name) + '" style="display:inline-block;margin-top:0.75rem;font-size:0.85rem;font-weight:600;color:var(--header-color);text-decoration:none;"><i class="fas fa-map-location-dot"></i> See it on the map</a>' +
                     '</div>';
 
                 (function(idx) {
@@ -202,7 +232,21 @@
 
                 grid.appendChild(card);
             });
+            shown = Math.min(shown + PAGE, filteredSpots.length);
+            if (shown < filteredSpots.length) {
+                var more = document.createElement('div');
+                more.id = 'reviewsMore';
+                more.style.cssText = 'grid-column:1/-1;text-align:center;padding:1rem 0;';
+                more.innerHTML = '<button class="filter-btn" type="button">Show more (' + (filteredSpots.length - shown) + ' left)</button>';
+                more.querySelector('button').addEventListener('click', renderMore);
+                grid.appendChild(more);
+            }
         }
+
+        document.getElementById('reviewSearch').addEventListener('input', function () {
+            searchText = this.value.trim().toLowerCase();
+            renderReviews(currentFilter);
+        });
 
         // ========================================
         // TIKTOK OVERLAY
@@ -222,7 +266,7 @@
             overlay.setAttribute('data-index', spotIndex);
 
             loader.classList.remove('hidden');
-            iframe.src = 'https://www.tiktok.com/embed/' + safeTikTok(spot.tiktokId);
+            iframe.src = spot.tiktokId ? 'https://www.tiktok.com/embed/' + safeTikTok(spot.tiktokId) : 'https://www.instagram.com/p/' + igCodeOf(spot) + '/embed';
             iframe.addEventListener('load', function () {
                 loader.classList.add('hidden');
             }, { once: true });

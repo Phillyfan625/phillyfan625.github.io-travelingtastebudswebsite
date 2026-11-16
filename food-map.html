@@ -255,6 +255,37 @@
         document.getElementById('mapList').innerHTML =
             '<div style="padding:1.5rem;text-align:center;color:var(--text-muted);"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;margin-bottom:0.5rem;display:block;"></i>Loading spots...</div>';
 
+        function slugOf(name) {
+            return String(name || '').toLowerCase().replace(/&/g, ' and ').replace(/['\u2019]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+
+        // Read before the filters rewrite the address bar.
+        var pendingSpot = null;
+        try { pendingSpot = new URLSearchParams(window.location.search).get('spot'); } catch (e) { /* ignore */ }
+
+        // ?spot=some-place opens that place's pin, so a single spot can be linked to.
+        function openSpotFromUrl() {
+            try {
+                var want = pendingSpot;
+                if (!want) return;
+                for (var i = 0; i < allSpots.length; i++) {
+                    if (allSpots[i]._ok && slugOf(allSpots[i].name) === want) { selectSpot(i); return; }
+                }
+            } catch (e) { /* ignore */ }
+        }
+
+        function shareSpot(link) {
+            var url = window.location.origin + window.location.pathname + '?spot=' + link.dataset.share;
+            var done = function () { link.innerHTML = '<i class="fas fa-check"></i> Link copied'; };
+            if (navigator.share) {
+                navigator.share({ title: link.dataset.name + ' | Traveling Tastebuds', url: url }).catch(function () {});
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done, function () { window.prompt('Copy this link', url); });
+            } else {
+                window.prompt('Copy this link', url);
+            }
+        }
+
         function readUrlFilters() {
             try {
                 var p = new URLSearchParams(window.location.search);
@@ -442,13 +473,17 @@
                     '<p style="font-size:0.8rem;color:#888;margin:0.3rem 0;">' + esc(spot.snippet || '') + '</p>' +
                     (videoId ? '<button class="popup-btn" data-kind="tiktok" data-video="' + videoId + '" data-name="' + esc(spot.name) + '"><i class="fab fa-tiktok"></i> Watch Review</button>' : '') +
                     (igCode ? '<button class="popup-btn popup-btn-ig" data-kind="instagram" data-video="' + igCode + '" data-name="' + esc(spot.name) + '"><i class="fab fa-instagram"></i> Watch Instagram Reel</button>' : '') +
-                    '<a class="popup-directions" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(spot.name + ', ' + spot.location) + '"><i class="fas fa-diamond-turn-right"></i> Directions</a></div>',
+                    '<a class="popup-directions" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(spot.name + ', ' + spot.location) + '"><i class="fas fa-diamond-turn-right"></i> Directions</a>' +
+                    '<a class="popup-directions popup-share" href="#" data-share="' + slugOf(spot.name) + '" data-name="' + esc(spot.name) + '"><i class="fas fa-share-nodes"></i> Share this spot</a></div>',
                     { maxWidth: 280, className: 'ttb-popup' }
                 );
 
                 marker.on('popupopen', function () {
                     document.querySelectorAll('.ttb-map-popup .popup-btn').forEach(function (btn) {
                         btn.addEventListener('click', function () { openVideoModal(this.dataset.kind, this.dataset.video, this.dataset.name); });
+                    });
+                    document.querySelectorAll('.ttb-map-popup .popup-share').forEach(function (a) {
+                        a.addEventListener('click', function (e) { e.preventDefault(); shareSpot(this); });
                     });
                 });
 
@@ -472,6 +507,7 @@
             readUrlFilters();
             buildChips();
             applyFilters(filters.area !== 'all' || filters.food !== 'all' || filters.deals);
+            openSpotFromUrl();
         })();
 
         function highlightSpot(index) {
