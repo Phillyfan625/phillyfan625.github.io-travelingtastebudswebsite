@@ -14,6 +14,55 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <style>
+        .map-count { font-size: 0.8rem; color: var(--text-muted); }
+        .map-filter-toggle { display: none; }
+        .map-filters { margin-top: 0.75rem; }
+        .map-chip-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin: 0.6rem 0 0.35rem; }
+        .map-chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .map-chip { display: inline-flex; align-items: center; gap: 0.35rem; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-white); font-family: 'Poppins', sans-serif; font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.75rem; border-radius: 50px; cursor: pointer; white-space: nowrap; transition: var(--transition); }
+        .map-chip:hover { border-color: var(--header-color); }
+        .map-chip.active { background: var(--header-color); border-color: var(--header-color); color: #fff; }
+        .map-chip-count { font-size: 0.7rem; opacity: 0.65; }
+        .map-chip.loading { opacity: 0.6; pointer-events: none; }
+        .map-chip.deals.active, .map-chip.near.active { background: var(--accent); border-color: var(--accent); color: #1e293b; }
+        .map-chip.clear { border-style: dashed; color: var(--text-muted); }
+        .map-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+        .map-near-note { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem; min-height: 1em; }
+        .food-map-item-dist { color: var(--header-color); font-weight: 600; margin-left: 0.25rem; }
+        .popup-directions { display: inline-block; margin: 0.5rem 0 0 0.75rem; font-size: 0.8rem; font-weight: 600; color: var(--header-color); text-decoration: none; }
+        @media (min-width: 992px) { .food-map-sidebar-header { position: static; } }
+        .popup-directions:hover { text-decoration: underline; }
+        .marker-cluster-small, .marker-cluster-medium, .marker-cluster-large { background-color: rgba(30, 64, 175, 0.25); }
+        .marker-cluster-small div, .marker-cluster-medium div, .marker-cluster-large div { background-color: #1e40af; color: #fff; font-family: 'Poppins', sans-serif; font-weight: 600; }
+        .map-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.6rem; }
+        .map-count { margin: 0; }
+        .map-filters-done { display: none; }
+        @media (max-width: 991px) {
+            /* Phone layout: search and filters on top, map in the middle, spots as a swipeable row of cards at the bottom */
+            .food-map-sidebar { display: contents; }
+            .food-map-sidebar-header { order: 1; position: relative; top: auto; padding: 0.6rem 0.75rem; z-index: 600; flex-shrink: 0; }
+            .food-map-sidebar-header h5 { display: none; }
+            .food-map-search { padding-top: 0.6rem; padding-bottom: 0.6rem; font-size: 16px; }
+            .map-toolbar { margin-top: 0.5rem; }
+            .map-filter-toggle { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-white); font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 50px; min-height: 40px; }
+            .map-filter-badge { background: var(--header-color); color: #fff; border-radius: 50px; font-size: 0.7rem; padding: 0 0.45rem; }
+            .map-filters { display: none; position: absolute; left: 0; right: 0; top: 100%; margin-top: 0; background: var(--bg-dark); padding: 0.25rem 0.75rem 0.9rem; border-bottom: 1px solid var(--glass-border); box-shadow: 0 16px 24px rgba(0, 0, 0, 0.18); max-height: 62vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+            .map-filters.open { display: block; }
+            .map-chip { font-size: 0.85rem; padding: 0.5rem 0.9rem; min-height: 40px; }
+            .map-filters-done { display: inline-flex; background: var(--header-color); border-color: var(--header-color); color: #fff; margin-left: auto; }
+            #foodMap { order: 2; flex: 1; min-height: 0; }
+            .food-map-list { order: 3; display: flex; flex-direction: row; gap: 0.5rem; overflow-x: auto; overflow-y: hidden; padding: 0.5rem 0.75rem; background: var(--bg-dark); border-top: 1px solid var(--glass-border); flex-shrink: 0; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+            .food-map-item { flex: 0 0 auto; width: 250px; gap: 0.65rem; padding: 0.6rem 0.75rem; background: var(--card-bg); border: 1px solid var(--card-border); scroll-snap-align: start; }
+            .food-map-item-img { width: 44px; height: 44px; }
+            .food-map-item-info { min-width: 0; }
+            .food-map-item-info h4, .food-map-item-info p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            #mapEmpty { width: 100%; }
+            #tiktokIframe { height: min(600px, 70vh); }
+        }
+    </style>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -67,7 +116,26 @@
                 </h5>
                 <div style="position: relative;">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="food-map-search" id="mapSearch" placeholder="Search spots...">
+                    <input type="text" class="food-map-search" id="mapSearch" placeholder="Search a spot, town or food...">
+                </div>
+                <div class="map-toolbar">
+                    <button type="button" class="map-filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="mapFilters">
+                        <i class="fas fa-sliders"></i> Filters <span class="map-filter-badge" id="filterBadge" style="display:none;"></span>
+                    </button>
+                    <div class="map-count" id="mapCount" aria-live="polite"></div>
+                </div>
+                <div class="map-filters" id="mapFilters">
+                    <div class="map-chip-label">Area</div>
+                    <div class="map-chip-row" id="areaChips"></div>
+                    <div class="map-chip-label">Food</div>
+                    <div class="map-chip-row" id="foodChips"></div>
+                    <div class="map-actions">
+                        <button type="button" class="map-chip near" id="nearMe"><i class="fas fa-location-crosshairs"></i> Near me</button>
+                        <button type="button" class="map-chip deals" id="dealsToggle"><i class="fas fa-tag"></i> TTB deals</button>
+                        <button type="button" class="map-chip clear" id="clearFilters" style="display:none;"><i class="fas fa-xmark"></i> Clear</button>
+                        <button type="button" class="map-chip map-filters-done" id="filtersDone">Done</button>
+                    </div>
+                    <div class="map-near-note" id="nearMeNote" aria-live="polite"></div>
                 </div>
             </div>
             <div class="food-map-list" id="mapList">
@@ -98,14 +166,78 @@
     <script src="/js/ttb-config.js"></script>
     <script src="/js/ttb-data.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script>
         var allSpots = [];
         var markers = {};
+        var items = {};
         var activeSpot = null;
         var map;
+        var clusterLayer = null;
+        var userLatLng = null;
+        var userMarker = null;
+        var filters = { area: 'all', food: 'all', deals: false, q: '' };
+
+        var AREAS = [
+            { key: 'all', label: 'All' },
+            { key: 'south', label: 'South Jersey' },
+            { key: 'shore', label: 'Jersey Shore' },
+            { key: 'philly', label: 'Philly' },
+            { key: 'pa', label: 'PA Suburbs' },
+            { key: 'north', label: 'North & Central NJ' },
+            { key: 'trips', label: 'Road Trips' }
+        ];
+        var FOODS = [
+            { key: 'all', label: 'All food', tags: [] },
+            { key: 'pizza', label: 'Pizza', tags: ['pizza', 'tomato pie'] },
+            { key: 'cheesesteaks', label: 'Cheesesteaks', tags: ['cheesesteaks'] },
+            { key: 'burgers', label: 'Burgers', tags: ['burgers'] },
+            { key: 'sandwiches', label: 'Sandwiches', tags: ['sandwiches', 'deli', 'roast beef', 'hot dogs', 'gyros'] },
+            { key: 'breakfast', label: 'Breakfast', tags: ['breakfast', 'brunch', 'diner', 'bagels', 'waffles'] },
+            { key: 'coffee', label: 'Coffee', tags: ['coffee', 'cafe', 'tea'] },
+            { key: 'sweets', label: 'Sweets', tags: ['ice cream', 'dessert', 'cookies', 'donuts', 'fudge', 'bakery', 'shakes', 'acai bowls'] },
+            { key: 'bars', label: 'Bars & Wings', tags: ['bar', 'pub', 'wings', 'tavern', 'cocktails', 'drinks', 'distillery', 'gastropub', 'craft beer'] },
+            { key: 'italian', label: 'Italian', tags: ['italian'] },
+            { key: 'mexican', label: 'Mexican', tags: ['mexican', 'latin', 'tacos'] },
+            { key: 'seafood', label: 'Seafood', tags: ['seafood'] },
+            { key: 'asian', label: 'Asian', tags: ['sushi', 'hibachi', 'ramen', 'japanese', 'chinese', 'hot pot', 'indian', 'dumplings'] }
+        ];
+
+        // Which part of the region a spot is in, worked out from its state and coordinates.
+        function areaOf(spot) {
+            var loc = spot.location || '';
+            var st = (loc.split(',').pop() || '').trim().slice(0, 2).toUpperCase();
+            if (st === 'PA') return /philadelphia/i.test(loc) ? 'philly' : 'pa';
+            if (st === 'NJ') {
+                var tags = spot.tags || [];
+                if (tags.indexOf('shore') !== -1) return 'shore';
+                if ((spot.lat < 39.2 && spot.lng > -74.97) || (spot.lng > -74.7 && spot.lat < 40.2)) return 'shore';
+                if (spot.lat >= 40.12) return 'north';
+                return 'south';
+            }
+            return 'trips';
+        }
+
+        function foodsOf(spot) {
+            var tags = (spot.tags || []).map(function (t) { return String(t).toLowerCase(); });
+            var out = [];
+            FOODS.forEach(function (f) {
+                if (f.key === 'all') return;
+                if (f.tags.some(function (t) { return tags.indexOf(t) !== -1; })) out.push(f.key);
+            });
+            return out;
+        }
+
+        function milesBetween(a, b) {
+            var R = 3958.8, toRad = Math.PI / 180;
+            var dLat = (b[0] - a[0]) * toRad, dLng = (b[1] - a[1]) * toRad;
+            var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(a[0] * toRad) * Math.cos(b[0] * toRad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            return 2 * R * Math.asin(Math.sqrt(h));
+        }
 
         function createMarkerIcon(isActive) {
             var size = isActive ? 22 : 16;
@@ -121,12 +253,153 @@
         document.getElementById('mapList').innerHTML =
             '<div style="padding:1.5rem;text-align:center;color:var(--text-muted);"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;margin-bottom:0.5rem;display:block;"></i>Loading spots...</div>';
 
+        function readUrlFilters() {
+            try {
+                var p = new URLSearchParams(window.location.search);
+                var a = p.get('area'), f = p.get('food');
+                if (a && AREAS.some(function (x) { return x.key === a; })) filters.area = a;
+                if (f && FOODS.some(function (x) { return x.key === f; })) filters.food = f;
+                if (p.get('deals') === '1') filters.deals = true;
+            } catch (e) { /* older browsers: ignore */ }
+        }
+
+        function writeUrlFilters() {
+            try {
+                var p = new URLSearchParams();
+                if (filters.area !== 'all') p.set('area', filters.area);
+                if (filters.food !== 'all') p.set('food', filters.food);
+                if (filters.deals) p.set('deals', '1');
+                var qs = p.toString();
+                window.history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : ''));
+            } catch (e) { /* ignore */ }
+        }
+
+        function buildChips() {
+            var areaCounts = {}, foodCounts = {};
+            allSpots.forEach(function (s) {
+                if (!s._ok) return;
+                areaCounts[s._area] = (areaCounts[s._area] || 0) + 1;
+                s._foods.forEach(function (f) { foodCounts[f] = (foodCounts[f] || 0) + 1; });
+            });
+            var areaRow = document.getElementById('areaChips');
+            var foodRow = document.getElementById('foodChips');
+            areaRow.innerHTML = ''; foodRow.innerHTML = '';
+            AREAS.forEach(function (a) {
+                if (a.key !== 'all' && !areaCounts[a.key]) return;
+                var b = document.createElement('button');
+                b.type = 'button'; b.className = 'map-chip'; b.setAttribute('data-area', a.key);
+                b.innerHTML = TTBData.escapeHtml(a.label) + (a.key !== 'all' ? ' <span class="map-chip-count">' + areaCounts[a.key] + '</span>' : '');
+                b.addEventListener('click', function () { filters.area = a.key; applyFilters(true); });
+                areaRow.appendChild(b);
+            });
+            FOODS.forEach(function (f) {
+                if (f.key !== 'all' && !foodCounts[f.key]) return;
+                var b = document.createElement('button');
+                b.type = 'button'; b.className = 'map-chip'; b.setAttribute('data-food', f.key);
+                b.textContent = f.label;
+                b.addEventListener('click', function () { filters.food = f.key; applyFilters(true); });
+                foodRow.appendChild(b);
+            });
+        }
+
+        function spotMatches(s) {
+            if (!s._ok) return false;
+            if (filters.area !== 'all' && s._area !== filters.area) return false;
+            if (filters.food !== 'all' && s._foods.indexOf(filters.food) === -1) return false;
+            if (filters.deals && !s.discount) return false;
+            if (filters.q) {
+                var q = filters.q;
+                var hit = s.name.toLowerCase().indexOf(q) !== -1 || (s.location || '').toLowerCase().indexOf(q) !== -1 ||
+                    (s.tags || []).some(function (t) { return String(t).toLowerCase().indexOf(q) !== -1; });
+                if (!hit) return false;
+            }
+            return true;
+        }
+
+        function applyFilters(refit) {
+            var mapList = document.getElementById('mapList');
+            var visible = [];
+            allSpots.forEach(function (s, i) { if (spotMatches(s)) visible.push(i); });
+
+            if (userLatLng) {
+                visible.sort(function (a, b) { return allSpots[a]._dist - allSpots[b]._dist; });
+            }
+
+            // Map pins
+            if (activeSpot !== null && visible.indexOf(activeSpot) === -1) {
+                markers[activeSpot].setIcon(createMarkerIcon(false));
+                map.closePopup();
+                activeSpot = null;
+            }
+            clusterLayer.clearLayers();
+            var layerList = visible.map(function (i) { return markers[i]; });
+            if (clusterLayer.addLayers) clusterLayer.addLayers(layerList);
+            else layerList.forEach(function (m) { clusterLayer.addLayer(m); });
+
+            // List
+            Object.keys(items).forEach(function (k) { items[k].style.display = 'none'; });
+            var empty = document.getElementById('mapEmpty');
+            if (empty) empty.remove();
+            visible.forEach(function (i) {
+                var el = items[i];
+                el.style.display = 'flex';
+                var d = el.querySelector('.food-map-item-dist');
+                if (d) d.textContent = userLatLng ? (allSpots[i]._dist < 10 ? allSpots[i]._dist.toFixed(1) : Math.round(allSpots[i]._dist)) + ' mi away' : '';
+                mapList.appendChild(el);
+            });
+            if (!visible.length) {
+                var e = document.createElement('div');
+                e.id = 'mapEmpty';
+                e.style.cssText = 'padding:2rem 1.5rem;text-align:center;color:var(--text-muted);';
+                e.innerHTML = 'No spots match these filters yet.<br><button type="button" class="map-chip" style="margin-top:0.75rem;" id="mapEmptyClear">Clear filters</button>';
+                mapList.appendChild(e);
+                document.getElementById('mapEmptyClear').addEventListener('click', clearFilters);
+            }
+
+            // Count and chip states
+            var total = allSpots.filter(function (s) { return s._ok; }).length;
+            document.getElementById('mapCount').textContent =
+                visible.length === total ? total + ' spots and counting' : 'Showing ' + visible.length + ' of ' + total + ' spots';
+            document.querySelectorAll('#areaChips .map-chip').forEach(function (b) {
+                b.classList.toggle('active', b.getAttribute('data-area') === filters.area);
+            });
+            document.querySelectorAll('#foodChips .map-chip').forEach(function (b) {
+                b.classList.toggle('active', b.getAttribute('data-food') === filters.food);
+            });
+            document.getElementById('dealsToggle').classList.toggle('active', filters.deals);
+            var activeCount = (filters.area !== 'all' ? 1 : 0) + (filters.food !== 'all' ? 1 : 0) + (filters.deals ? 1 : 0);
+            document.getElementById('clearFilters').style.display = (activeCount || filters.q) ? 'inline-flex' : 'none';
+            var badge = document.getElementById('filterBadge');
+            badge.textContent = activeCount ? activeCount : '';
+            badge.style.display = activeCount ? 'inline-block' : 'none';
+
+            writeUrlFilters();
+
+            if (refit && visible.length) {
+                var pts = visible.map(function (i) { return [allSpots[i].lat, allSpots[i].lng]; });
+                if (pts.length === 1) map.flyTo(pts[0], 14, { duration: 0.6 });
+                else map.flyToBounds(L.latLngBounds(pts), { padding: [40, 40], maxZoom: 14, duration: 0.6 });
+            }
+        }
+
+        function clearFilters() {
+            filters.area = 'all'; filters.food = 'all'; filters.deals = false; filters.q = '';
+            document.getElementById('mapSearch').value = '';
+            applyFilters(true);
+        }
+
         (async function loadMap() {
             map = L.map('foodMap', { zoomControl: true }).setView([39.83, -75.08], 11);
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                 maxZoom: 19
             }).addTo(map);
+
+            // Nearby pins merge into a numbered bubble until you zoom in. Falls back to plain pins if the plugin did not load.
+            clusterLayer = (typeof L.markerClusterGroup === 'function')
+                ? L.markerClusterGroup({ maxClusterRadius: 45, showCoverageOnHover: false, spiderfyOnMaxZoom: true, disableClusteringAtZoom: 15 })
+                : L.layerGroup();
+            clusterLayer.addTo(map);
 
             try {
                 allSpots = await TTBData.getSpots();
@@ -149,9 +422,12 @@
             var safeTikTok = TTBData.sanitizeTikTokId;
 
             allSpots.forEach(function (spot, index) {
-                if (!spot.lat || !spot.lng) return;
+                spot._ok = !!(spot.lat && spot.lng);
+                if (!spot._ok) return;
+                spot._area = areaOf(spot);
+                spot._foods = foodsOf(spot);
 
-                var marker = L.marker([spot.lat, spot.lng], { icon: createMarkerIcon(false) }).addTo(map);
+                var marker = L.marker([spot.lat, spot.lng], { icon: createMarkerIcon(false) });
                 var videoId = safeTikTok(spot.tiktokId);
 
                 marker.bindPopup(
@@ -161,7 +437,8 @@
                     '<div class="popup-tags">' + (spot.tags || []).map(function (t) { return '<span class="popup-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
                     (spot.discount ? '<div class="popup-discount"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</div>' : '') +
                     '<p style="font-size:0.8rem;color:#888;margin:0.3rem 0;">' + esc(spot.snippet || '') + '</p>' +
-                    '<button class="popup-btn" data-video="' + videoId + '" data-name="' + esc(spot.name) + '"><i class="fab fa-tiktok"></i> Watch Review</button></div>',
+                    '<button class="popup-btn" data-video="' + videoId + '" data-name="' + esc(spot.name) + '"><i class="fab fa-tiktok"></i> Watch Review</button>' +
+                    '<a class="popup-directions" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(spot.name + ', ' + spot.location) + '"><i class="fas fa-diamond-turn-right"></i> Directions</a></div>',
                     { maxWidth: 280, className: 'ttb-popup' }
                 );
 
@@ -171,46 +448,104 @@
                 });
 
                 markers[index] = marker;
-                marker.on('click', function () { selectSpot(index); });
+                marker.on('click', function () { highlightSpot(index); });
 
                 var item = document.createElement('div');
                 item.className = 'food-map-item';
                 item.setAttribute('data-index', index);
                 item.innerHTML =
-                    '<img src="' + esc(spot.logoImage || '') + '" alt="' + esc(spot.name) + '" class="food-map-item-img"' + (spot.logoBgColor ? ' style="background:' + esc(spot.logoBgColor) + ';"' : '') + '>' +
+                    '<img src="' + esc(spot.logoImage || '/Images/ttbLogo.png') + '" alt="' + esc(spot.name) + '" class="food-map-item-img" loading="lazy"' + (spot.logoBgColor ? ' style="background:' + esc(spot.logoBgColor) + ';"' : '') + '>' +
                     '<div class="food-map-item-info"><h4>' + esc(spot.name) + '</h4>' +
-                    '<p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> ' + esc(spot.location) + '</p>' +
+                    '<p><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> ' + esc(spot.location) + ' <span class="food-map-item-dist"></span></p>' +
                     (spot.discount ? '<div class="food-map-item-discount"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</div>' : '') +
                     '</div>';
                 item.addEventListener('click', function () { selectSpot(index); });
+                items[index] = item;
                 mapList.appendChild(item);
             });
+
+            readUrlFilters();
+            buildChips();
+            applyFilters(filters.area !== 'all' || filters.food !== 'all' || filters.deals);
         })();
 
-        function selectSpot(index) {
-            if (activeSpot !== null) {
+        function highlightSpot(index) {
+            if (activeSpot !== null && markers[activeSpot]) {
                 markers[activeSpot].setIcon(createMarkerIcon(false));
-                var prev = document.querySelector('.food-map-item[data-index="' + activeSpot + '"]');
-                if (prev) prev.classList.remove('active');
+                if (items[activeSpot]) items[activeSpot].classList.remove('active');
             }
             activeSpot = index;
-            var spot = allSpots[index];
             markers[index].setIcon(createMarkerIcon(true));
-            var item = document.querySelector('.food-map-item[data-index="' + index + '"]');
-            if (item) { item.classList.add('active'); item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-            map.flyTo([spot.lat, spot.lng], 14, { duration: 0.8 });
-            markers[index].openPopup();
+            var item = items[index];
+            if (item) { item.classList.add('active'); item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
+        }
+
+        function selectSpot(index) {
+            highlightSpot(index);
+            var spot = allSpots[index];
+            var marker = markers[index];
+            if (clusterLayer && typeof clusterLayer.zoomToShowLayer === 'function') {
+                clusterLayer.zoomToShowLayer(marker, function () { marker.openPopup(); });
+            } else {
+                map.flyTo([spot.lat, spot.lng], 14, { duration: 0.8 });
+                marker.openPopup();
+            }
         }
 
         document.getElementById('mapSearch').addEventListener('input', function () {
-            var q = this.value.toLowerCase();
-            document.querySelectorAll('.food-map-item').forEach(function (item, i) {
-                var spot = allSpots[i];
-                if (!spot) { item.style.display = 'none'; return; }
-                var matches = spot.name.toLowerCase().includes(q) || spot.location.toLowerCase().includes(q) ||
-                    (spot.tags || []).some(function (t) { return t.toLowerCase().includes(q); });
-                item.style.display = matches ? 'flex' : 'none';
-            });
+            filters.q = this.value.trim().toLowerCase();
+            applyFilters(false);
+        });
+
+        document.getElementById('dealsToggle').addEventListener('click', function () {
+            filters.deals = !filters.deals;
+            applyFilters(true);
+        });
+
+        document.getElementById('clearFilters').addEventListener('click', clearFilters);
+
+        document.getElementById('filterToggle').addEventListener('click', function () {
+            var open = document.getElementById('mapFilters').classList.toggle('open');
+            this.setAttribute('aria-expanded', open ? 'true' : 'false');
+            setTimeout(function () { if (map) map.invalidateSize(); }, 250);
+        });
+
+        document.getElementById('filtersDone').addEventListener('click', function () {
+            document.getElementById('mapFilters').classList.remove('open');
+            document.getElementById('filterToggle').setAttribute('aria-expanded', 'false');
+            setTimeout(function () { if (map) map.invalidateSize(); }, 250);
+        });
+
+        document.getElementById('nearMe').addEventListener('click', function () {
+            var btn = this;
+            var note = document.getElementById('nearMeNote');
+            if (!navigator.geolocation) { note.textContent = 'Your browser can\'t share a location.'; return; }
+            btn.classList.add('loading');
+            note.textContent = 'Finding you...';
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                btn.classList.remove('loading');
+                btn.classList.add('active');
+                userLatLng = [pos.coords.latitude, pos.coords.longitude];
+                allSpots.forEach(function (s) { if (s._ok) s._dist = milesBetween(userLatLng, [s.lat, s.lng]); });
+                if (userMarker) map.removeLayer(userMarker);
+                userMarker = L.circleMarker(userLatLng, { radius: 8, color: '#ffffff', weight: 3, fillColor: '#f7a94b', fillOpacity: 1 })
+                    .addTo(map).bindTooltip('You are here');
+                note.textContent = 'Closest spots first.';
+                applyFilters(false);
+                document.getElementById('mapList').scrollTop = 0;
+                document.getElementById('mapList').scrollLeft = 0;
+                document.getElementById('mapSidebar').scrollTop = 0;
+                var first = null;
+                allSpots.forEach(function (s, i) { if (spotMatches(s) && (first === null || s._dist < allSpots[first]._dist)) first = i; });
+                if (first !== null) {
+                    map.flyToBounds(L.latLngBounds([userLatLng, [allSpots[first].lat, allSpots[first].lng]]), { padding: [60, 60], maxZoom: 13, duration: 0.6 });
+                } else {
+                    map.flyTo(userLatLng, 12, { duration: 0.6 });
+                }
+            }, function () {
+                btn.classList.remove('loading');
+                note.textContent = 'Couldn\'t get your location. Check that location is allowed for this site.';
+            }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
         });
 
         function openTikTokModal(videoId, name) {
