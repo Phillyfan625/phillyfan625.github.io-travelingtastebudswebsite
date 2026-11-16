@@ -188,7 +188,7 @@
                     '<div class="review-card-body"><h3>' + esc(spot.name) + '</h3>' +
                     '<div class="review-location"><i class="fas fa-map-marker-alt"></i> ' + esc(spot.location) + '</div>' +
                     '<p class="review-snippet">' + esc(spot.snippet || '') + '</p>' +
-                    '<div class="review-rating"><span class="rating-badge"><i class="fas fa-star"></i> ' + rating + '/10</span>' +
+                    '<div class="review-rating">' + (rating > 0 ? '<span class="rating-badge"><i class="fas fa-star"></i> ' + rating + '/10</span>' : '') +
                     (spot.discount ? '<span class="rating-badge" style="background:rgba(30,64,175,0.1);color:var(--header-color);"><i class="fas fa-tag"></i> ' + esc(spot.discount) + '</span>' : '') +
                     '</div>' +
                     '<div class="review-tags">' + (spot.tags || []).map(function (t) { return '<span class="tiktok-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
