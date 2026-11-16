@@ -118,12 +118,21 @@ const TTBData = (function () {
     }
 
     async function login(password) {
-        var res = await fetch(API_BASE + '/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password })
-        });
-        var data = await res.json();
+        var res;
+        try {
+            res = await fetch(API_BASE + '/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password }),
+                signal: AbortSignal.timeout(30000)
+            });
+        } catch (err) {
+            if (err && (err.name === 'TimeoutError' || err.name === 'AbortError')) {
+                throw new Error('Login timed out — the server may still be starting. Try again in a moment.');
+            }
+            throw err;
+        }
+        var data = await res.json().catch(function () { return {}; });
         if (!res.ok) throw new Error(data.error || 'Login failed');
         setToken(data.token);
         return data;
