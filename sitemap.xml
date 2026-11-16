@@ -103,6 +103,12 @@
         <priority>0.7</priority>
     </url>
     <url>
+        <loc>https://travelingtastebuds.org/best-food/north-wildwood-nj</loc>
+        <lastmod>2026-11-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
         <loc>https://travelingtastebuds.org/best-food/marlton-nj</loc>
         <lastmod>2026-11-16</lastmod>
         <changefreq>weekly</changefreq>
@@ -127,6 +133,12 @@
         <priority>0.7</priority>
     </url>
     <url>
+        <loc>https://travelingtastebuds.org/best-food/westmont-nj</loc>
+        <lastmod>2026-11-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
         <loc>https://travelingtastebuds.org/best-food/beach-haven-nj</loc>
         <lastmod>2026-11-16</lastmod>
         <changefreq>weekly</changefreq>
@@ -134,12 +146,6 @@
     </url>
     <url>
         <loc>https://travelingtastebuds.org/best-food/pennsauken-nj</loc>
-        <lastmod>2026-11-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://travelingtastebuds.org/best-food/westmont-nj</loc>
         <lastmod>2026-11-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
@@ -200,6 +206,12 @@
     </url>
     <url>
         <loc>https://travelingtastebuds.org/top-5/sandwich-shops-south-jersey</loc>
+        <lastmod>2026-11-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://travelingtastebuds.org/top-5/dive-bars-south-jersey</loc>
         <lastmod>2026-11-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
