@@ -7812,5 +7812,33 @@
         "tags": ["bagels", "breakfast"],
         "rating": 0,
         "snippet": "Bagels in Glassboro"
+    },
+    {
+        "name": "Beiler's Doughnuts",
+        "tiktokId": "6961553313150110981",
+        "lat": 39.9533,
+        "lng": -75.1592,
+        "location": "Philadelphia, PA",
+        "discount": "",
+        "logoImage": "/Images/ttbLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
+        "tags": ["donuts", "dessert", "bakery"],
+        "rating": 0,
+        "snippet": "Hand-rolled doughnuts at Reading Terminal Market"
+    },
+    {
+        "name": "3 Brothers Pizza",
+        "tiktokId": "6976356500948192517",
+        "lat": 39.2741,
+        "lng": -74.5745,
+        "location": "Ocean City, NJ",
+        "discount": "",
+        "logoImage": "/Images/ttbLogo.png",
+        "foodImage": "",
+        "logoBgColor": "",
+        "tags": ["pizza"],
+        "rating": 0,
+        "snippet": "Giant boardwalk slices in Ocean City"
     }
 ]
